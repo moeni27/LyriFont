@@ -29,7 +29,7 @@ for index, val in enumerate(lyrics):
     label = Label(win, text=val, font=('Futura 30'),fg='black')
     label.pack(pady=20)
     label.place(relx=.5, rely=.5, anchor="center")
-    client.send_message(" ", val)
+    client.send_message("/lyric", val)
     if (index==0):
         win.after(millisec_ts[index]+(millisec_ts[index+1]-millisec_ts[index]), lambda: win.quit())
         label.after(millisec_ts[index]*2, lambda: label.destroy())
