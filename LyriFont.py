@@ -1,9 +1,7 @@
 import syncedlyrics
 from tkinter import *
 import os
-import pyaudio
-import wave
-import threading
+import vlc
 
 os.chdir(os.path.dirname(__file__))
 directory = os.getcwd()
@@ -18,20 +16,8 @@ millisec_ts = [int(x[0:2])*60000+int(x[3:5])*1000+int(x[6:9]+"0") for x in times
 win = Tk()
 win.geometry("1000x500")
 
-audio = wave.open('beatles.wav', 'rb')
-p = pyaudio.PyAudio()
-
-def callback(in_data, frame_count, time_info, status):
-    data = audio.readframes(frame_count)
-    return (data, pyaudio.paContinue)
-
-stream = p.open(format = p.get_format_from_width(audio.getsampwidth()),
-                channels = audio.getnchannels(),
-                rate = audio.getframerate(),
-                output = True,
-                stream_callback = callback)
-
-stream.start_stream()
+p = vlc.MediaPlayer("The Beatles - A Hard Day's Night.mp3")
+p.play()
 
 for index, val in enumerate(lyrics):
     label = Label(win, text=val, font=('Futura 30'),fg='black')
