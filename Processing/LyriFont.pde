@@ -9,6 +9,12 @@ AudioPlayer song;
 int frameLength = 1024;
 AgentFeature feat;
 
+// Feature Variables
+float ener;
+float entr;
+float cnt;
+float spr;
+
 int rectX, rectY;      // Position of square button
 int rectSize = 90;     // Diameter of rect
 color rectColor;
@@ -59,13 +65,21 @@ void draw() {
   
   update(mouseX, mouseY);  
   background(0);
+  entr = feat.entropy;
+  ener = feat.energy/1000;
+  cnt = feat.centroid/1000;
+  spr = feat.spread/1000;
   
   if (currentLine > -1 && playing) {
     text = getCurrentLine(timestamps, lrc);
   }
   
-  textSize(64);
   textAlign(CENTER, CENTER);
+  if(firstPlay){textSize(64);fill(255);}
+  else{
+    textSize(map(entr,0,100,60,64));
+    fill(map(ener,0,10,0,255),map(cnt,0,10,0,255),map(spr,0,10,0,255));
+    }
   text(text, width/2, height/2); 
   
   if (rectOver) {
@@ -141,8 +155,8 @@ void oscEvent(OscMessage theOscMessage) {
       //}
         
       // start lyrics and song
-      // song.play();
-      // playing = true;
+      song.play();
+      playing = true;
    }
    
   if(theOscMessage.checkAddrPattern("/fontchange")==true) {

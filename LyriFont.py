@@ -17,7 +17,7 @@ def loadLyrics(unused_addr):
   lrc = syncedlyrics.search("[The Beatles] [A Hard Day's Night]").splitlines()
   timestamps = [x[1:9] for x in lrc]
   lyrics = [x[11:len(x)] for x in lrc]
-  print(lyrics)
+  
   print("Lyrics and Timestamps Loaded!")
   millisec_ts = [int(x[0:2])*60000+int(x[3:5])*1000+int(x[6:9]+"0") for x in timestamps]
 
