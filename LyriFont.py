@@ -19,8 +19,9 @@ def loadLyrics(unused_addr):
   lyrics = [x[11:len(x)] for x in lrc]
   print(lyrics)
   print("Lyrics and Timestamps Loaded!")
+  millisec_ts = [int(x[0:2])*60000+int(x[3:5])*1000+int(x[6:9]+"0") for x in timestamps]
 
-  client.send_message("/timestamps", timestamps)
+  client.send_message("/timestamps", millisec_ts)
   client.send_message("/lyrics", lyrics)
   print("Lyrics and Timestamps Sent")
 

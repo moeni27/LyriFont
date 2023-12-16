@@ -21,14 +21,22 @@ NetAddress myRemoteLocation;
 String text = "";
 Object[] timestamps;
 Object[] lrc;
-
+int currentLine = -1;
 boolean playing = false;
 boolean firstPlay = true;
+int startTime = 0;
+
+String getCurrentLine(Object[] timestamps, Object[] lines) {
+    int current_time = millis()-startTime;
+    if(current_time > Integer.parseInt(timestamps[currentLine+1].toString())){
+      currentLine++;
+    }
+    return lines[currentLine].toString();
+  }
 
 void setup() {
   size(1500,500);
   frameRate(25);
-  
   rectColor = color(255);
   rectHighlight = color(204);
   rectX = 20;
@@ -49,6 +57,10 @@ void draw() {
   
   update(mouseX, mouseY);  
   background(0);
+  
+  if (currentLine > -1 && playing) {
+    text = getCurrentLine(timestamps, lrc);
+  }
   
   textSize(64);
   textAlign(CENTER, CENTER);
@@ -88,6 +100,7 @@ void mousePressed() {
       else{
         song.play();
         // play lyrics
+        startTime = millis();
         playing = true;
       }
     }
@@ -107,7 +120,7 @@ void oscEvent(OscMessage theOscMessage) {
   
   if(theOscMessage.checkAddrPattern("/timestamps")==true) {
       timestamps = theOscMessage.arguments();
-      
+      print(timestamps[0].getClass());
       // For Debugging
       //for (Object item : lrc) {
       //  println(item);
@@ -116,8 +129,8 @@ void oscEvent(OscMessage theOscMessage) {
    
   if(theOscMessage.checkAddrPattern("/lyrics")==true) {
       firstPlay = false;
-      Object[] lrc = theOscMessage.arguments();
-      
+      lrc = theOscMessage.arguments();
+      currentLine = 0;
       // For Debugging
       //for (Object item : lrc) {
       //  println(item);
