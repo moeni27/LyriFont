@@ -25,9 +25,11 @@ int currentLine = -1;
 boolean playing = false;
 boolean firstPlay = true;
 int startTime = 0;
+int elapsedTime = 0;
+int restartTime = 0;
 
 String getCurrentLine(Object[] timestamps, Object[] lines) {
-    int current_time = millis()-startTime;
+    int current_time = millis()-startTime+elapsedTime;
     if(current_time > Integer.parseInt(timestamps[currentLine+1].toString())){
       currentLine++;
     }
@@ -95,6 +97,8 @@ void mousePressed() {
       if(playing){
         song.pause();
         // stop lyrics
+        elapsedTime = millis()-startTime+restartTime;
+        restartTime = elapsedTime;
         playing = false;
       }
       else{
