@@ -46,6 +46,9 @@ boolean songChosen = false;
 int startTime = 0;
 int elapsedTime = 0;
 int restartTime = 0;
+PImage playimg;
+PImage pauseimg;
+PImage pyimg;
 
 
 String getCurrentLine(Object[] timestamps, Object[] lines) {
@@ -79,6 +82,9 @@ void setup() {
   size(1500,500);
   //print(a.getAbsolutePath());
   frameRate(25);
+  playimg = loadImage("play.png");
+  pauseimg = loadImage("pause.png");
+  pyimg = loadImage("python.png");
   rectColor = color(255);
   rectHighlight = color(204);
   rectX = 20;
@@ -133,6 +139,17 @@ void draw() {
   stroke(255);
   rect(rectX, rectY, rectSize, rectSize);
   
+  if (!firstPlay&&!playing) {
+  image(playimg, rectX+rectSize/4, rectY+rectSize/4, rectSize/2, rectSize/2);
+  } else {
+    if (!firstPlay&&playing) {
+        image(pauseimg, rectX+rectSize/4, rectY+rectSize/4, rectSize/2, rectSize/2);
+    }
+  } 
+  
+  if (firstPlay) {
+      image(pyimg, rectX+rectSize/4, rectY+rectSize/4, rectSize/2, rectSize/2);
+  }
   //if (chooseOver) {
   //  fill(chooseHighlight);
   //} else {
@@ -243,8 +260,8 @@ void oscEvent(OscMessage theOscMessage) {
    }
    
   if(theOscMessage.checkAddrPattern("/lyrics")==true) {
-      firstPlay = false;
       lrc = theOscMessage.arguments();
+      firstPlay = false;
       text = "Ready!";
       currentLine = 0;
    }
