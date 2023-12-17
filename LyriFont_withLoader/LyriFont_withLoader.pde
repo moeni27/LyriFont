@@ -124,12 +124,33 @@ void draw() {
   
   textAlign(CENTER, CENTER);
   textFont(font);
-  if(firstPlay || text=="Ready!"){textSize(64);fill(255);}
+    if(firstPlay || text=="Ready!"){textSize(64);fill(255);text(text, width/2, height/2);}
   else{
-    textSize(map(entr,0,100,60,64));
-    fill(map(ener,0,10,0,255),map(cnt,0,10,0,255),map(spr,0,10,0,255));
-    }
-  text(text, width/2, height/2); 
+    // Check if the length of the text is greater than 30
+    if (text.length() > 30) {
+        int middleIndex = text.length() / 2;
+        int lastSpaceIndex = text.lastIndexOf(' ', middleIndex);
+    
+        // Check space
+        if (lastSpaceIndex != -1) {
+            String firstLine = text.substring(0, lastSpaceIndex);
+            String secondLine = text.substring(lastSpaceIndex + 1);
+            textSize(map(entr, 0, 100, 60, 64));
+            fill(map(ener, 0, 10, 0, 255), map(cnt, 0, 10, 0, 255), map(spr, 0, 10, 0, 255));
+            text(firstLine, width / 2, height / 2 - 20); 
+            text(secondLine, width / 2, height / 2 + 20); 
+        } else {
+            textSize(map(entr, 0, 100, 60, 64));
+            fill(map(ener, 0, 10, 0, 255), map(cnt, 0, 10, 0, 255), map(spr, 0, 10, 0, 255));
+            text(text, width / 2, height / 2);
+        }
+      } else {
+        // Display the text as a single line
+        textSize(map(entr, 0, 100, 60, 64));
+        fill(map(ener, 0, 10, 0, 255), map(cnt, 0, 10, 0, 255), map(spr, 0, 10, 0, 255));
+        text(text, width / 2, height / 2);
+      }
+    } 
   
   if (rectOver) {
     fill(rectHighlight);

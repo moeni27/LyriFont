@@ -5,10 +5,16 @@ import pandas as pd
 from pythonosc import udp_client
 from pythonosc import osc_server
 from pythonosc import dispatcher
+import sys
+
+currentpath = sys.path[0]
+
 
 ##PATH LOCALE!!!
-excel_path = "/Users/aleferro98/Documents/GitHub/LyriFont/ML_Spreadsheet.xlsx" ##PATH LOCALE !!!!!!
+excel_path = currentpath + "\\ML_Spreadsheet.xlsx" ##PATH LOCALE !!!!!!
 ##PATH LOCALE!!
+
+
 
 ## Read the file
 df = pd.read_excel(excel_path, index_col=None, header=None)
@@ -56,3 +62,4 @@ if __name__ == "__main__":
 
   print("Serving on {}".format(server.server_address))
   server.serve_forever()
+
