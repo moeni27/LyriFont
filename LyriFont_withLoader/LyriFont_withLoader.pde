@@ -117,68 +117,69 @@ void draw() {
     }
   }
   
-  textAlign(CENTER, CENTER);
-  textFont(font);
+textAlign(CENTER, CENTER);
+textFont(font);
     if(firstPlay || text=="Ready!"){
+      colorMode(RGB);
+      fill(255,255,255);
       textSize(64);
-      fill(255);
       text(text, width/2, height/2);
   }
-  else{
-    // Check if the length of the text is greater than 30
-    if (text.length() > 30) {
-        int middleIndex = text.length() / 2;
-        int lastSpaceIndex = text.lastIndexOf(' ', middleIndex);
-    
-        // Check space
-        if (lastSpaceIndex != -1) {
-            String firstLine = text.substring(0, lastSpaceIndex);
-            String secondLine = text.substring(lastSpaceIndex + 1);
-            // Glow Effect
-            textSize(txtSize+2);
-            colorMode(HSB,100);
-            fill(txtColor,100,100);
-            text(firstLine, width / 2, height / 2 - 20); 
-            text(secondLine, width / 2, height / 2 + 20); 
-            filter(BLUR, 4 );
-            
-            // Lyrics
-            textSize(txtSize);
-            colorMode(RGB);
-            fill(255,100,100);
-            text(firstLine, width / 2, height / 2 - 20); 
-            text(secondLine, width / 2, height / 2 + 20); 
+    else{
+      // Check if the length of the text is greater than 30
+      if (text.length() > 30) {
+          int middleIndex = text.length() / 2;
+          int lastSpaceIndex = text.lastIndexOf(' ', middleIndex);
+      
+          // Check space
+          if (lastSpaceIndex != -1) {
+              String firstLine = text.substring(0, lastSpaceIndex);
+              String secondLine = text.substring(lastSpaceIndex + 1);
+              // Glow Effect
+              textSize(txtSize+2);
+              colorMode(HSB,100);
+              fill(txtColor,100,100);
+              text(firstLine, width / 2, height / 2 - 20); 
+              text(secondLine, width / 2, height / 2 + 20); 
+              //filter(BLUR, 4 );
+              
+              // Lyrics
+              textSize(txtSize);
+              colorMode(RGB);
+              fill(255,100,100);
+              text(firstLine, width / 2, height / 2 - 20); 
+              text(secondLine, width / 2, height / 2 + 20); 
+          } else {
+              // Glow Effect
+              textSize(txtSize+2);
+              colorMode(HSB,100);
+              fill(txtColor,100,100);
+              text(text, width/2, height/2); 
+              //filter(BLUR, 4 );
+              
+              // Lyrics
+              textSize(txtSize);
+              colorMode(RGB);
+              fill(255,100,100);
+              text(text, width / 2, height / 2);
+          }
         } else {
-            // Glow Effect
-            textSize(txtSize+2);
-            colorMode(HSB,100);
-            fill(txtColor,100,100);
-            text(text, width/2, height/2); 
-            filter(BLUR, 4 );
-            
-            // Lyrics
-            textSize(txtSize);
-            colorMode(RGB);
-            fill(255,100,100);
-            text(text, width / 2, height / 2);
+          // Display the text as a single line
+          
+          // Glow Effect
+          textSize(txtSize+2);
+          colorMode(HSB,100);
+          fill(255,100,100);
+          text(text, width / 2, height / 2); 
+          //filter(BLUR, 4 );
+          
+          // Lyrics 
+          textSize(txtSize);
+          colorMode(RGB);
+          fill(255,100,100);
+          text(text, width / 2, height / 2);
         }
-      } else {
-        // Display the text as a single line
-        
-        // Glow Effect
-        textSize(txtSize+2);
-        colorMode(HSB,100);
-        fill(255,100,100);
-        text(text, width / 2, height / 2); 
-        filter(BLUR, 4 );
-        
-        // Lyrics 
-        textSize(txtSize);
-        colorMode(RGB);
-        fill(255,100,100);
-        text(text, width / 2, height / 2);
       }
-    } 
   
   if (rectOver) {
     fill(rectHighlight);
@@ -191,26 +192,19 @@ void draw() {
   if (!firstPlay&&!playing) {
   image(playimg, rectX+rectSize/4, rectY+rectSize/4, rectSize/2, rectSize/2);
   } else {
-    if (!firstPlay&&playing) {
+    if (playing) {
         image(pauseimg, rectX+rectSize/4, rectY+rectSize/4, rectSize/2, rectSize/2);
     }
-  } 
+  }
   
   if (firstPlay) {
       image(pyimg, rectX+rectSize/4, rectY+rectSize/4, rectSize/2, rectSize/2);
   }
-  //if (chooseOver) {
-  //  fill(chooseHighlight);
-  //} else {
-  //  fill(chooseColor);
- // }
- // rect(chooseX, chooseY, chooseSize, chooseSize);
-  
   
   // upload button
   if (mouseX > chooseX && mouseX < chooseX + chooseSize &&
       mouseY > chooseY && mouseY < chooseY + chooseSize) {
-    tint(200, 200); // Dim the button when the mouse is over it
+    tint(200, 200, 200); // Dim the button when the mouse is over it
   } else {
     noTint();
   }
@@ -246,6 +240,7 @@ void reset() {
   restartTime = 0;
   currentLine = 0;
   text = "";
+  font = createFont("Georgia", 38);
 }
 
 void fileSelected(File selection) {
