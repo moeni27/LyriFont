@@ -126,60 +126,64 @@ textFont(font);
       text(text, width/2, height/2);
   }
     else{
-      // Check if the length of the text is greater than 30
-      if (text.length() > 30) {
-          int middleIndex = text.length() / 2;
-          int lastSpaceIndex = text.lastIndexOf(' ', middleIndex);
-      
-          // Check space
-          if (lastSpaceIndex != -1) {
-              String firstLine = text.substring(0, lastSpaceIndex);
-              String secondLine = text.substring(lastSpaceIndex + 1);
-              // Glow Effect
-              textSize(txtSize+2);
-              colorMode(HSB,100);
-              fill(txtColor,100,100);
-              text(firstLine, width / 2, height / 2 - 20); 
-              text(secondLine, width / 2, height / 2 + 20); 
-              //filter(BLUR, 4 );
-              
-              // Lyrics
-              textSize(txtSize);
-              colorMode(RGB);
-              fill(255,100,100);
-              text(firstLine, width / 2, height / 2 - 20); 
-              text(secondLine, width / 2, height / 2 + 20); 
+      if (playing) {
+        // Check if the length of the text is greater than 30
+        if (text.length() > 30) {
+            int middleIndex = text.length() / 2;
+            int lastSpaceIndex = text.lastIndexOf(' ', middleIndex);
+        
+            // Check space
+            if (lastSpaceIndex != -1) {
+                String firstLine = text.substring(0, lastSpaceIndex);
+                String secondLine = text.substring(lastSpaceIndex + 1);
+                // Glow Effect
+                textSize(txtSize+2);
+                colorMode(HSB, 360, 100, 100);
+                fill(txtColor,100,100);
+                text(firstLine, width / 2, height / 2 - 20); 
+                text(secondLine, width / 2, height / 2 + 20); 
+                //filter(BLUR, 4 );
+                
+                // Lyrics
+                textSize(txtSize);
+                colorMode(RGB, 255, 255, 255);
+                fill(255,255,255);
+                text(firstLine, width / 2, height / 2 - 20); 
+                text(secondLine, width / 2, height / 2 + 20); 
+            } else {
+                // Glow Effect
+                textSize(txtSize+2);
+                colorMode(HSB, 360, 100, 100);
+                fill(txtColor,100,100);
+                text(text, width/2, height/2); 
+                //filter(BLUR, 4 );
+                
+                // Lyrics
+                textSize(txtSize);
+                colorMode(RGB, 255, 255, 255);
+                fill(255,255,255);
+                text(text, width / 2, height / 2);
+            }
           } else {
-              // Glow Effect
-              textSize(txtSize+2);
-              colorMode(HSB,100);
-              fill(txtColor,100,100);
-              text(text, width/2, height/2); 
-              //filter(BLUR, 4 );
-              
-              // Lyrics
-              textSize(txtSize);
-              colorMode(RGB);
-              fill(255,100,100);
-              text(text, width / 2, height / 2);
+            // Display the text as a single line
+            
+            // Glow Effect
+            textSize(txtSize+2);
+            colorMode(HSB, 360, 100, 100);
+            fill(txtColor,100,100);
+            text(text, width / 2, height / 2); 
+            //filter(BLUR, 4 );
+            
+            // Lyrics 
+            textSize(txtSize);
+            colorMode(RGB, 255, 255, 255);
+            fill(255,255,255);
+            text(text, width / 2, height / 2);
           }
-        } else {
-          // Display the text as a single line
-          
-          // Glow Effect
-          textSize(txtSize+2);
-          colorMode(HSB,100);
-          fill(255,100,100);
-          text(text, width / 2, height / 2); 
-          //filter(BLUR, 4 );
-          
-          // Lyrics 
-          textSize(txtSize);
-          colorMode(RGB);
-          fill(255,100,100);
-          text(text, width / 2, height / 2);
-        }
+      } else {
+        fill(0,0,0);
       }
+    }
   
   if (rectOver) {
     fill(rectHighlight);
@@ -204,7 +208,7 @@ textFont(font);
   // upload button
   if (mouseX > chooseX && mouseX < chooseX + chooseSize &&
       mouseY > chooseY && mouseY < chooseY + chooseSize) {
-    tint(200, 200, 200); // Dim the button when the mouse is over it
+    tint(200); // Dim the button when the mouse is over it
   } else {
     noTint();
   }
