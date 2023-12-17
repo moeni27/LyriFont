@@ -1,19 +1,32 @@
 import argparse
 import syncedlyrics
 import os
+import pandas as pd
 from pythonosc import udp_client
 from pythonosc import osc_server
 from pythonosc import dispatcher
 
-client = udp_client.SimpleUDPClient("127.0.0.1", 1234)
+##PATH LOCALE!!!
+excel_path = "/Users/aleferro98/Documents/GitHub/LyriFont/ML_Spreadsheet.xlsx" ##PATH LOCALE !!!!!!
+##PATH LOCALE!!
 
+## Read the file
+df = pd.read_excel(excel_path, index_col=None, header=None)
+
+client = udp_client.SimpleUDPClient("127.0.0.1", 1234)
 
 def loadLyrics(unused_addr, args):
   
   fname = os.path.basename(args)
   artistname = fname.split(" - ")[0]
   songname = os.path.splitext("".join(fname.split(" - ")[1:]))[0]
-
+  
+  songFont_df = (df[df[1]== fname])
+  
+  songFont = songFont_df.iloc[0, 0]
+  
+  ##print(songFont.iloc[0, 0])
+  
   print("Loading Lyrics and Timestamps...")
   lrc = syncedlyrics.search("["+artistname+"] ["+songname+"]").splitlines()
   timestamps = [x[1:9] for x in lrc]
@@ -24,6 +37,7 @@ def loadLyrics(unused_addr, args):
 
   client.send_message("/timestamps", millisec_ts)
   client.send_message("/lyrics", lyrics)
+  client.send_message("/fontchange", songFont)
   print("Lyrics and Timestamps Sent")
 
 if __name__ == "__main__":
