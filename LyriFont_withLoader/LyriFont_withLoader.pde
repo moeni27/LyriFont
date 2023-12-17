@@ -11,7 +11,6 @@ AgentFeature feat;
 
 PFont font;
 
-
 // Feature Variables
 float ener;
 float entr;
@@ -39,6 +38,7 @@ String filepath;
 String text = "";
 Object[] timestamps;
 Object[] lrc;
+Object[] fontPython;
 int currentLine = -1;
 boolean playing = false;
 boolean firstPlay = true;
@@ -90,7 +90,7 @@ void setup() {
   //chooseColor = color(255,0,0);
   //chooseHighlight = color(127,0,0);
   
-  font = createFont("../RubikDoodleShadow-Regular.ttf", 38);
+  font = createFont("Georgia", 38);
   
   minim = new Minim(this);
   
@@ -250,6 +250,8 @@ void oscEvent(OscMessage theOscMessage) {
    }
    
   if(theOscMessage.checkAddrPattern("/fontchange")==true) {
-      //change font
+      fontPython = theOscMessage.arguments();
+      println(fontPython[0].toString());
+      font = createFont("Font/" + fontPython[0].toString(), 38);
    }
 }
