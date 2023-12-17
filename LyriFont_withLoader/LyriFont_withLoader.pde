@@ -8,6 +8,7 @@ Minim minim;
 AudioPlayer song;  
 int frameLength = 1024;
 AgentFeature feat;
+AudioMetaData meta;
 
 PFont font;
 
@@ -30,6 +31,8 @@ NetAddress myRemoteLocation;
 
 String filepath;
 String text = "";
+String metaTitle;
+String metaArtist;
 float txtSize = 64;
 float txtColor = 50;
 Object[] timestamps;
@@ -262,16 +265,28 @@ void loadSong() {
    song = minim.loadFile(filepath, frameLength);  
    feat = new AgentFeature(song.bufferSize(), song.sampleRate());
    songChosen = true;
+   
+   meta = song.getMetaData();
+   metaTitle = meta.title();
+   metaArtist =  meta.author();
+   println("Title: " + metaTitle);
+   println("Artist: " + metaArtist);
 }
+
 
 void mousePressed() {
   if (rectOver) { 
     if(firstPlay&&songChosen){
         text = "Loading Lyrics";
         OscMessage myMessage = new OscMessage("/load");
-        myMessage.add(filepath);
+        if (metaArtist == "" || metaTitle == ""){
+            myMessage.add(filepath);
+          }
+        else {
+            myMessage.add(metaArtist + " - " + metaTitle+".mp3");
+        }
         oscP5.send(myMessage, myRemoteLocation); 
-      }
+    }
     else if (songChosen) {
       if(playing){
         song.pause();
