@@ -50,6 +50,21 @@ int restartTime = 0;
 
 String getCurrentLine(Object[] timestamps, Object[] lines) {
     int current_time = millis()-startTime+elapsedTime;
+
+    if (current_time > song.length()) {
+      print(song.length());
+      if(playing){
+        song.pause();
+        playing = false;
+       }
+      startTime = 0;
+      elapsedTime = 0;
+      restartTime = 0;
+      currentLine = 0;
+      song.cue(0);
+      return "";
+    }
+    
     if(current_time > Integer.parseInt(timestamps[min(currentLine+1, timestamps.length-1)].toString())){
       currentLine = min(currentLine+1, lines.length-1);
     }
@@ -153,12 +168,27 @@ void update() {
   }
 }
 
+void reset() {
+  songChosen = false;
+   if(playing){
+        song.pause();
+        playing = false;
+   }
+  firstPlay = true;
+  startTime = 0;
+  elapsedTime = 0;
+  restartTime = 0;
+  currentLine = 0;
+  text = "";
+}
+
 void fileSelected(File selection) {
   if (selection == null) {
     println("Window was closed or the user hit cancel.");
   } else {
     filepath = selection.getPath();
     println("User selected " + selection.getPath());
+    reset();
     loadSong();
   }
 }
