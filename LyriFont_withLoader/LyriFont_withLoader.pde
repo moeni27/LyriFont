@@ -11,12 +11,6 @@ AgentFeature feat;
 
 PFont font;
 
-// Feature Variables
-float ener;
-float entr;
-float cnt;
-float spr;
-
 int rectX, rectY;      // Position of square button
 int rectSize = 90;     // Diameter of rect
 color rectColor;
@@ -36,6 +30,8 @@ NetAddress myRemoteLocation;
 
 String filepath;
 String text = "";
+float txtSize = 64;
+float txtColor = 50;
 Object[] timestamps;
 Object[] lrc;
 Object[] fontPython;
@@ -112,10 +108,9 @@ void draw() {
   if (songChosen) {
   feat.reasoning(song.mix);  
    
-  entr = feat.entropy;
-  ener = feat.energy/1000;
-  cnt = feat.centroid/1000;
-  spr = feat.spread/1000;
+  // Calculate text settings from audio features
+  txtSize = entropyMapping(feat.entropy);
+  txtColor = centroidMapping(feat.centroid);
   
     if (currentLine > -1 && playing) {
       text = getCurrentLine(timestamps, lrc);
@@ -124,7 +119,11 @@ void draw() {
   
   textAlign(CENTER, CENTER);
   textFont(font);
-    if(firstPlay || text=="Ready!"){textSize(64);fill(255);text(text, width/2, height/2);}
+    if(firstPlay || text=="Ready!"){
+      textSize(64);
+      fill(255);
+      text(text, width/2, height/2);
+  }
   else{
     // Check if the length of the text is greater than 30
     if (text.length() > 30) {
@@ -135,19 +134,48 @@ void draw() {
         if (lastSpaceIndex != -1) {
             String firstLine = text.substring(0, lastSpaceIndex);
             String secondLine = text.substring(lastSpaceIndex + 1);
-            textSize(map(entr, 0, 100, 60, 64));
-            fill(map(ener, 0, 10, 0, 255), map(cnt, 0, 10, 0, 255), map(spr, 0, 10, 0, 255));
+            // Glow Effect
+            textSize(txtSize+2);
+            colorMode(HSB,100);
+            fill(txtColor,100,100);
+            text(firstLine, width / 2, height / 2 - 20); 
+            text(secondLine, width / 2, height / 2 + 20); 
+            filter(BLUR, 4 );
+            
+            // Lyrics
+            textSize(txtSize);
+            colorMode(RGB);
+            fill(255,100,100);
             text(firstLine, width / 2, height / 2 - 20); 
             text(secondLine, width / 2, height / 2 + 20); 
         } else {
-            textSize(map(entr, 0, 100, 60, 64));
-            fill(map(ener, 0, 10, 0, 255), map(cnt, 0, 10, 0, 255), map(spr, 0, 10, 0, 255));
+            // Glow Effect
+            textSize(txtSize+2);
+            colorMode(HSB,100);
+            fill(txtColor,100,100);
+            text(text, width/2, height/2); 
+            filter(BLUR, 4 );
+            
+            // Lyrics
+            textSize(txtSize);
+            colorMode(RGB);
+            fill(255,100,100);
             text(text, width / 2, height / 2);
         }
       } else {
         // Display the text as a single line
-        textSize(map(entr, 0, 100, 60, 64));
-        fill(map(ener, 0, 10, 0, 255), map(cnt, 0, 10, 0, 255), map(spr, 0, 10, 0, 255));
+        
+        // Glow Effect
+        textSize(txtSize+2);
+        colorMode(HSB,100);
+        fill(255,100,100);
+        text(text, width / 2, height / 2); 
+        filter(BLUR, 4 );
+        
+        // Lyrics 
+        textSize(txtSize);
+        colorMode(RGB);
+        fill(255,100,100);
         text(text, width / 2, height / 2);
       }
     } 
@@ -292,4 +320,50 @@ void oscEvent(OscMessage theOscMessage) {
       println(fontPython[0].toString());
       font = createFont("Font/" + fontPython[0].toString(), 38);
    }
+}
+// Features Functions 
+ 
+// Entropy goes approximately from  0 (usually only when there is silence, otherwise it has a minimum value between around 50 and 200) to a maximum around 800/1000.
+// 
+float entropyMapping(float entropy){
+  float output = 64;
+  if (0 < entropy && entropy <= 200){output = map(entropy,0,200,63,63.5);}
+  else if (200 < entropy && entropy <= 400){output = map(entropy,200,400,63.5,64);}
+  else if (400 < entropy && entropy <= 600){output = map(entropy,400,600,64,64.5);}
+  else if (600 < entropy && entropy <= 800){output = map(entropy,600,800,64.5,65);}
+  else if (800 < entropy){output = map(entropy,800,1000,65,66);}
+  return output;
+}
+// Centroid is more stable than Energy and mantains values from around 1000/2000 to 5000/6000
+// TO DO BETTER
+float centroidMapping(float centroid){
+  float output = 50;
+  if (1000 < centroid && centroid <= 2000){output = map(centroid,1000,2000,0,10);}
+  else if (2000 < centroid && centroid <= 3000){output = map(centroid,2000,3000,10,20);}
+  else if (3000 < centroid && centroid <= 4000){output = map(centroid,3000,4000,20,30);}
+  else if (5000 < centroid && centroid <= 6000){output = map(centroid,4000,6000,30,50);}
+  else if (6000 < centroid){output = map(centroid,6000,10000,50,100);}
+  return output;
+}
+//Energy mantains very high values that changes dramatically during the song. They goes from a minimum around 1000 to a maximum around 40000/50000
+// TO DO
+float energyMapping(float energy){
+  float output = 64;
+  if (0 < energy && energy <= 200){output = map(energy,0,200,63,63.5);}
+  else if (200 < energy && energy <= 400){output = map(energy,200,400,63.5,64);}
+  else if (400 < energy && energy <= 600){output = map(energy,400,600,64,64.5);}
+  else if (600 < energy && energy <= 800){output = map(energy,600,800,64.5,65);}
+  else if (800 < energy){output = map(energy,800,1000,65,66);}
+  return output;
+}
+// Spread behaves more or less as the Centroid
+// TO DO
+float spreadMapping(float spread){
+  float output = 64;
+  if (0 < spread && spread <= 200){output = map(spread,0,200,63,63.5);}
+  else if (200 < spread && spread <= 400){output = map(spread,200,400,63.5,64);}
+  else if (400 < spread && spread <= 600){output = map(spread,400,600,64,64.5);}
+  else if (600 < spread && spread <= 800){output = map(spread,600,800,64.5,65);}
+  else if (800 < spread){output = map(spread,800,1000,65,66);}
+  return output;
 }
