@@ -20,11 +20,14 @@ int rectSize = 90;     // Diameter of rect
 color rectColor;
 color rectHighlight;
 boolean rectOver = false;
+
+PImage uploadButton;
 int chooseX, chooseY;
 int chooseSize = 90;
-color chooseColor;
-color chooseHighlight;
+//color chooseColor;
+//color chooseHighlight;
 boolean chooseOver = false;
+
 OscP5 oscP5;
 OscP5 oscP52;
 NetAddress myRemoteLocation;
@@ -40,7 +43,6 @@ boolean songChosen = false;
 int startTime = 0;
 int elapsedTime = 0;
 int restartTime = 0;
-
 
 
 String getCurrentLine(Object[] timestamps, Object[] lines) {
@@ -63,10 +65,15 @@ void setup() {
   rectHighlight = color(204);
   rectX = 20;
   rectY = 20;
+  
+  uploadButton = loadImage("cloud-upload.png");  
   chooseX = width-chooseSize-20;
   chooseY = 20;
-  chooseColor = color(255,0,0);
-  chooseHighlight = color(127,0,0);
+  //chooseColor = color(255,0,0);
+  //chooseHighlight = color(127,0,0);
+  
+  
+
   
   minim = new Minim(this);
   
@@ -108,12 +115,24 @@ void draw() {
   stroke(255);
   rect(rectX, rectY, rectSize, rectSize);
   
-  if (chooseOver) {
-    fill(chooseHighlight);
+  //if (chooseOver) {
+  //  fill(chooseHighlight);
+  //} else {
+  //  fill(chooseColor);
+ // }
+ // rect(chooseX, chooseY, chooseSize, chooseSize);
+  
+  
+  // upload button
+  if (mouseX > chooseX && mouseX < chooseX + chooseSize &&
+      mouseY > chooseY && mouseY < chooseY + chooseSize) {
+    tint(200, 200); // Dim the button when the mouse is over it
   } else {
-    fill(chooseColor);
+    noTint();
   }
-  rect(chooseX, chooseY, chooseSize, chooseSize);
+  
+  // Draw the upload button image
+  image(uploadButton, chooseX, chooseY, chooseSize, chooseSize);
 } 
  
   
