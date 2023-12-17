@@ -20,19 +20,28 @@ int rectSize = 90;     // Diameter of rect
 color rectColor;
 color rectHighlight;
 boolean rectOver = false;
+int chooseX, chooseY;
+int chooseSize = 90;
+color chooseColor;
+color chooseHighlight;
+boolean chooseOver = false;
 OscP5 oscP5;
 OscP5 oscP52;
 NetAddress myRemoteLocation;
 
+String filepath;
 String text = "";
 Object[] timestamps;
 Object[] lrc;
 int currentLine = -1;
 boolean playing = false;
 boolean firstPlay = true;
+boolean songChosen = false;
 int startTime = 0;
 int elapsedTime = 0;
 int restartTime = 0;
+
+
 
 String getCurrentLine(Object[] timestamps, Object[] lines) {
     int current_time = millis()-startTime+elapsedTime;
@@ -48,16 +57,18 @@ String getCurrentLine(Object[] timestamps, Object[] lines) {
 
 void setup() {
   size(1500,500);
+  //print(a.getAbsolutePath());
   frameRate(25);
   rectColor = color(255);
   rectHighlight = color(204);
   rectX = 20;
   rectY = 20;
+  chooseX = width-chooseSize-20;
+  chooseY = 20;
+  chooseColor = color(255,0,0);
+  chooseHighlight = color(127,0,0);
   
   minim = new Minim(this);
-  song = minim.loadFile("../The Beatles - A Hard Day's Night.mp3",frameLength);  
-  feat = new AgentFeature(song.bufferSize(), song.sampleRate());
-   
   
   oscP5 = new OscP5(this,1234);
   oscP52 = new OscP5(this,1234);
@@ -65,17 +76,20 @@ void setup() {
 }
 
 void draw() {
-  feat.reasoning(song.mix);  
-  
-  update();  
   background(0);
+  update(); 
+  
+  if (songChosen) {
+  feat.reasoning(song.mix);  
+   
   entr = feat.entropy;
   ener = feat.energy/1000;
   cnt = feat.centroid/1000;
   spr = feat.spread/1000;
   
-  if (currentLine > -1 && playing) {
-    text = getCurrentLine(timestamps, lrc);
+    if (currentLine > -1 && playing) {
+      text = getCurrentLine(timestamps, lrc);
+    }
   }
   
   textAlign(CENTER, CENTER);
@@ -93,8 +107,15 @@ void draw() {
   }
   stroke(255);
   rect(rectX, rectY, rectSize, rectSize);
-}
   
+  if (chooseOver) {
+    fill(chooseHighlight);
+  } else {
+    fill(chooseColor);
+  }
+  rect(chooseX, chooseY, chooseSize, chooseSize);
+} 
+ 
   
 void update() {
   if ( overRect(rectX, rectY, rectSize, rectSize) ) {
@@ -102,16 +123,39 @@ void update() {
   } else {
     rectOver = false;
   }
+  
+  if ( overRect(chooseX, chooseY, chooseSize, chooseSize) ) {
+    chooseOver = true;
+  } else {
+    chooseOver = false;
+  }
+}
+
+void fileSelected(File selection) {
+  if (selection == null) {
+    println("Window was closed or the user hit cancel.");
+  } else {
+    filepath = selection.getPath();
+    println("User selected " + selection.getPath());
+    loadSong();
+  }
+}
+
+void loadSong() {
+   song = minim.loadFile(filepath, frameLength);  
+   feat = new AgentFeature(song.bufferSize(), song.sampleRate());
+   songChosen = true;
 }
 
 void mousePressed() {
   if (rectOver) { 
-    if(firstPlay){
+    if(firstPlay&&songChosen){
         text = "Loading Lyrics";
         OscMessage myMessage = new OscMessage("/load");
-        oscP5.send(myMessage, myRemoteLocation);   
+        myMessage.add(filepath);
+        oscP5.send(myMessage, myRemoteLocation); 
       }
-    else{
+    else if (songChosen) {
       if(playing){
         song.pause();
         elapsedTime = millis()-startTime+restartTime;
@@ -124,6 +168,10 @@ void mousePressed() {
         playing = true;
       }
     }
+  } else {
+      if (chooseOver) {
+        selectInput("Select a file to process:", "fileSelected");
+      }
   }
 }
 
