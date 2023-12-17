@@ -9,6 +9,9 @@ AudioPlayer song;
 int frameLength = 1024;
 AgentFeature feat;
 
+PFont font;
+
+
 // Feature Variables
 float ener;
 float entr;
@@ -72,8 +75,7 @@ void setup() {
   //chooseColor = color(255,0,0);
   //chooseHighlight = color(127,0,0);
   
-  
-
+  font = createFont("../RubikDoodleShadow-Regular.ttf", 38);
   
   minim = new Minim(this);
   
@@ -100,6 +102,7 @@ void draw() {
   }
   
   textAlign(CENTER, CENTER);
+  textFont(font);
   if(firstPlay || text=="Ready!"){textSize(64);fill(255);}
   else{
     textSize(map(entr,0,100,60,64));
