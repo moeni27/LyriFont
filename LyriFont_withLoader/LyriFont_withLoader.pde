@@ -48,7 +48,7 @@ int restartTime = 0;
 PImage playimg;
 PImage pauseimg;
 PImage pyimg;
-
+float max_distance;
 //ArrayList<String> receivedLyrics = new ArrayList<>();
 ArrayList<Object> dynamicLyric;
 ArrayList<Object> dynamicTime;
@@ -82,7 +82,7 @@ String getCurrentLine(Object[] timestamps, Object[] lines) {
 
 void setup() {
   size(1500,500);
-  //print(a.getAbsolutePath());
+  max_distance = dist(0, 0, width, height);
   frameRate(25);
   playimg = loadImage("play.png");
   pauseimg = loadImage("pause.png");
@@ -113,6 +113,27 @@ void setup() {
 void draw() {
   background(0);
   update(); 
+   
+  for(int i = 0; i <= width; i += 20) {
+    if ((i >= 0 && i <= width / 8) || (i >= (width * 7) / 8 && i <= width)) {
+      for(int j = 0; j <= height; j += 20) {
+        
+        if (playing) {
+          float size = dist(width/2, height/2, i, j);
+          size = size*map(energyMapping(feat.energy), 0, 66, 0, 0.1)/max_distance*66;
+          colorMode(HSB, 360, 100, 100);
+          fill(centroidMapping(feat.centroid), 100, 100);
+          ellipse(i, j, size, size);
+          colorMode(RGB, 255, 255, 255);
+        } else {
+          float size = dist(width/2, height/2, i, j);
+          size = size/(max_distance*2)*10;
+          ellipse(i, j, size, size);
+        }
+        
+      }
+    }
+  }
   
   if (songChosen) {
   feat.reasoning(song.mix);  
