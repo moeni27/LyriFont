@@ -50,7 +50,7 @@ PImage pauseimg;
 PImage pyimg;
 
 //ArrayList<String> receivedLyrics = new ArrayList<>();
-ArrayList<Object> dynamicArray;
+ArrayList<Object> dynamicLyric;
 ArrayList<Object> dynamicTime;
 
 String getCurrentLine(Object[] timestamps, Object[] lines) {
@@ -92,7 +92,7 @@ void setup() {
   rectX = 20;
   rectY = 20;
   
-  dynamicArray = new ArrayList<Object>();
+  dynamicLyric = new ArrayList<Object>();
   dynamicTime = new ArrayList<Object>();
   
   uploadButton = loadImage("cloud-upload.png");  
@@ -248,6 +248,8 @@ void reset() {
         playing = false;
    }
   firstPlay = true;
+  dynamicTime.clear();
+  dynamicLyric.clear();
   startTime = 0;
   elapsedTime = 0;
   restartTime = 0;
@@ -336,12 +338,11 @@ void oscEvent(OscMessage theOscMessage) {
   if (theOscMessage.checkAddrPattern("/lyrics") == true) {
       for (int i = 0; i < theOscMessage.arguments().length; i++) {
         if (theOscMessage.arguments()[i] instanceof String) {
-          dynamicArray.add(theOscMessage.arguments()[i]);
+          dynamicLyric.add(theOscMessage.arguments()[i]);
         }
       }
-
-      lrc = dynamicArray.toArray();
-
+      lrc = dynamicLyric.toArray();
+      
       firstPlay = false;
       text = "Ready!";
       currentLine = 0;
