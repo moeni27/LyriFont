@@ -30,7 +30,7 @@ OscP5 oscP52;
 NetAddress myRemoteLocation;
 
 String filepath;
-String text = "";
+String text = "Load a song to start";
 String metaTitle;
 String metaArtist;
 float txtSize = 64;
@@ -151,7 +151,7 @@ textFont(font);
                 fill(txtColor,100,100);
                 text(firstLine, width / 2, height / 2 - 20); 
                 text(secondLine, width / 2, height / 2 + 20); 
-                //filter(BLUR, 4 );
+                filter(BLUR, 1);
                 
                 // Lyrics
                 textSize(txtSize);
@@ -165,7 +165,7 @@ textFont(font);
                 colorMode(HSB, 360, 100, 100);
                 fill(txtColor,100,100);
                 text(text, width/2, height/2); 
-                //filter(BLUR, 4 );
+                filter(BLUR, 1);
                 
                 // Lyrics
                 textSize(txtSize);
@@ -181,7 +181,7 @@ textFont(font);
             colorMode(HSB, 360, 100, 100);
             fill(txtColor,100,100);
             text(text, width / 2, height / 2); 
-            //filter(BLUR, 4 );
+            filter(BLUR, 1);
             
             // Lyrics 
             textSize(txtSize);
@@ -279,13 +279,14 @@ void loadSong() {
    metaArtist =  meta.author();
    println("Title: " + metaTitle);
    println("Artist: " + metaArtist);
+   text = "Song loaded!";
 }
 
 
 void mousePressed() {
   if (rectOver) { 
     if(firstPlay&&songChosen){
-        text = "Loading Lyrics";
+        text = "Fetching lyrics . . .";
         OscMessage myMessage = new OscMessage("/load");
         if (metaArtist == "" || metaTitle == ""){
             myMessage.add(filepath);
@@ -344,7 +345,6 @@ void oscEvent(OscMessage theOscMessage) {
       lrc = dynamicLyric.toArray();
       
       firstPlay = false;
-      text = "Ready!";
       currentLine = 0;
    }
    
@@ -352,6 +352,7 @@ void oscEvent(OscMessage theOscMessage) {
       fontPython = theOscMessage.arguments();
       println(fontPython[0].toString());
       font = createFont("Font/" + fontPython[0].toString(), 38);
+      text = "Ready!";
    }
 }
 // Features Functions 
