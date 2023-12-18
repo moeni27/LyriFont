@@ -8,6 +8,7 @@ from pythonosc import udp_client
 from pythonosc import osc_server
 from pythonosc import dispatcher
 import sys
+from objsize import get_deep_size
 
 currentpath = sys.path[0]
 
@@ -19,6 +20,14 @@ excel_path = currentpath + "\\ML_Spreadsheet.xlsx" ##PATH LOCALE !!!!!!
 df = pd.read_excel(excel_path, index_col=None, header=None)
 
 client = udp_client.SimpleUDPClient("127.0.0.1", 1234)
+
+def checkSize(array, default):
+  if (get_deep_size(array)>2048):
+    k = 1
+    while (get_deep_size(array[0:k])<2048):
+      k += 1
+    return k
+  else: return default  
 
 def getSpotifyFont(artist):
 
@@ -88,7 +97,13 @@ def loadLyrics(unused_addr, args):
   print("Lyrics and Timestamps Loaded!")
 
 # Set the maximum number of characters per OSC message
-  max_chars_per_message = 40
+  defaultSize = 40
+  k = checkSize(lyrics, defaultSize)
+  
+  if (k!=defaultSize):
+    for i in range(0,len(lyrics)-k):
+      k = min(k, checkSize(lyrics[i:k+i], defaultSize))
+      max_chars_per_message = min(defaultSize,k-1)  
 
   # Split lyrics into chunks
   lyric_chunks = [lyrics[i:i + max_chars_per_message] for i in range(0, len(lyrics), max_chars_per_message)]
