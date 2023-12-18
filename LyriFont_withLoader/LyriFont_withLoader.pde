@@ -49,6 +49,9 @@ PImage playimg;
 PImage pauseimg;
 PImage pyimg;
 
+//ArrayList<String> receivedLyrics = new ArrayList<>();
+ArrayList<Object> dynamicArray;
+ArrayList<Object> dynamicTime;
 
 String getCurrentLine(Object[] timestamps, Object[] lines) {
     int current_time = millis()-startTime+elapsedTime;
@@ -88,6 +91,9 @@ void setup() {
   rectHighlight = color(204);
   rectX = 20;
   rectY = 20;
+  
+  dynamicArray = new ArrayList<Object>();
+  dynamicTime = new ArrayList<Object>();
   
   uploadButton = loadImage("cloud-upload.png");  
   chooseX = width-chooseSize-20;
@@ -319,11 +325,23 @@ boolean overRect(int x, int y, int width, int height)  {
 void oscEvent(OscMessage theOscMessage) {
   
   if(theOscMessage.checkAddrPattern("/timestamps")==true) {
-      timestamps = theOscMessage.arguments();
+      for (int i = 0; i < theOscMessage.arguments().length; i++) {
+        if (theOscMessage.arguments()[i] instanceof Integer) {
+          dynamicTime.add(theOscMessage.arguments()[i]);
+        }
+      }
+      timestamps = dynamicTime.toArray();    
    }
    
-  if(theOscMessage.checkAddrPattern("/lyrics")==true) {
-      lrc = theOscMessage.arguments();
+  if (theOscMessage.checkAddrPattern("/lyrics") == true) {
+      for (int i = 0; i < theOscMessage.arguments().length; i++) {
+        if (theOscMessage.arguments()[i] instanceof String) {
+          dynamicArray.add(theOscMessage.arguments()[i]);
+        }
+      }
+
+      lrc = dynamicArray.toArray();
+
       firstPlay = false;
       text = "Ready!";
       currentLine = 0;

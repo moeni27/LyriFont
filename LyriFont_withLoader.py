@@ -43,10 +43,8 @@ def excel(genre):
         
       # Get the first element of the row in column A (assuming column A contains the desired data)
       return (df.iloc[index_of_first_occurrence, 0])
-    
 
-
-
+'''
 def loadLyrics(unused_addr, args):
   
   fname = os.path.basename(args)
@@ -69,6 +67,45 @@ def loadLyrics(unused_addr, args):
   client.send_message("/lyrics", lyrics)
   client.send_message("/fontchange", songFont)
   print("Lyrics and Timestamps Sent")
+  '''
+
+def loadLyrics(unused_addr, args):
+  
+  fname = os.path.basename(args)
+  artistname = fname.split(" - ")[0]
+  songname = os.path.splitext("".join(fname.split(" - ")[1:]))[0]
+  
+  genre = getSpotifyFont(artistname)
+  print(genre)
+  songFont = excel(genre)
+
+  print("Loading Lyrics and Timestamps...")
+  lrc = syncedlyrics.search("["+artistname+"] ["+songname+"]").splitlines()
+  timestamps = [x[1:9] for x in lrc]
+  lyrics = [x[11:len(x)] for x in lrc]
+  millisec_ts = [int(x[0:2])*60000+int(x[3:5])*1000+int(x[6:9]+"0") for x in timestamps]
+  
+  print("Lyrics and Timestamps Loaded!")
+
+# Set the maximum number of characters per OSC message
+  max_chars_per_message = 40
+
+  # Split lyrics into chunks
+  lyric_chunks = [lyrics[i:i + max_chars_per_message] for i in range(0, len(lyrics), max_chars_per_message)]
+  ms_chunks = [millisec_ts[i:i + max_chars_per_message] for i in range(0, len(millisec_ts), max_chars_per_message)]
+
+  for idx, chunk in enumerate(ms_chunks):
+    client.send_message("/timestamps", chunk)
+    print(f"Timestamps (Chunk {idx + 1}/{len(ms_chunks)}) Sent")
+  
+  for idx, chunk in enumerate(lyric_chunks):
+      client.send_message("/lyrics", chunk)
+      client.send_message("/fontchange", songFont)
+      print(f"Lyrics (Chunk {idx + 1}/{len(lyric_chunks)}) Sent")
+
+  print("All Lyrics and Timestamps Sent")
+
+
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
