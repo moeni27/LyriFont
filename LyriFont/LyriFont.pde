@@ -93,7 +93,7 @@ String getCurrentLine(Object[] timestamps, Object[] lines) {
 String[] splitTextIntoLines(String input, float lineWidth) {
   String[] words = input.split("\\s+");
   StringBuilder currentLine = new StringBuilder();
-  ArrayList<String> lines = new ArrayList<>();
+  ArrayList<String> lines = new ArrayList<String>();
 
   for (String word : words) {
     if (textWidth(currentLine + word) <= lineWidth) {
@@ -163,6 +163,7 @@ void draw() {
           size = size*map(energyMapping(feat.energy), 0, 66, 0, 0.1)/max_distance*66;
           colorMode(HSB, 360, 100, 100);
           fill(centroidMapping(feat.centroid), 100, 100);
+          stroke(0);
           ellipse(i, j, size, size);
           colorMode(RGB, 255, 255, 255);
         } else {
@@ -495,7 +496,7 @@ void textShapesEffect() {
       points = grp.children[j].getPoints();
       // If there are any points
       if (points != null) {
-        fill(25);
+        fill(255, 255, 255);
         beginShape();
         for (int i = 0; i < points.length; i++) {
           vertex(points[i].x, points[i].y + lineY);
