@@ -79,6 +79,27 @@ String getCurrentLine(Object[] timestamps, Object[] lines) {
       return lines[currentLine].toString();
     }
   }
+  
+String[] splitTextIntoLines(String input, float lineWidth) {
+  String[] words = input.split("\\s+");
+  StringBuilder currentLine = new StringBuilder();
+  ArrayList<String> lines = new ArrayList<>();
+
+  for (String word : words) {
+    if (textWidth(currentLine + word) <= lineWidth) {
+      currentLine.append(word).append(" ");
+    } else {
+      lines.add(currentLine.toString().trim());
+      currentLine = new StringBuilder(word + " ");
+    }
+  }
+
+  if (currentLine.length() > 0) {
+    lines.add(currentLine.toString().trim());
+  }
+
+  return lines.toArray(new String[0]);
+}
 
 void setup() {
   size(1500,500);
@@ -147,6 +168,8 @@ void draw() {
     }
   }
   
+  
+/*  
 textAlign(CENTER, CENTER);
 textFont(font);
     if(firstPlay || text=="Ready!"){
@@ -214,6 +237,64 @@ textFont(font);
         fill(0,0,0);
       }
     }
+    
+ */
+ 
+textAlign(CENTER, CENTER);
+textFont(font);
+
+float lineVerticalSpacing = 10; 
+
+if (firstPlay || text == "Ready!") {
+  colorMode(RGB);
+  fill(255, 255, 255);
+  textSize(64);
+  text(text, width / 2, height / 2);
+} else {
+  if (playing) {
+    float textWidthWithMargin = textWidth(text) + 1200; 
+    if (textWidthWithMargin > width) {
+      String[] lines = splitTextIntoLines(text, width - 1200); 
+      
+      // Glow Effect
+      textSize(txtSize + 2);
+      colorMode(HSB, 360, 100, 100);
+      fill(txtColor, 100, 100);
+
+      float lineHeight = 40; 
+      for (int i = 0; i < lines.length; i++) {
+        float y = height / 2 - (lines.length - 1) * (lineHeight + lineVerticalSpacing) / 2 + i * (lineHeight + lineVerticalSpacing);
+        text(lines[i], width / 2, y);
+      }
+      filter(BLUR, 1);
+
+      // Lyrics
+      textSize(txtSize);
+      colorMode(RGB, 255, 255, 255);
+      fill(255, 255, 255);
+
+      for (int i = 0; i < lines.length; i++) {
+        float y = height / 2 - (lines.length - 1) * (lineHeight + lineVerticalSpacing) / 2 + i * (lineHeight + lineVerticalSpacing);
+        text(lines[i], width / 2, y);
+      }
+    } else {
+      // Glow Effect
+      textSize(txtSize + 2);
+      colorMode(HSB, 360, 100, 100);
+      fill(txtColor, 100, 100);
+      text(text, width / 2, height / 2);
+      filter(BLUR, 1);
+
+      // Lyrics
+      textSize(txtSize);
+      colorMode(RGB, 255, 255, 255);
+      fill(255, 255, 255);
+      text(text, width / 2, height / 2);
+    }
+  } else {
+    fill(0, 0, 0);
+  }
+}
   
   if (rectOver) {
     fill(rectHighlight);
