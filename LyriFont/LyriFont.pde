@@ -1,8 +1,8 @@
-
 import oscP5.*;
 import netP5.*;
 import ddf.minim.*;
 import ddf.minim.analysis.*;
+import geomerative.*;
 
 Minim minim;
 AudioPlayer song;  
@@ -11,16 +11,26 @@ AgentFeature feat;
 AudioMetaData meta;
 
 PFont font;
+RShape grp;
+RPoint[] points;
+String GeomFont;
+
 
 int rectX, rectY;      // Position of square button
 int rectSize = 90;     // Diameter of rect
 color rectColor;
 color rectHighlight;
 boolean rectOver = false;
+boolean geomActive = false;
 
 PImage uploadButton;
+PImage switchButton;
+
 int chooseX, chooseY;
 int chooseSize = 90;
+
+int switchX, switchY;
+int switchSize = 90;
 //color chooseColor;
 //color chooseHighlight;
 boolean chooseOver = false;
@@ -101,6 +111,7 @@ String[] splitTextIntoLines(String input, float lineWidth) {
   return lines.toArray(new String[0]);
 }
 
+
 void setup() {
   size(1500,500);
   max_distance = dist(0, 0, width, height);
@@ -113,6 +124,11 @@ void setup() {
   rectX = 20;
   rectY = 20;
   
+  // Geomerative stuff
+  RG.init(this);
+  grp = RG.getText(text, "/Font/Silkscreen-Regular.ttf", 120, CENTER);
+  
+  
   dynamicLyric = new ArrayList<Object>();
   dynamicTime = new ArrayList<Object>();
   
@@ -121,6 +137,9 @@ void setup() {
   chooseY = 20;
   //chooseColor = color(255,0,0);
   //chooseHighlight = color(127,0,0);
+  switchButton = loadImage("switch.png");
+  switchX = width - switchSize - 20; 
+  switchY = height - switchSize - 20; 
   
   font = createFont("Georgia", 38);
   
@@ -168,77 +187,6 @@ void draw() {
     }
   }
   
-  
-/*  
-textAlign(CENTER, CENTER);
-textFont(font);
-    if(firstPlay || text=="Ready!"){
-      colorMode(RGB);
-      fill(255,255,255);
-      textSize(64);
-      text(text, width/2, height/2);
-  }
-    else{
-      if (playing) {
-        // Check if the length of the text is greater than 30
-        if (text.length() > 30) {
-            int middleIndex = text.length() / 2;
-            int lastSpaceIndex = text.lastIndexOf(' ', middleIndex);
-        
-            // Check space
-            if (lastSpaceIndex != -1) {
-                String firstLine = text.substring(0, lastSpaceIndex);
-                String secondLine = text.substring(lastSpaceIndex + 1);
-                // Glow Effect
-                textSize(txtSize+2);
-                colorMode(HSB, 360, 100, 100);
-                fill(txtColor,100,100);
-                text(firstLine, width / 2, height / 2 - 20); 
-                text(secondLine, width / 2, height / 2 + 20); 
-                filter(BLUR, 1);
-                
-                // Lyrics
-                textSize(txtSize);
-                colorMode(RGB, 255, 255, 255);
-                fill(255,255,255);
-                text(firstLine, width / 2, height / 2 - 20); 
-                text(secondLine, width / 2, height / 2 + 20); 
-            } else {
-                // Glow Effect
-                textSize(txtSize+2);
-                colorMode(HSB, 360, 100, 100);
-                fill(txtColor,100,100);
-                text(text, width/2, height/2); 
-                filter(BLUR, 1);
-                
-                // Lyrics
-                textSize(txtSize);
-                colorMode(RGB, 255, 255, 255);
-                fill(255,255,255);
-                text(text, width / 2, height / 2);
-            }
-          } else {
-            // Display the text as a single line
-            
-            // Glow Effect
-            textSize(txtSize+2);
-            colorMode(HSB, 360, 100, 100);
-            fill(txtColor,100,100);
-            text(text, width / 2, height / 2); 
-            filter(BLUR, 1);
-            
-            // Lyrics 
-            textSize(txtSize);
-            colorMode(RGB, 255, 255, 255);
-            fill(255,255,255);
-            text(text, width / 2, height / 2);
-          }
-      } else {
-        fill(0,0,0);
-      }
-    }
-    
- */
  
 textAlign(CENTER, CENTER);
 textFont(font);
@@ -253,6 +201,7 @@ if (firstPlay || text == "Ready!") {
   text(text, width / 2, height / 2);
 } else {
   if (playing) {
+    if (!geomActive){   
     float textWidthWithMargin = textWidth(text) + margin; 
     if (textWidthWithMargin > width) {
       String[] lines = splitTextIntoLines(text, width - margin); 
@@ -292,11 +241,22 @@ if (firstPlay || text == "Ready!") {
       fill(255, 255, 255);
       text(text, width / 2, height / 2);
     }
+    }else{
+    colorMode(RGB, 255, 255, 255);
+                fill(255,255,255);
+                translate(width/2, 0);
+                /*text(firstLine, width / 2, height / 2 - 20); 
+                text(secondLine, width / 2, height / 2 + 20);*/
+                textShapesEffect();
+                translate(-width/2, 0);
+    }
   } else {
     fill(0, 0, 0);
   }
 }
-  
+
+
+
   if (rectOver) {
     fill(rectHighlight);
   } else {
@@ -327,6 +287,7 @@ if (firstPlay || text == "Ready!") {
   
   // Draw the upload button image
   image(uploadButton, chooseX, chooseY, chooseSize, chooseSize);
+  image(switchButton, switchX, switchY, switchSize, switchSize);
 } 
  
   
@@ -417,6 +378,13 @@ void mousePressed() {
         selectInput("Select a file to process:", "fileSelected");
       }
   }
+  
+   if (mouseX > switchX && mouseX < switchX + switchSize &&
+      mouseY > switchY && mouseY < switchY + switchSize) {
+    geomActive = !geomActive;
+    println("Button pressed");
+  }
+  
 }
 
 boolean overRect(int x, int y, int width, int height)  {
@@ -454,6 +422,7 @@ void oscEvent(OscMessage theOscMessage) {
   if(theOscMessage.checkAddrPattern("/fontchange")==true) {
       fontPython = theOscMessage.arguments();
       println(fontPython[0].toString());
+      GeomFont = "Font/" + fontPython[0].toString();
       font = createFont("Font/" + fontPython[0].toString(), 38);
       text = "Ready!";
    }
@@ -503,4 +472,59 @@ float spreadMapping(float spread){
   else if (600 < spread && spread <= 800){output = map(spread,600,800,64.5,65);}
   else if (800 < spread){output = map(spread,800,1000,65,66);}
   return output;
+}
+
+
+void textShapesEffect() {
+  String[] lines = splitTextIntoLinesGeom(text, width - 1200);
+  float lineHeight = txtSize + 10; // Adjust the vertical spacing between lines as needed
+
+  RG.setPolygonizer(RG.UNIFORMLENGTH);
+  RG.setPolygonizerLength(map(mouseY, 0, height, 0, 200));
+
+  float totalTextHeight = lines.length * lineHeight;
+  float yOffset = (height - totalTextHeight) / 2; // Calculate the vertical offset for centering
+
+  for (int lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+    String line = lines[lineIndex];
+    grp = RG.getText(line, GeomFont, int(txtSize), CENTER);
+
+    float lineY = yOffset + lineIndex * lineHeight + totalTextHeight / 2 - (lines.length - 1) * lineHeight / 2;
+
+    for (int j = 0; j < grp.countChildren(); j++) {
+      points = grp.children[j].getPoints();
+      // If there are any points
+      if (points != null) {
+        fill(25);
+        beginShape();
+        for (int i = 0; i < points.length; i++) {
+          vertex(points[i].x, points[i].y + lineY);
+        }
+        endShape();
+      }
+    }
+  }
+}
+
+
+
+String[] splitTextIntoLinesGeom(String input, float lineWidth) {
+  String[] words = input.split("\\s+");
+  StringBuilder currentLine = new StringBuilder();
+  ArrayList<String> lines = new ArrayList<>();
+
+  for (String word : words) {
+    if (textWidth(currentLine + word) <= lineWidth) {
+      currentLine.append(word).append(" ");
+    } else {
+      lines.add(currentLine.toString().trim());
+      currentLine = new StringBuilder(word + " ");
+    }
+  }
+
+  if (currentLine.length() > 0) {
+    lines.add(currentLine.toString().trim());
+  }
+
+  return lines.toArray(new String[0]);
 }
