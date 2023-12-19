@@ -23,6 +23,12 @@ color rectHighlight;
 boolean rectOver = false;
 boolean geomActive = false;
 
+int geomX, geomY;      // Position of square button
+int geomSize = 90;     // Diameter of rect
+color geomColor;
+color geomHighlight;
+boolean geomOver = false;
+
 PImage uploadButton;
 PImage switchButton;
 
@@ -58,6 +64,8 @@ int restartTime = 0;
 PImage playimg;
 PImage pauseimg;
 PImage pyimg;
+PImage geomimg;
+PImage noVectimg;
 float max_distance;
 //ArrayList<String> receivedLyrics = new ArrayList<>();
 ArrayList<Object> dynamicLyric;
@@ -119,11 +127,18 @@ void setup() {
   playimg = loadImage("play.png");
   pauseimg = loadImage("pause.png");
   pyimg = loadImage("python.png");
+  geomimg = loadImage("geom.png");
+  noVectimg = loadImage("noVectorize.png");
   rectColor = color(255);
   rectHighlight = color(204);
   rectX = 20;
   rectY = 20;
   
+  geomColor = color(255);
+  geomHighlight = color(204);
+  geomX = width - geomSize - 20; 
+  geomY = height - geomSize - 20; 
+    
   // Geomerative stuff
   RG.init(this);
   grp = RG.getText(text, "/Font/Silkscreen-Regular.ttf", 120, CENTER);
@@ -137,9 +152,9 @@ void setup() {
   chooseY = 20;
   //chooseColor = color(255,0,0);
   //chooseHighlight = color(127,0,0);
-  switchButton = loadImage("switch.png");
-  switchX = width - switchSize - 20; 
-  switchY = height - switchSize - 20; 
+  //switchButton = loadImage("switch.png");
+  //switchX = width - switchSize - 20; 
+  //switchY = height - switchSize - 20; 
   
   font = createFont("Georgia", 38);
   
@@ -276,6 +291,21 @@ if (firstPlay || text == "Ready!") {
       image(pyimg, rectX+rectSize/4, rectY+rectSize/4, rectSize/2, rectSize/2);
   }
   
+  
+  if (geomOver) {
+    fill(geomHighlight);
+  } else {
+    fill(geomColor);
+  }
+  stroke(255);
+  rect(geomX, geomY, geomSize, geomSize);
+  
+  if (!geomActive) {
+  image(noVectimg, geomX-12, geomY-15, geomSize+22, geomSize+15);
+  } else {
+        image(geomimg, geomX, geomY, geomSize, geomSize);
+  }
+  
   // upload button
   if (mouseX > chooseX && mouseX < chooseX + chooseSize &&
       mouseY > chooseY && mouseY < chooseY + chooseSize) {
@@ -286,7 +316,7 @@ if (firstPlay || text == "Ready!") {
   
   // Draw the upload button image
   image(uploadButton, chooseX, chooseY, chooseSize, chooseSize);
-  image(switchButton, switchX, switchY, switchSize, switchSize);
+  //image(switchButton, switchX, switchY, switchSize, switchSize);
 } 
  
   
@@ -301,6 +331,12 @@ void update() {
     chooseOver = true;
   } else {
     chooseOver = false;
+  }
+  
+  if ( overRect(geomX, geomY, geomSize, geomSize) ) {
+    geomOver = true;
+  } else {
+    geomOver = false;
   }
 }
 
@@ -378,12 +414,11 @@ void mousePressed() {
       }
   }
   
-   if (mouseX > switchX && mouseX < switchX + switchSize &&
-      mouseY > switchY && mouseY < switchY + switchSize) {
+   if (mouseX > geomX && mouseX < geomX + geomSize &&
+      mouseY > geomY && mouseY < geomY + geomSize) {
     geomActive = !geomActive;
     println("Button pressed");
   }
-  
 }
 
 boolean overRect(int x, int y, int width, int height)  {
@@ -504,7 +539,6 @@ void textShapesEffect() {
     }
   }
 }
-
 
 
 String[] splitTextIntoLinesGeom(String input, float lineWidth) {
