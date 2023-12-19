@@ -521,10 +521,10 @@ void textShapesEffect() {
 
   for (int lineIndex = 0; lineIndex < lines.length; lineIndex++) {
     String line = lines[lineIndex];
+    int vectorizeOffset = 12;
+    grp = RG.getText(line, GeomFont, int(txtSize+4), CENTER);
 
-    grp = RG.getText(line, GeomFont, int(txtSize+2), CENTER);
-
-    float lineY = yOffset + lineIndex * lineHeight + totalTextHeight / 2 - (lines.length - 1) * lineHeight / 2;
+    float lineY = vectorizeOffset + yOffset + lineIndex * (lineHeight+10) + totalTextHeight / 2 - (lines.length - 1) * lineHeight / 2;
 
     for (int j = 0; j < grp.countChildren(); j++) {
       points = grp.children[j].getPoints();
@@ -541,8 +541,8 @@ void textShapesEffect() {
       }
     }
     
-    grp = RG.getText(line, GeomFont, int(txtSize), CENTER);
-    lineY = yOffset + lineIndex * lineHeight + totalTextHeight / 2 - (lines.length - 1) * lineHeight / 2;
+    grp = RG.getText(line, GeomFont, ceil(txtSize+1), CENTER);
+    lineY = vectorizeOffset + yOffset + lineIndex * (lineHeight+10) + totalTextHeight / 2 - (lines.length - 1) * lineHeight / 2;
 
     for (int j = 0; j < grp.countChildren(); j++) {
       points = grp.children[j].getPoints();
