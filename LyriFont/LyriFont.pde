@@ -243,7 +243,8 @@ textFont(font);
 textAlign(CENTER, CENTER);
 textFont(font);
 
-float lineVerticalSpacing = 10; 
+float lineVerticalSpacing = 50; 
+float margin = 900;
 
 if (firstPlay || text == "Ready!") {
   colorMode(RGB);
@@ -252,9 +253,9 @@ if (firstPlay || text == "Ready!") {
   text(text, width / 2, height / 2);
 } else {
   if (playing) {
-    float textWidthWithMargin = textWidth(text) + 1200; 
+    float textWidthWithMargin = textWidth(text) + margin; 
     if (textWidthWithMargin > width) {
-      String[] lines = splitTextIntoLines(text, width - 1200); 
+      String[] lines = splitTextIntoLines(text, width - margin); 
       
       // Glow Effect
       textSize(txtSize + 2);
