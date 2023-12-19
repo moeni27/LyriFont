@@ -232,7 +232,7 @@ if (firstPlay || text == "Ready!") {
         float y = height / 2 - (lines.length - 1) * (lineHeight + lineVerticalSpacing) / 2 + i * (lineHeight + lineVerticalSpacing);
         text(lines[i], width / 2, y);
       }
-      filter(BLUR, 1);
+      //filter(BLUR, 1);
 
       // Lyrics
       textSize(txtSize);
@@ -249,7 +249,7 @@ if (firstPlay || text == "Ready!") {
       colorMode(HSB, 360, 100, 100);
       fill(txtColor, 100, 100);
       text(text, width / 2, height / 2);
-      filter(BLUR, 1);
+      //filter(BLUR, 1);
 
       // Lyrics
       textSize(txtSize);
@@ -298,12 +298,12 @@ if (firstPlay || text == "Ready!") {
     fill(geomColor);
   }
   stroke(255);
-  rect(geomX, geomY, geomSize, geomSize);
+  rect(geomX, geomY, geomSize, geomSize, 28);
   
   if (!geomActive) {
-  image(noVectimg, geomX-12, geomY-15, geomSize+22, geomSize+15);
+    image(noVectimg, geomX-22, geomY-14, geomSize+42, geomSize+15);
   } else {
-        image(geomimg, geomX, geomY, geomSize, geomSize);
+    image(geomimg, geomX-8, geomY+1, geomSize+17, geomSize-1);
   }
   
   // upload button
@@ -521,7 +521,8 @@ void textShapesEffect() {
 
   for (int lineIndex = 0; lineIndex < lines.length; lineIndex++) {
     String line = lines[lineIndex];
-    grp = RG.getText(line, GeomFont, int(txtSize), CENTER);
+
+    grp = RG.getText(line, GeomFont, int(txtSize+2), CENTER);
 
     float lineY = yOffset + lineIndex * lineHeight + totalTextHeight / 2 - (lines.length - 1) * lineHeight / 2;
 
@@ -529,6 +530,25 @@ void textShapesEffect() {
       points = grp.children[j].getPoints();
       // If there are any points
       if (points != null) {
+        colorMode(HSB, 360, 100, 100);
+        fill(txtColor, 100, 100);
+        beginShape();
+        for (int i = 0; i < points.length; i++) {
+          vertex(points[i].x, points[i].y + lineY);
+        }
+        endShape();
+        //filter(BLUR, 1);
+      }
+    }
+    
+    grp = RG.getText(line, GeomFont, int(txtSize), CENTER);
+    lineY = yOffset + lineIndex * lineHeight + totalTextHeight / 2 - (lines.length - 1) * lineHeight / 2;
+
+    for (int j = 0; j < grp.countChildren(); j++) {
+      points = grp.children[j].getPoints();
+      // If there are any points
+      if (points != null) {
+        colorMode(RGB, 255, 255, 255);
         fill(255, 255, 255);
         beginShape();
         for (int i = 0; i < points.length; i++) {
@@ -537,6 +557,7 @@ void textShapesEffect() {
         endShape();
       }
     }
+    
   }
 }
 
