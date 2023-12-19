@@ -245,18 +245,16 @@ if (firstPlay || text == "Ready!") {
     }else{
     colorMode(RGB, 255, 255, 255);
                 fill(255,255,255);
-                translate(width/2, 0);
+                translate(width/2, 10);
                 /*text(firstLine, width / 2, height / 2 - 20); 
                 text(secondLine, width / 2, height / 2 + 20);*/
                 textShapesEffect();
-                translate(-width/2, 0);
+                translate(-width/2, -10);
     }
   } else {
     fill(0, 0, 0);
   }
 }
-
-
 
   if (rectOver) {
     fill(rectHighlight);
@@ -477,11 +475,11 @@ float spreadMapping(float spread){
 
 
 void textShapesEffect() {
-  String[] lines = splitTextIntoLinesGeom(text, width - 1200);
+  String[] lines = splitTextIntoLinesGeom(text, width - 900);
   float lineHeight = txtSize + 10; // Adjust the vertical spacing between lines as needed
 
   RG.setPolygonizer(RG.UNIFORMLENGTH);
-  RG.setPolygonizerLength(map(mouseY, 0, height, 0, 200));
+  RG.setPolygonizerLength(map(energyMapping(feat.energy), 0, height, 0, 40));
 
   float totalTextHeight = lines.length * lineHeight;
   float yOffset = (height - totalTextHeight) / 2; // Calculate the vertical offset for centering
