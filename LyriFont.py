@@ -9,6 +9,7 @@ from pythonosc import osc_server
 from pythonosc import dispatcher
 import sys
 from objsize import get_deep_size
+import config
 
 currentpath = sys.path[0]
 
@@ -31,9 +32,7 @@ def checkSize(array, default):
 
 def getSpotifyFont(artist):
 
-  client_id = "e118ebb8f8984e75b253ba9bb60e8da3"
-  client_secret = "0cca8ed331d24a17a9f22decbe2fa5d3"
-  client_credentials_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
+  client_credentials_manager = SpotifyClientCredentials(client_id=config.client_id, client_secret=config.client_secret)
   sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager) #spotify object to access API
   name = artist
   result = sp.search(name)
