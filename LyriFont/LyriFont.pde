@@ -70,6 +70,9 @@ float max_distance;
 //ArrayList<String> receivedLyrics = new ArrayList<>();
 ArrayList<Object> dynamicLyric;
 ArrayList<Object> dynamicTime;
+World world;
+int a;
+ArrayList<Blob> blobs = new ArrayList<Blob>();
 
 String getCurrentLine(Object[] timestamps, Object[] lines) {
     int current_time = millis()-startTime+elapsedTime;
@@ -163,6 +166,9 @@ void setup() {
   oscP5 = new OscP5(this,1234);
   oscP52 = new OscP5(this,1234);
   myRemoteLocation = new NetAddress("127.0.0.1", 5005);
+  
+  world = new World(20);
+  a = 0;
 }
 
 void draw() {
@@ -204,119 +210,127 @@ void draw() {
   }
   
  
-textAlign(CENTER, CENTER);
-textFont(font);
-
-float lineVerticalSpacing = 50; 
-float margin = 900;
-
-if (firstPlay || text == "Ready!") {
-  colorMode(RGB);
-  fill(255, 255, 255);
-  textSize(64);
-  text(text, width / 2, height / 2);
-} else {
-  if (playing) {
-    if (!geomActive){   
-    float textWidthWithMargin = textWidth(text) + margin; 
-    if (textWidthWithMargin > width) {
-      String[] lines = splitTextIntoLines(text, width - margin); 
-      
-      // Glow Effect
-      textSize(txtSize + 2);
-      colorMode(HSB, 360, 100, 100);
-      fill(txtColor, 100, 100);
-
-      float lineHeight = 40; 
-      for (int i = 0; i < lines.length; i++) {
-        float y = height / 2 - (lines.length - 1) * (lineHeight + lineVerticalSpacing) / 2 + i * (lineHeight + lineVerticalSpacing);
-        text(lines[i], width / 2, y);
-      }
-      //filter(BLUR, 1);
-
-      // Lyrics
-      textSize(txtSize);
-      colorMode(RGB, 255, 255, 255);
-      fill(255, 255, 255);
-
-      for (int i = 0; i < lines.length; i++) {
-        float y = height / 2 - (lines.length - 1) * (lineHeight + lineVerticalSpacing) / 2 + i * (lineHeight + lineVerticalSpacing);
-        text(lines[i], width / 2, y);
-      }
-    } else {
-      // Glow Effect
-      textSize(txtSize + 2);
-      colorMode(HSB, 360, 100, 100);
-      fill(txtColor, 100, 100);
-      text(text, width / 2, height / 2);
-      //filter(BLUR, 1);
-
-      // Lyrics
-      textSize(txtSize);
-      colorMode(RGB, 255, 255, 255);
-      fill(255, 255, 255);
-      text(text, width / 2, height / 2);
-    }
-    }else{
-    colorMode(RGB, 255, 255, 255);
-                fill(255,255,255);
-                translate(width/2, 10);
-                /*text(firstLine, width / 2, height / 2 - 20); 
-                text(secondLine, width / 2, height / 2 + 20);*/
-                textShapesEffect();
-                translate(-width/2, -10);
-    }
-  } else {
-    fill(0, 0, 0);
-  }
-}
-
-  if (rectOver) {
-    fill(rectHighlight);
-  } else {
-    fill(rectColor);
-  }
-  stroke(255);
-  rect(rectX, rectY, rectSize, rectSize);
+  textAlign(CENTER, CENTER);
+  textFont(font);
   
-  if (!firstPlay&&!playing) {
-  image(playimg, rectX+rectSize/4, rectY+rectSize/4, rectSize/2, rectSize/2);
+  float lineVerticalSpacing = 50; 
+  float margin = 900;
+  
+  if (firstPlay || text == "Ready!") {
+    colorMode(RGB);
+    fill(255, 255, 255);
+    textSize(64);
+    text(text, width / 2, height / 2);
   } else {
     if (playing) {
-        image(pauseimg, rectX+rectSize/4, rectY+rectSize/4, rectSize/2, rectSize/2);
+      if (!geomActive){   
+      float textWidthWithMargin = textWidth(text) + margin; 
+      if (textWidthWithMargin > width) {
+        String[] lines = splitTextIntoLines(text, width - margin); 
+        
+        // Glow Effect
+        textSize(txtSize + 2);
+        colorMode(HSB, 360, 100, 100);
+        fill(txtColor, 100, 100);
+  
+        float lineHeight = 40; 
+        for (int i = 0; i < lines.length; i++) {
+          float y = height / 2 - (lines.length - 1) * (lineHeight + lineVerticalSpacing) / 2 + i * (lineHeight + lineVerticalSpacing);
+          text(lines[i], width / 2, y);
+        }
+        //filter(BLUR, 1);
+  
+        // Lyrics
+        textSize(txtSize);
+        colorMode(RGB, 255, 255, 255);
+        fill(255, 255, 255);
+  
+        for (int i = 0; i < lines.length; i++) {
+          float y = height / 2 - (lines.length - 1) * (lineHeight + lineVerticalSpacing) / 2 + i * (lineHeight + lineVerticalSpacing);
+          text(lines[i], width / 2, y);
+        }
+      } else {
+        // Glow Effect
+        textSize(txtSize + 2);
+        colorMode(HSB, 360, 100, 100);
+        fill(txtColor, 100, 100);
+        text(text, width / 2, height / 2);
+        //filter(BLUR, 1);
+  
+        // Lyrics
+        textSize(txtSize);
+        colorMode(RGB, 255, 255, 255);
+        fill(255, 255, 255);
+        text(text, width / 2, height / 2);
+      }
+      }else{
+      colorMode(RGB, 255, 255, 255);
+                  fill(255,255,255);
+                  translate(width/2, 10);
+                  /*text(firstLine, width / 2, height / 2 - 20); 
+                  text(secondLine, width / 2, height / 2 + 20);*/
+                  textShapesEffect();
+                  translate(-width/2, -10);
+      }
+    } else {
+      fill(0, 0, 0);
     }
   }
   
-  if (firstPlay) {
-      image(pyimg, rectX+rectSize/4, rectY+rectSize/4, rectSize/2, rectSize/2);
-  }
-  
-  
-  if (geomOver) {
-    fill(geomHighlight);
-  } else {
-    fill(geomColor);
-  }
-  stroke(255);
-  rect(geomX, geomY, geomSize, geomSize, 28);
-  
-  if (!geomActive) {
-    image(noVectimg, geomX-22, geomY-14, geomSize+42, geomSize+15);
-  } else {
-    image(geomimg, geomX-8, geomY+1, geomSize+17, geomSize-1);
-  }
-  
-  // upload button
-  if (mouseX > chooseX && mouseX < chooseX + chooseSize &&
-      mouseY > chooseY && mouseY < chooseY + chooseSize) {
-    tint(200); // Dim the button when the mouse is over it
-  } else {
-    noTint();
-  }
-  
-  // Draw the upload button image
-  image(uploadButton, chooseX, chooseY, chooseSize, chooseSize);
-  //image(switchButton, switchX, switchY, switchSize, switchSize);
+    if (rectOver) {
+      fill(rectHighlight);
+    } else {
+      fill(rectColor);
+    }
+    stroke(255);
+    rect(rectX, rectY, rectSize, rectSize);
+    
+    if (!firstPlay&&!playing) {
+    image(playimg, rectX+rectSize/4, rectY+rectSize/4, rectSize/2, rectSize/2);
+    } else {
+      if (playing) {
+          image(pauseimg, rectX+rectSize/4, rectY+rectSize/4, rectSize/2, rectSize/2);
+      }
+    }
+    
+    if (firstPlay) {
+        image(pyimg, rectX+rectSize/4, rectY+rectSize/4, rectSize/2, rectSize/2);
+    }
+    
+    
+    if (geomOver) {
+      fill(geomHighlight);
+    } else {
+      fill(geomColor);
+    }
+    stroke(255);
+    rect(geomX, geomY, geomSize, geomSize, 28);
+    
+    if (!geomActive) {
+      image(noVectimg, geomX-22, geomY-14, geomSize+42, geomSize+15);
+    } else {
+      image(geomimg, geomX-8, geomY+1, geomSize+17, geomSize-1);
+    }
+    
+    // upload button
+    if (mouseX > chooseX && mouseX < chooseX + chooseSize &&
+        mouseY > chooseY && mouseY < chooseY + chooseSize) {
+      tint(200); // Dim the button when the mouse is over it
+    } else {
+      noTint();
+    }
+    
+    // Draw the upload button image
+    image(uploadButton, chooseX, chooseY, chooseSize, chooseSize);
+    //image(switchButton, switchX, switchY, switchSize, switchSize);
+    
+    world.run();
+    //new one every 15 frames
+    a = a + 1;
+    if (a == 15){
+      world.born(random(width/8, width-width/8),random(height));
+      a = 0;
+    }
 } 
  
   
@@ -409,6 +423,9 @@ void mousePressed() {
       }
     }
   } else {
+      if (mouseX>width/8 && mouseX<(width-width/8)) {
+        world.born(float(mouseX), float(mouseY));
+      }
       if (chooseOver) {
         selectInput("Select a file to process:", "fileSelected");
       }
@@ -581,4 +598,10 @@ String[] splitTextIntoLinesGeom(String input, float lineWidth) {
   }
 
   return lines.toArray(new String[0]);
+}
+
+void mouseDragged() {
+  if (mouseX>width/8 && mouseX<(width-width/8)) {
+    world.born(float(mouseX), float(mouseY));
+  }
 }
