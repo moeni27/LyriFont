@@ -54,6 +54,7 @@ float txtColor = 50;
 Object[] timestamps;
 Object[] lrc;
 Object[] fontPython;
+Object[] keywords;
 int currentLine = -1;
 boolean playing = false;
 boolean firstPlay = true;
@@ -70,6 +71,7 @@ float max_distance;
 //ArrayList<String> receivedLyrics = new ArrayList<>();
 ArrayList<Object> dynamicLyric;
 ArrayList<Object> dynamicTime;
+ArrayList<Object> dynamicKey;
 World world;
 int a;
 ArrayList<Blob> blobs = new ArrayList<Blob>();
@@ -477,6 +479,13 @@ void oscEvent(OscMessage theOscMessage) {
       font = createFont("Font/" + fontPython[0].toString(), 38);
       text = "Ready!";
    }
+   
+  if (theOscMessage.checkAddrPattern("/keywords") == true) {
+    keywords = theOscMessage.arguments();
+    println("Keywords:");
+    println(keywords);
+  }
+
 }
 // Features Functions 
  

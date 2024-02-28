@@ -97,7 +97,10 @@ def loadLyrics(unused_addr, args):
 
 # Extract lyric
 def extract_keywords_tfidf(sentence):
-    num_keywords = math.floor(len(sentence)/10)
+    if len(sentence) < 10:
+       num_keywords = len(sentence)
+    else:
+       num_keywords = math.floor(len(sentence)/10)
     vectorizer = TfidfVectorizer(stop_words='english')
     X = vectorizer.fit_transform([sentence])
     feature_names = vectorizer.get_feature_names_out()
@@ -131,6 +134,8 @@ def loadLyrics(unused_addr, args):
   # Example usage
   nouns = extract_nouns(result_key)
   print("Nouns:", nouns)
+  client.send_message("/keywords", nouns)
+  print(f"Keywords Sent")
   # end keyword extraction
   
   print("Lyrics and Timestamps Loaded!")
