@@ -1,3 +1,4 @@
+from sklearn.feature_extraction.text import TfidfVectorizer
 import argparse
 import syncedlyrics
 import os
@@ -10,6 +11,23 @@ from pythonosc import dispatcher
 import sys
 from objsize import get_deep_size
 import config
+import spacy
+import math
+
+# extract nouns
+def extract_nouns(sentence):
+    nlp = spacy.load("en_core_web_sm")
+    doc = nlp(sentence)
+
+    # Filter out repeated words and common punctuation
+    unique_nouns = set()
+    for token in doc:
+        if token.pos_ == "NOUN" and token.text.lower() not in unique_nouns and token.text not in ('\'','.', ',', '!', '?'):
+            unique_nouns.add(token.text.lower())
+
+    return list(unique_nouns)
+# end def
+
 
 currentpath = sys.path[0]
 
@@ -77,6 +95,17 @@ def loadLyrics(unused_addr, args):
   print("Lyrics and Timestamps Sent")
   '''
 
+# Extract lyric
+def extract_keywords_tfidf(sentence):
+    num_keywords = math.floor(len(sentence)/10)
+    vectorizer = TfidfVectorizer(stop_words='english')
+    X = vectorizer.fit_transform([sentence])
+    feature_names = vectorizer.get_feature_names_out()
+    keywords = [feature_names[i] for i in X.sum(axis=0).argsort()[0, ::-1][:num_keywords]]  # Adjust 5 to the desired number of keywords
+    #print("Keywords:",keywords)
+    return keywords
+# end def
+
 def loadLyrics(unused_addr, args):
   
   fname = os.path.basename(args)
@@ -94,6 +123,18 @@ def loadLyrics(unused_addr, args):
   millisec_ts = [int(x[0:2])*60000+int(x[3:5])*1000+int(x[6:9]+"0") for x in timestamps]
   
   print("Lyrics and Timestamps Loaded!")
+
+  # Keywords extraction
+  result_string = ' '.join(str(element) for element in lyrics)
+  keywords = extract_keywords_tfidf(result_string)
+  result_key = ' '.join(str(element) for element in keywords)
+  # Example usage
+  nouns = extract_nouns(result_key)
+  print("Nouns:", nouns)
+  # end keyword extraction
+  
+  print("Lyrics and Timestamps Loaded!")
+
 
 # Set the maximum number of characters per OSC message
   defaultSize = 40
