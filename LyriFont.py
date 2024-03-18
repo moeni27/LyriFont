@@ -105,36 +105,6 @@ def loadLyrics(unused_addr, args):
   print("Lyrics and Timestamps Sent")
   '''
 
-
-'''# extract nouns
-def extract_nouns(sentence):
-    nlp = spacy.load("en_core_web_sm")
-    doc = nlp(sentence)
-
-    # Filter out repeated words and common punctuation
-    unique_nouns = set()
-    for token in doc:
-        if token.pos_ == "NOUN" and token.text.lower() not in unique_nouns and token.text not in ('\'','.', ',', '!', '?'):
-            unique_nouns.add(token.text.lower())
-
-    return list(unique_nouns)
-# end def
-
-
-# Extract lyric
-def extract_keywords_tfidf(sentence):
-    if len(sentence) < 10:
-       num_keywords = len(sentence)
-    else:
-       num_keywords = math.floor(len(sentence)/10)
-    vectorizer = TfidfVectorizer(stop_words='english')
-    X = vectorizer.fit_transform([sentence])
-    feature_names = vectorizer.get_feature_names_out()
-    keywords = [feature_names[i] for i in X.sum(axis=0).argsort()[0, ::-1][:num_keywords]]  # Adjust 5 to the desired number of keywords
-    #print("Keywords:",keywords)
-    return keywords
-# end def'''
-
 def extract_keywords_tfidf(text):
     if len(text) > 10:
        max_keywords = 5
