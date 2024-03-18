@@ -13,20 +13,11 @@ from objsize import get_deep_size
 import config
 import spacy
 import math
-
-# extract nouns
-def extract_nouns(sentence):
-    nlp = spacy.load("en_core_web_sm")
-    doc = nlp(sentence)
-
-    # Filter out repeated words and common punctuation
-    unique_nouns = set()
-    for token in doc:
-        if token.pos_ == "NOUN" and token.text.lower() not in unique_nouns and token.text not in ('\'','.', ',', '!', '?'):
-            unique_nouns.add(token.text.lower())
-
-    return list(unique_nouns)
-# end def
+from PIL import Image
+from datetime import datetime
+import requests
+import io
+import random
 
 
 currentpath = sys.path[0]
@@ -69,6 +60,25 @@ def excel(genre):
         
       # Get the first element of the row in column A (assuming column A contains the desired data)
       return (df.iloc[index_of_first_occurrence, 0])
+  
+# Text to image generation  
+def text2image(prompt: str):
+      API_URL = ("https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5")
+      
+      headers = {"Authorization": f"Bearer {config.api_key}"}
+      payload = {
+             "inputs": prompt,
+      }
+      response = requests.post(API_URL, headers=headers, json=payload)
+      image_bytes = response.content
+
+      image = Image.open(io.BytesIO(image_bytes))
+
+      timestamps = datetime.now().strftime("%Y%m%d%H%M%S")
+      filename = f"{timestamps}.jpg"
+
+      image.save(filename)
+      return filename
 
 '''
 def loadLyrics(unused_addr, args):
@@ -95,6 +105,22 @@ def loadLyrics(unused_addr, args):
   print("Lyrics and Timestamps Sent")
   '''
 
+
+'''# extract nouns
+def extract_nouns(sentence):
+    nlp = spacy.load("en_core_web_sm")
+    doc = nlp(sentence)
+
+    # Filter out repeated words and common punctuation
+    unique_nouns = set()
+    for token in doc:
+        if token.pos_ == "NOUN" and token.text.lower() not in unique_nouns and token.text not in ('\'','.', ',', '!', '?'):
+            unique_nouns.add(token.text.lower())
+
+    return list(unique_nouns)
+# end def
+
+
 # Extract lyric
 def extract_keywords_tfidf(sentence):
     if len(sentence) < 10:
@@ -107,7 +133,28 @@ def extract_keywords_tfidf(sentence):
     keywords = [feature_names[i] for i in X.sum(axis=0).argsort()[0, ::-1][:num_keywords]]  # Adjust 5 to the desired number of keywords
     #print("Keywords:",keywords)
     return keywords
-# end def
+# end def'''
+
+def extract_keywords_tfidf(text):
+    if len(text) > 10:
+       max_keywords = 5
+    else:
+       max_keywords = 1
+    nlp = spacy.load("en_core_web_sm")
+    # Process the text
+    doc = nlp(text)
+    
+    # Extract nouns from the processed text
+    nouns = [token.text for token in doc if token.pos_ == "NOUN"]
+    
+    # Shuffle the list of nouns
+    random.shuffle(nouns)
+    
+    # Return only the first `max_keywords` nouns if specified
+    nouns = nouns[:max_keywords]
+    
+    return nouns
+
 
 def loadLyrics(unused_addr, args):
   
@@ -124,15 +171,22 @@ def loadLyrics(unused_addr, args):
   timestamps = [x[1:9] for x in lrc]
   lyrics = [x[11:len(x)] for x in lrc]
   millisec_ts = [int(x[0:2])*60000+int(x[3:5])*1000+int(x[6:9]+"0") for x in timestamps]
+
+  
   
   print("Lyrics and Timestamps Loaded!")
 
   # Keywords extraction
   result_string = ' '.join(str(element) for element in lyrics)
+  print(result_string)
   keywords = extract_keywords_tfidf(result_string)
-  result_key = ' '.join(str(element) for element in keywords)
-  # Example usage
-  nouns = extract_nouns(result_key)
+  nouns = ' '.join(str(element) for element in keywords)
+
+  for c in keywords:
+     text2image(c)
+
+  print("Images generated!")
+
   print("Nouns:", nouns)
   client.send_message("/keywords", nouns)
   print(f"Keywords Sent")
