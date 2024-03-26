@@ -26,6 +26,10 @@ currentpath = sys.path[0]
 excel_path = currentpath + "\\ML_Spreadsheet.xlsx" ##PATH LOCALE !!!!!!
 ##PATH LOCALE!!
 
+# Create a folder for Images
+folder_path = "LyriFont/Images"
+if not os.path.exists(folder_path):
+   os.makedirs(folder_path)
 ## Read the file
 df = pd.read_excel(excel_path, index_col=None, header=None)
 
@@ -62,23 +66,22 @@ def excel(genre):
       return (df.iloc[index_of_first_occurrence, 0])
   
 # Text to image generation  
-def text2image(prompt: str):
-      API_URL = ("https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5")
-      
-      headers = {"Authorization": f"Bearer {config.api_key}"}
-      payload = {
-             "inputs": prompt,
-      }
-      response = requests.post(API_URL, headers=headers, json=payload)
-      image_bytes = response.content
+def text2image(prompt: str, fname):
+    API_URL = "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5"
+    headers = {"Authorization": f"Bearer {config.api_key}"}
+    payload = {"inputs": prompt}
+    response = requests.post(API_URL, headers=headers, json=payload)
+    image_bytes = response.content
 
-      image = Image.open(io.BytesIO(image_bytes))
+    image = Image.open(io.BytesIO(image_bytes))
+    
+    timestamps = datetime.now().strftime("%Y%m%d%H%M%S")
+    name = fname+timestamps
+    filename = f"{name}.jpg"
+    filepath = os.path.join(folder_path, filename)
 
-      timestamps = datetime.now().strftime("%Y%m%d%H%M%S")
-      filename = f"{timestamps}.jpg"
-
-      image.save(filename)
-      return filename
+    image.save(filepath)
+    return filename
 
 '''
 def loadLyrics(unused_addr, args):
@@ -153,7 +156,7 @@ def loadLyrics(unused_addr, args):
   nouns = ' '.join(str(element) for element in keywords)
 
   for c in keywords:
-     text2image(c)
+     text2image(c, songname)
 
   print("Images generated!")
 

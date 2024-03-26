@@ -3,6 +3,9 @@ import netP5.*;
 import ddf.minim.*;
 import ddf.minim.analysis.*;
 import geomerative.*;
+import java.io.File;
+
+File folder;
 
 Minim minim;
 AudioPlayer song;  
@@ -49,6 +52,7 @@ String filepath;
 String text = "Load a song to start";
 String metaTitle;
 String metaArtist;
+int metaDuration;
 float txtSize = 64;
 float txtColor = 50;
 Object[] timestamps;
@@ -75,6 +79,21 @@ ArrayList<Object> dynamicKey;
 World world;
 int a;
 ArrayList<Blob> blobs = new ArrayList<Blob>();
+
+// BACKGROUND IMAGES
+PImage img;
+float PARTICLE_SIZE = 5;
+float RESOLUTION = 5;
+float MAX_FORCE = 5;
+float MIN_FORCE = 0;
+ArrayList<Particle> particles = new ArrayList<Particle>();
+int currentIndex = 0;
+int displayDuration = 5000; // 5 seconds in milliseconds
+int previousTime = 0;
+String[] imageFiles;
+
+boolean shouldDisplayImages = false; 
+
 
 String getCurrentLine(Object[] timestamps, Object[] lines) {
     int current_time = millis()-startTime+elapsedTime;
@@ -138,11 +157,13 @@ void setup() {
   rectHighlight = color(204);
   rectX = 20;
   rectY = 20;
+
   
   geomColor = color(255);
   geomHighlight = color(204);
   geomX = width - geomSize - 20; 
   geomY = height - geomSize - 20; 
+  
     
   // Geomerative stuff
   RG.init(this);
@@ -175,8 +196,26 @@ void setup() {
 
 void draw() {
   background(0);
-  update(); 
-   
+  // Check if shouldDisplayImages is true to display images
+  if (shouldDisplayImages && particles.size() > 0) {
+    for (Particle obj : particles) {
+      obj.update();
+      obj.draw();
+    }
+    filter(GRAY);
+    
+    displayDuration = metaDuration*50;
+    
+    if (millis() - previousTime >= displayDuration) {
+      // Move to the next image after 5 seconds
+      currentIndex = (currentIndex + 1) % imageFiles.length;
+      loadImageFromIndex(currentIndex);
+      spawnParticles();
+      previousTime = millis(); // Update the time
+    }
+  }
+  update();
+  
   for(int i = 0; i <= width; i += 20) {
     if ((i >= 0 && i <= width / 8) || (i >= (width * 7) / 8 && i <= width)) {
       for(int j = 0; j <= height; j += 20) {
@@ -199,12 +238,12 @@ void draw() {
     }
   }
   
+  
   if (songChosen) {
-  feat.reasoning(song.mix);  
-   
-  // Calculate text settings from audio features
-  txtSize = entropyMapping(feat.entropy);
-  txtColor = centroidMapping(feat.centroid);
+    feat.reasoning(song.mix);  
+    // Calculate text settings from audio features
+    txtSize = entropyMapping(feat.entropy);
+    txtColor = centroidMapping(feat.centroid);
   
     if (currentLine > -1 && playing) {
       text = getCurrentLine(timestamps, lrc);
@@ -334,6 +373,46 @@ void draw() {
       a = 0;
     }
 } 
+
+void loadImageFromIndex(int index) {
+  String imagePath = "Images/" + imageFiles[index];
+  img = loadImage(imagePath);
+}
+
+void spawnParticles() {
+  particles.clear(); // Clear previous particles
+  float offset = PARTICLE_SIZE/2;
+  for (int i = 0; i < img.width; i += RESOLUTION) {
+    for (int j = 0; j < img.height; j += RESOLUTION) {
+      color c = img.get(i, j);
+      particles.add(new Particle(i + (width / 2 - img.width / 2) + offset, j + (height / 2 - img.height / 2) + offset, c));
+    }
+  }
+}
+
+
+// Clear Images Folder when selecting a new song
+void clearFolder() {
+  // Specify the folder path you want to clear
+  String folderPath = sketchPath("Images");
+ 
+  // Initialize the folder
+  folder = new File(folderPath);
+  
+  // Check if the folder exists
+  if (folder.exists() && folder.isDirectory()) {
+    // Get list of files in the folder
+    File[] files = folder.listFiles();
+    
+    // Delete each file in the folder
+    for (File file : files) {
+      file.delete();
+    }
+    println("Folder cleared successfully.");
+  } else {
+    println("Folder does not exist or is not a directory.");
+  }
+}
  
   
 void update() {
@@ -392,8 +471,10 @@ void loadSong() {
    meta = song.getMetaData();
    metaTitle = meta.title();
    metaArtist =  meta.author();
+   metaDuration = song.length() / frameLength;
    println("Title: " + metaTitle);
    println("Artist: " + metaArtist);
+   println("Duration: " +  String.valueOf(song.length() / frameLength) + "s");
    text = "Song loaded!";
 }
 
@@ -410,8 +491,26 @@ void mousePressed() {
             myMessage.add(metaArtist + " - " + metaTitle+".mp3");
         }
         oscP5.send(myMessage, myRemoteLocation); 
+        
     }
     else if (songChosen) {
+      shouldDisplayImages = !shouldDisplayImages;
+    if (shouldDisplayImages) {
+      // Load images from the folder when the boolean variable becomes true
+      String folderPath = sketchPath("Images");
+      File folder = new File(folderPath);
+      if (!folder.exists() || !folder.isDirectory()) {
+        println("Error: Images folder not found or is not a directory");
+        return;
+      }
+      imageFiles = folder.list();
+      if (imageFiles == null || imageFiles.length == 0) {
+        println("Error: No image files found in the Images folder");
+        return;
+      }
+      loadImageFromIndex(0);
+      spawnParticles();
+    }
       if(playing){
         song.pause();
         elapsedTime = millis()-startTime+restartTime;
@@ -429,6 +528,7 @@ void mousePressed() {
         world.born(float(mouseX), float(mouseY));
       }
       if (chooseOver) {
+        clearFolder();        
         selectInput("Select a file to process:", "fileSelected");
       }
   }
