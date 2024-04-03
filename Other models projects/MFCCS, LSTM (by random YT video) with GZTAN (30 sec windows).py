@@ -62,7 +62,7 @@ X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2,random_state=
 
 num_labels=y.shape[1]
 
-'''# Creating the model
+# Creating the model
 model = Sequential()
 model.add(Dense(1024,input_shape=(40,), activation='relu'))
 model.add(Dropout(0.3))
@@ -105,9 +105,9 @@ print("Training completed in time: ", duration)
 model.save("GTZAN_MLP.h5")
 
 # Evaluating model
-model.evaluate(X_test,y_test,verbose=0)'''
+model.evaluate(X_test,y_test,verbose=0)
 
-# Loading pre-trained model
+'''# Loading pre-trained model
 model = tf.keras.models.load_model('GTZAN_MLP.h5')
 model.summary()
 
@@ -122,5 +122,5 @@ predicted_label=model.predict(mfccs_scaled_features)
 predicted_label=np.argmax(predicted_label,axis=1)
 prediction_class = labelencoder.inverse_transform(predicted_label)
 
-print(prediction_class)
+print(prediction_class)'''
 

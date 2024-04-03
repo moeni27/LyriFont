@@ -38,20 +38,20 @@ def preprocess(dataset_path,num_mfcc=40, n_fft=2048, hop_length=512, num_segment
                     data["labels"].append(label_idx-2)
     return data
 
-'''# Extracting MFCCs
+# Extracting MFCCs
 mfcc_data = preprocess("myData")
 
 # Preparing Training Data
 x = np.array(mfcc_data["mfcc"])
 y = np.array(mfcc_data["labels"])
 
-# Save for future use
+'''# Save for future use
 np.save("mfccs_array.npy",x)
-np.save("labels_array.npy",y)'''
+np.save("labels_array.npy",y)
 
 # Load already prepared data
 x = np.load("mfccs_array.npy")
-y = np.load("labels_array.npy")
+y = np.load("labels_array.npy")'''
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,train_size = 0.8, test_size = 0.2)
 x_train, x_val, y_train, y_val = train_test_split(x_train,y_train,test_size = 0.3)
