@@ -1,2 +1,0 @@
-# LyriFont
-LyriFont - CPAC Project
