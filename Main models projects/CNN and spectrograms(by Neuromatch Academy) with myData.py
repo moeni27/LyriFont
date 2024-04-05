@@ -33,6 +33,7 @@ def plot_loss_accuracy(train_loss, train_acc, validation_loss, validation_acc):
   ax2.legend()
   fig.set_size_inches(15.5, 5.5)
   plt.show()
+  plt.savefig('loss.png')
 
 def set_device():
   device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -55,7 +56,8 @@ class music_net(nn.Module):
     self.conv4 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, stride=1, padding=0)
     self.conv5 = nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3, stride=1, padding=0)
     self.fc1 = nn.Linear(in_features=9856, out_features=10)
-
+    # for mydata --> in_features=43520, out_features=11
+    # for data --> in_features=9856, out_features=10
     self.batchnorm1 = nn.BatchNorm2d(num_features=8)
     self.batchnorm2 = nn.BatchNorm2d(num_features=16)
     self.batchnorm3 = nn.BatchNorm2d(num_features=32)
@@ -163,13 +165,15 @@ def train(model, device, train_loader, validation_loader, epochs):
       validation_loss.append(running_loss/len(validation_loader))
       validation_acc.append(correct/total)
 
+  # save the trained model
+  torch.save(model,'../trained models/CNN_myData.pth')
   return train_loss, train_acc, validation_loss, validation_acc
 
 device = set_device()
 ## Create folder with training, testing and validation data.
 
-spectrograms_dir = "data/images_original/"
-folder_names = ['data/train/', 'data/test/', 'data/val/']
+spectrograms_dir = "myData/images_original/"
+folder_names = ['myData/train/', 'myData/test/', 'myData/val/']
 train_dir = folder_names[0]
 test_dir = folder_names[1]
 val_dir = folder_names[2]
