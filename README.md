@@ -16,6 +16,5 @@ Two dataset used : GZTAN and myData.
 - Try to see if the data needs normalization
 - For each song select a chunk of 30 seconds and use them. This means that during prediction each song should be also divided in chunks of 30 seconds and predicted separately.
 - For each song select a chunk of 30 seconds and use them mixed with GZTAN dataset.
-##### 2) Not clear how to predict elements with the CNN.
-##### 3) We should need to do spectrograms of myData of the same dimension of the one of GZTAN in order to have a more omogeneous comparison (also because every model on internet is optimized for GZTAN dataset).
-  
+##### 2) We should need to do spectrograms of myData of the same dimension of the one of GZTAN in order to have a more omogeneous comparison (also because every model on internet is optimized for GZTAN dataset).
+##### 3) When predicting a song with a model trained with GZTAN, split it in chuncks of 30 seconds and do an average on the results.
