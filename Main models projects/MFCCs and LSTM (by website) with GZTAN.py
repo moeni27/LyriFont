@@ -16,11 +16,11 @@ def preprocess(dataset_path,num_mfcc=40, n_fft=2048, hop_length=512, num_segment
     for label_idx, (dirpath,dirnames,filenames) in enumerate(os.walk(dataset_path)):
         if dirpath == dataset_path:
             continue
-        
         for f in sorted(filenames):
             if not f.endswith('.wav'):
                 continue
-            file_path = str(str(dirpath).split('\\')[-3]) + "/" + str(str(dirpath).split('\\')[-2]) + "/" + str(str(dirpath).split('\\')[-1]) + "/" + str(f)
+            # file_path = str(str(dirpath).split('\\')[-3]) + "/" + str(str(dirpath).split('\\')[-2]) + "/" + str(str(dirpath).split('\\')[-1]) + "/" + str(f)
+            file_path = dirpath + "/" + f
             print("Track Name", file_path)
 
             try:
@@ -44,6 +44,14 @@ mfcc_data = preprocess("data")
 x = np.array(mfcc_data["mfcc"])
 y = np.array(mfcc_data["labels"])
 
+# Save for future use
+np.save("trained models/MFCCs and LSTM with GZTAN/mfccs_array.npy",x)
+np.save("trained models/MFCCs and LSTM with GZTAN/labels_array.npy",y)
+
+'''# Load already prepared data
+x = np.load("trained models/MFCCs and LSTM with GZTAN/mfccs_array.npy")
+y = np.load("trained models/MFCCs and LSTM with GZTAN/labels_array.npy")'''
+
 x_train, x_test, y_train, y_test = train_test_split(x,y,train_size = 0.75, test_size = 0.25)
 x_train, x_val, y_train, y_val = train_test_split(x_train,y_train,test_size = 0.2)
 
@@ -57,23 +65,21 @@ model.add(tf.keras.layers.Dense(64, activation="relu"))
 model.add(tf.keras.layers.Dense(11,activation = "softmax"))
 
 # Compiling and Fitting the model
-optimiser = tf.keras.optimizers.Adam(lr=0.001)
+optimiser = tf.keras.optimizers.Adam(learning_rate=0.001)
 model.compile(optimizer=optimiser,
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
 model.summary()
 model.fit(x_train, y_train, validation_data=(x_val, y_val), batch_size=32, epochs=60, verbose=2)
-model.save("GTZAN_LSTM.h5")
+model.save("trained models/MFCCs and LSTM with GZTAN/model.h5")
 
 '''# Loading pre-trained model
-model = tf.keras.models.load_model('GTZAN_LSTM.h5')
+model = tf.keras.models.load_model('trained models/MFCCs and LSTM with GZTAN/model.h5')
 model.summary()'''
 
 # Evaluate model
 y_pred = model.predict(x_test)
-print(y_pred)
 y_pred = np.argmax(y_pred, axis=1)
-print(y_pred)
 
 result = np.sum(y_pred==y_test)/len(y_pred)
-print(result)
+print(result) #0.8013616339607529

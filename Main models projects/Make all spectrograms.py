@@ -1,61 +1,85 @@
-# Import necessary libraries.
-import os
-os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
-import glob
-import random, shutil
-import torch
-import torch.nn as nn
-from tqdm.notebook import tqdm
-import torch.nn.functional as F
-import torchvision.datasets as datasets
-import torchvision.transforms as transforms
-import numpy as np
-import matplotlib.pyplot as plt
-import IPython.display as display
+# Music Genre Recognition with Deep Learning
+import math
+import json
 import librosa
-import librosa.display
+import os
+import numpy as np
+import tensorflow as tf
+from sklearn.model_selection import train_test_split
 
-# Path to the dataset
-dataset_path = 'myData/genres_original'
 
-# Path to save the spectrogram images
-output_path = 'myData/images_original'
+def preprocess(dataset_path,num_mfcc=40, n_fft=2048, hop_length=512, num_segment=10):
+    data = {"labels": [], "mfcc": []}
+    sample_rate = 22050
+    samples_per_segment = int(sample_rate*30/num_segment)
 
-# Function to create mel spectrogram and save as image
-def create_mel_spectrogram(audio_file, output_file):
-    y, sr = librosa.load(audio_file)
-    mel_spec = librosa.feature.melspectrogram(y=y, sr=sr)
-    mel_spec_db = librosa.amplitude_to_db(mel_spec, ref=np.max)
-    plt.figure(figsize=(15, 5))
-    ax = plt.axes()
-    ax.set_axis_off()
-    plt.set_cmap('hot')
-    librosa.display.specshow(mel_spec_db, sr=sr, hop_length=512, x_axis='time', y_axis='log')
-    plt.savefig(output_file, bbox_inches='tight', transparent=True, pad_inches=0.0 )
-    plt.close()
+    for label_idx, (dirpath,dirnames,filenames) in enumerate(os.walk(dataset_path)):
+        if dirpath == dataset_path:
+            continue
+        for f in sorted(filenames):
+            if not f.endswith('.wav'):
+                continue
+            # file_path = str(str(dirpath).split('\\')[-3]) + "/" + str(str(dirpath).split('\\')[-2]) + "/" + str(str(dirpath).split('\\')[-1]) + "/" + str(f)
+            file_path = dirpath + "/" + f
+            print("Track Name", file_path)
 
-# Create output directory if not exist
-if not os.path.exists(output_path):
-    os.makedirs(output_path)
+            try:
+                y, sr = librosa.load(file_path, sr = sample_rate)
+            except:
+                continue
+            for n in range(num_segment):
+                mfcc = librosa.feature.mfcc(y = y[samples_per_segment*n: samples_per_segment*(n+1)],
+                                            sr = sample_rate, n_mfcc = num_mfcc, n_fft = n_fft,
+                                            hop_length = hop_length)
+                mfcc = mfcc.T
+                if len(mfcc) == math.ceil(samples_per_segment / hop_length):
+                    data["mfcc"].append(mfcc.tolist())
+                    data["labels"].append(label_idx-1)
+    return data
 
-# Iterate through each genre directory
-for genre_folder in os.listdir(dataset_path):
-    genre_path = os.path.join(dataset_path, genre_folder)
-    output_genre_path = os.path.join(output_path, genre_folder)
-    
-    # Create genre output directory if not exist
-    if not os.path.exists(output_genre_path):
-        os.makedirs(output_genre_path)
-    
-    # Iterate through each song in the genre folder
-    for song_file in os.listdir(genre_path):
-        if song_file.endswith('.mp3'):
-            song_path = os.path.join(genre_path, song_file)
-            
-            # Construct output file path
-            file_number = song_file.split('.')[0]
-            output_file = os.path.join(output_genre_path, song_file + '.png')
-            
-            # Create mel spectrogram and save as image
-            create_mel_spectrogram(song_path, output_file)
-            print(f'Spectrogram generated for: {output_file}')
+'''# Extracting MFCCs
+mfcc_data = preprocess("data")
+
+# Preparing Training Data
+x = np.array(mfcc_data["mfcc"])
+y = np.array(mfcc_data["labels"])
+
+# Save for future use
+np.save("trained models/MFCCs and LSTM with GZTAN/mfccs_array.npy",x)
+np.save("trained models/MFCCs and LSTM with GZTAN/labels_array.npy",y)
+
+'''# Load already prepared data
+x = np.load("trained models/MFCCs and LSTM with GZTAN/mfccs_array.npy")
+y = np.load("trained models/MFCCs and LSTM with GZTAN/labels_array.npy")
+
+x_train, x_test, y_train, y_test = train_test_split(x,y,train_size = 0.75, test_size = 0.25)
+x_train, x_val, y_train, y_val = train_test_split(x_train,y_train,test_size = 0.2)
+
+input_shape = (x_train.shape[1],x_train.shape[2])
+
+# Training simple LSTM classifier
+model = tf.keras.Sequential()
+model.add(tf.keras.layers.LSTM(64, input_shape = input_shape, return_sequences = True))
+model.add(tf.keras.layers.LSTM(64))
+model.add(tf.keras.layers.Dense(64, activation="relu"))
+model.add(tf.keras.layers.Dense(11,activation = "softmax"))
+
+# Compiling and Fitting the model
+optimiser = tf.keras.optimizers.Adam(learning_rate=0.001)
+model.compile(optimizer=optimiser,
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+model.summary()
+model.fit(x_train, y_train, validation_data=(x_val, y_val), batch_size=32, epochs=60, verbose=2)
+model.save("trained models/MFCCs and LSTM with GZTAN/model.h5")
+
+'''# Loading pre-trained model
+model = tf.keras.models.load_model('trained models/MFCCs and LSTM with GZTAN/model.h5')
+model.summary()'''
+
+# Evaluate model
+y_pred = model.predict(x_test)
+y_pred = np.argmax(y_pred, axis=1)
+
+result = np.sum(y_pred==y_test)/len(y_pred)
+print(result) #0.8013616339607529
