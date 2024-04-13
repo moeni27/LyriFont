@@ -18,6 +18,9 @@ from datetime import datetime
 import requests
 import io
 import random
+import librosa
+import tensorflow as tf
+import numpy as np
 
 
 currentpath = sys.path[0]
@@ -42,6 +45,55 @@ def checkSize(array, default):
       k += 1
     return k
   else: return default  
+
+# Preprocess audio before prediction
+def preprocess_song(file_path,num_mfcc=40, n_fft=2048, hop_length=512, num_segment=10,offset=0,duration=30,param=False):
+    sample_rate = 22050
+    samples_per_segment = int(sample_rate*30/num_segment)
+
+    try:
+        if(param):
+            y, sr = librosa.load(file_path, sr = sample_rate,offset=offset,duration=duration)
+        else:
+            y, sr = librosa.load(file_path, sr = sample_rate)
+    except:
+        return None
+    for n in range(num_segment):
+        mfcc = librosa.feature.mfcc(y = y[samples_per_segment*n: samples_per_segment*(n+1)],
+                                    sr = sample_rate, n_mfcc = num_mfcc, n_fft = n_fft,
+                                    hop_length = hop_length)
+        mfcc = mfcc.T
+        if len(mfcc) == math.ceil(samples_per_segment / hop_length):
+            return mfcc.tolist();
+
+    return None
+
+# Association genre-number in DL model
+def genreConversionGZTAN(genreNumber):
+    genre = ""
+    match genreNumber:
+        case 1:
+            genre = "Pop" # was blues
+        case 2:
+            genre = "Rock" # was classical
+        case 3:
+            genre = "Metal" # was country
+        case 4:
+            genre = "Hiphop" # was disco
+        case 5:
+            genre = "Reggae" # was hiphop
+        case 6:
+            genre = "Blues" # was jazz
+        case 7:
+            genre = "Classical" # was metal
+        case 8:
+            genre = "Jazz" # was pop
+        case 9:
+            genre = "Disco" # was reggae
+        case 10:
+            genre = "Country" # was rock
+    print("The genre of the song is : " + genre)
+    return genre
 
 def getSpotifyFont(artist):
 
@@ -135,7 +187,46 @@ def loadLyrics(unused_addr, args):
   artistname = fname.split(" - ")[0]
   songname = os.path.splitext("".join(fname.split(" - ")[1:]))[0]
   
-  genre = getSpotifyFont(artistname)
+  song_path = "Songs/" + fname
+  # Load pre-trained model for genre recognition
+  model = tf.keras.models.load_model('model.h5')
+  n_of_chunks = 5
+  predictions = np.zeros((1, 11))
+
+  for x in range(0,n_of_chunks):
+
+    offset = 30*(x+1)
+    duration = 30
+
+    # Prepare input song data
+    x_test_1 = preprocess_song(song_path,offset=offset,duration=duration,param=True) 
+    if(x_test_1 == None):
+        x_test_1 = preprocess_song(song_path,param=False)
+        if(x_test_1 == None):
+            n_of_chunks = x
+            break
+    x_test_1 = np.array(x_test_1)
+    x_test_1 = x_test_1.reshape(1,130,40)
+
+    # Predict song genre
+    y_pred = model.predict(x_test_1)
+    predictions = predictions + y_pred
+    print("Chunk " + str(x+1))
+    pred = np.argmax(y_pred, axis=1)
+    genreConversionGZTAN(pred)
+    print("Value : " + str(y_pred[0,pred]))
+
+  print(n_of_chunks)
+  predictions = predictions/n_of_chunks
+  print("Final ")
+  final_pred = np.argmax(predictions, axis=1)
+  genre = genreConversionGZTAN(final_pred)
+  value = predictions[0,final_pred]
+  print("Value : " + str(value))
+
+  if (value < 0.85):
+    genre = getSpotifyFont(artistname)
+    print("Genre taken by Spotify")
   print(genre)
   songFont = excel(genre)
 
