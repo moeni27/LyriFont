@@ -4,6 +4,7 @@ class Particle {
   color c;
   float targetX;
   float targetY;
+  float jigglefactor = 0.25;
 
   Particle(float x, float y, color c) {
     this.x = x;
@@ -38,8 +39,8 @@ class Particle {
       force.add(particle2target);
     }
     
-    this.x += force.x;
-    this.y += force.y;
+    this.x += force.x+random(-jigglefactor, jigglefactor);
+    this.y += force.y+random(-jigglefactor, jigglefactor);
     
   }
   
