@@ -11,17 +11,17 @@ class World {
 
   //new blob
   void born(Float x, Float y) {
-    PVector l = new PVector(x,y); 
     Float[] randgene = {1.1};
     DNA dna = new DNA(randgene);
+    PVector l = new PVector(x,y); 
     blobs.add(new Blob(l, dna));
   }
 
- void run() {
+ void run(float centroidcolor) {
 
     for (int i = blobs.size() - 1; i >= 0; i--) {
       Blob b = blobs.get(i);
-      b.run();
+      b.run(centroidcolor);
       if (b.dead()) {
         b.makeSmall();
         blobs.remove(i);
@@ -53,9 +53,9 @@ public class Blob {
     r = map(dna.genes[0], 0, 1, 0, 50);
   }
 
-  void run() {
+  void run(float centroidcolor) {
     this.update();
-    this.display();
+    this.display(centroidcolor);
   }
 
   Blob reproduce() {
@@ -82,7 +82,7 @@ public class Blob {
     Float vx = map(noise(this.xoff), 0, 1, -this.maxspeed, this.maxspeed);
     Float vy = map(noise(this.yoff), 0, 1, -this.maxspeed, this.maxspeed);
     
-    if (position.x > width-width / 8 || position.x < width / 8) {
+    if (position.x > width-width / 8-this.r || position.x < width / 8+this.r) {
       vx *= -1;
       vx = 0.0;
     }
@@ -101,11 +101,10 @@ public class Blob {
     }
   }
 
-  void display() {
-    //maybe add a trail?
+  void display(float centroidcolor) {
     ellipseMode(CENTER);
-    stroke(50, this.health,180);
-    fill(50, this.health,180);
+    stroke(centroidcolor, this.health,180);
+    fill(centroidcolor, this.health,180);
     ellipse(this.position.x, this.position.y, this.r, this.r);
   }
 

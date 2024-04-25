@@ -134,31 +134,7 @@ def text2image(prompt: str, fname):
 
     image.save(filepath)
     return filename
-
-'''
-def loadLyrics(unused_addr, args):
-  
-  fname = os.path.basename(args)
-  artistname = fname.split(" - ")[0]
-  songname = os.path.splitext("".join(fname.split(" - ")[1:]))[0]
-  
-  genre = getSpotifyFont(artistname)
-  print(genre)
-  songFont = excel(genre)
-
-  print("Loading Lyrics and Timestamps...")
-  lrc = syncedlyrics.search("["+artistname+"] ["+songname+"]").splitlines()
-  timestamps = [x[1:9] for x in lrc]
-  lyrics = [x[11:len(x)] for x in lrc]
-  
-  print("Lyrics and Timestamps Loaded!")
-  millisec_ts = [int(x[0:2])*60000+int(x[3:5])*1000+int(x[6:9]+"0") for x in timestamps]
-
-  client.send_message("/timestamps", millisec_ts)
-  client.send_message("/lyrics", lyrics)
-  client.send_message("/fontchange", songFont)
-  print("Lyrics and Timestamps Sent")
-  '''
+    
 
 def extract_keywords_tfidf(text):
     if len(text) > 10:

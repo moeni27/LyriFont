@@ -196,6 +196,16 @@ void setup() {
 
 void draw() {
   background(0);
+   if (playing) {
+       world.run(centroidMapping(feat.centroid));
+   }
+  world.run(200);
+    //new one every 15 frames
+    a = a + 1;
+    if (a == 15){
+      world.born(random(width/8, width-width/8),random(height));
+      a = 0;
+    }
   // Check if shouldDisplayImages is true to display images
   if (shouldDisplayImages && particles.size() > 0) {
     for (Particle obj : particles) {
@@ -364,14 +374,6 @@ void draw() {
     // Draw the upload button image
     image(uploadButton, chooseX, chooseY, chooseSize, chooseSize);
     //image(switchButton, switchX, switchY, switchSize, switchSize);
-    
-    world.run();
-    //new one every 15 frames
-    a = a + 1;
-    if (a == 15){
-      world.born(random(width/8, width-width/8),random(height));
-      a = 0;
-    }
 } 
 
 void loadImageFromIndex(int index) {
