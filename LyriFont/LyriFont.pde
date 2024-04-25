@@ -173,7 +173,7 @@ void setup() {
   dynamicLyric = new ArrayList<Object>();
   dynamicTime = new ArrayList<Object>();
   
-  uploadButton = loadImage("cloud-upload.png");  
+  uploadButton = loadImage("upload.png");  
   chooseX = width-chooseSize-20;
   chooseY = 20;
   //chooseColor = color(255,0,0);
@@ -334,7 +334,7 @@ void draw() {
       fill(rectColor);
     }
     stroke(255);
-    rect(rectX, rectY, rectSize, rectSize);
+    rect(rectX, rectY, rectSize, rectSize,28);
     
     if (!firstPlay&&!playing) {
     image(playimg, rectX+rectSize/4, rectY+rectSize/4, rectSize/2, rectSize/2);
@@ -372,7 +372,10 @@ void draw() {
     }
     
     // Draw the upload button image
+    rect(chooseX, chooseY, chooseSize, chooseSize, 28);
     image(uploadButton, chooseX, chooseY, chooseSize, chooseSize);
+    
+    
     //image(switchButton, switchX, switchY, switchSize, switchSize);
 } 
 
