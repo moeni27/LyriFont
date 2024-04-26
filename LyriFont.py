@@ -25,12 +25,10 @@ import numpy as np
 
 currentpath = sys.path[0]
 
-##PATH LOCALE!!!
-excel_path = currentpath + "\\ML_Spreadsheet.xlsx" ##PATH LOCALE !!!!!!
-##PATH LOCALE!!
+excel_path = os.path.join(currentpath, "ML_Spreadsheet.xlsx") 
 
 # Create a folder for Images
-folder_path = currentpath + "\\LyriFont/Images"
+folder_path = os.path.join(currentpath, "LyriFont/Images")
 if not os.path.exists(folder_path):
    os.makedirs(folder_path)
 ## Read the file
@@ -164,9 +162,9 @@ def loadLyrics(unused_addr, args):
   artistname = fname.split(" - ")[0]
   songname = os.path.splitext("".join(fname.split(" - ")[1:]))[0]
   
-  song_path = "Songs/" + fname
+  song_path = os.path.join("Songs", fname)
   # Load pre-trained model for genre recognition
-  model = tf.keras.models.load_model(currentpath + "\\model.keras")
+  model = tf.keras.models.load_model(os.path.join(currentpath, "model.keras"))
   n_of_chunks = 5
   predictions = np.zeros((1, 11))
 
