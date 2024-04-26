@@ -30,7 +30,7 @@ excel_path = currentpath + "\\ML_Spreadsheet.xlsx" ##PATH LOCALE !!!!!!
 ##PATH LOCALE!!
 
 # Create a folder for Images
-folder_path = "LyriFont/Images"
+folder_path = currentpath + "\\LyriFont/Images"
 if not os.path.exists(folder_path):
    os.makedirs(folder_path)
 ## Read the file
@@ -118,7 +118,7 @@ def excel(genre):
       return (df.iloc[index_of_first_occurrence, 0])
   
 # Text to image generation  
-def text2image(prompt: str, fname):
+def text2image(prompt: str, fnameimage):
     API_URL = "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5"
     headers = {"Authorization": f"Bearer {config.api_key}"}
     payload = {"inputs": prompt}
@@ -128,9 +128,10 @@ def text2image(prompt: str, fname):
     image = Image.open(io.BytesIO(image_bytes))
     
     timestamps = datetime.now().strftime("%Y%m%d%H%M%S")
-    name = fname+timestamps
+    name = fnameimage+timestamps
     filename = f"{name}.jpg"
     filepath = os.path.join(folder_path, filename)
+    
 
     image.save(filepath)
     return filename
@@ -165,7 +166,7 @@ def loadLyrics(unused_addr, args):
   
   song_path = "Songs/" + fname
   # Load pre-trained model for genre recognition
-  model = tf.keras.models.load_model('model.h5')
+  model = tf.keras.models.load_model(currentpath + "\\model.keras")
   n_of_chunks = 5
   predictions = np.zeros((1, 11))
 
@@ -211,8 +212,6 @@ def loadLyrics(unused_addr, args):
   timestamps = [x[1:9] for x in lrc]
   lyrics = [x[11:len(x)] for x in lrc]
   millisec_ts = [int(x[0:2])*60000+int(x[3:5])*1000+int(x[6:9]+"0") for x in timestamps]
-
-  
   
   print("Lyrics and Timestamps Loaded!")
 
