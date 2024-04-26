@@ -162,7 +162,7 @@ def loadLyrics(unused_addr, args):
   artistname = fname.split(" - ")[0]
   songname = os.path.splitext("".join(fname.split(" - ")[1:]))[0]
   
-  song_path = os.path.join("Songs", fname)
+  song_path = os.path.join(currentpath, os.path.join("Songs", fname))
   # Load pre-trained model for genre recognition
   model = tf.keras.models.load_model(os.path.join(currentpath, "model.keras"))
   n_of_chunks = 5
