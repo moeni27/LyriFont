@@ -103,8 +103,17 @@ public class Blob {
 
   void display(float centroidcolor) {
     ellipseMode(CENTER);
-    stroke(centroidcolor, this.health,180);
-    fill(centroidcolor, this.health,180);
+    if(centroidcolor==200){
+      colorMode(HSB, 360, 100, 100);
+          stroke(360*abs(cos(millis()*0.0001)), this.health,this.health);
+          fill(360*abs(cos(millis()*0.0001)), this.health,this.health);
+      colorMode(RGB, 255, 255, 255);
+    } else {
+      colorMode(HSB, 360, 100, 100);
+          stroke(centroidcolor*0.5, this.health,this.health);
+          fill(centroidcolor*0.5, this.health,this.health);
+      colorMode(RGB, 255, 255, 255);
+    }
     ellipse(this.position.x, this.position.y, this.r, this.r);
   }
 

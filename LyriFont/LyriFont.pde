@@ -86,6 +86,8 @@ float PARTICLE_SIZE = 5;
 float RESOLUTION = 5;
 float MAX_FORCE = 5;
 float MIN_FORCE = 0;
+float COUNTER = 0;
+boolean DEAD = false;
 ArrayList<Particle> particles = new ArrayList<Particle>();
 int currentIndex = 0;
 int displayDuration = 5000; // 5 seconds in milliseconds
@@ -198,8 +200,9 @@ void draw() {
   background(0);
    if (playing) {
        world.run(centroidMapping(feat.centroid));
+   } else {
+       world.run(200);
    }
-  world.run(200);
     //new one every 15 frames
     a = a + 1;
     if (a == 15){
@@ -212,9 +215,15 @@ void draw() {
       obj.update();
       obj.draw();
     }
-    filter(GRAY);
+    //filter(GRAY);
     
     displayDuration = metaDuration*50;
+    
+    //makes image fade out
+    if (millis() - previousTime >= displayDuration-1000&&!DEAD) {
+      DEAD = true;
+      print(DEAD);
+    }
     
     if (millis() - previousTime >= displayDuration) {
       // Move to the next image after 5 seconds
@@ -241,7 +250,11 @@ void draw() {
         } else {
           float size = dist(width/2, height/2, i, j);
           size = size/(max_distance*2)*10;
+          colorMode(HSB, 360, 100, 100);
+          fill(360*abs(cos(millis()*0.0001)), 100, 100);
+          stroke(0);
           ellipse(i, j, size, size);
+          colorMode(RGB, 255, 255, 255);
         }
         
       }
@@ -385,12 +398,15 @@ void loadImageFromIndex(int index) {
 }
 
 void spawnParticles() {
+  DEAD = false;
+  COUNTER=0;
   particles.clear(); // Clear previous particles
   float offset = PARTICLE_SIZE/2;
+  PVector randomTarget = new PVector(random(-(width*3)/8+img.width/2+PARTICLE_SIZE,(width*3)/8-img.width/2-PARTICLE_SIZE),random(-height/2+img.height/2,height/2-img.height/2));
   for (int i = 0; i < img.width; i += RESOLUTION) {
     for (int j = 0; j < img.height; j += RESOLUTION) {
       color c = img.get(i, j);
-      particles.add(new Particle(i + (width / 2 - img.width / 2) + offset, j + (height / 2 - img.height / 2) + offset, c));
+      particles.add(new Particle(i + (width / 2 - img.width / 2) + offset, j + (height / 2 - img.height / 2) + offset, c, randomTarget));
     }
   }
 }
