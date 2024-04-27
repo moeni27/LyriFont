@@ -16,7 +16,7 @@ class Particle {
   
   void update() {
     
-    if(COUNTER<1 && !DEAD) {
+    if(COUNTER<1&&!DEAD) {
       COUNTER+=0.000001; 
     } else if (DEAD && COUNTER>0) {
       COUNTER-=0.000005;
