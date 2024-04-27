@@ -222,11 +222,9 @@ void draw() {
     //makes image fade out
     if (millis()-startTime+elapsedTime - previousTime >= displayDuration-1000&&!DEAD) {
       DEAD = true;
-      print(DEAD);
     }
-    print("    "+str(millis()-startTime+elapsedTime - previousTime)+"   ");
+
     if (millis()-startTime+elapsedTime - previousTime >= displayDuration) {
-      print("newpic");
       // Move to the next image after 5 seconds
       currentIndex = (currentIndex + 1) % imageFiles.length;
       loadImageFromIndex(currentIndex);
@@ -478,9 +476,11 @@ void fileSelected(File selection) {
   if (selection == null) {
     println("Window was closed or the user hit cancel.");
   } else {
+    shouldDisplayImages = false;
     filepath = selection.getPath();
     println("User selected " + selection.getPath());
     reset();
+    clearFolder();
     loadSong();
   }
 }
@@ -548,7 +548,6 @@ void mousePressed() {
       world.born(float(mouseX), float(mouseY));
     }
     if (chooseOver) {
-      clearFolder();
       selectInput("Select a file to process:", "fileSelected");
     }
   }
