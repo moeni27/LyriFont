@@ -96,6 +96,8 @@ String[] imageFiles;
 
 boolean shouldDisplayImages = false;
 
+//["Pop","Rock","Metal","Hiphop","Reggae","Blues","Classical","Jazz","Disco","Country"]
+float[] genreColors = {30, 70, 100, 130, 150, 200,240, 270, 300, 340};
 
 String getCurrentLine(Object[] timestamps, Object[] lines) {
   int current_time = millis()-startTime+elapsedTime;
@@ -147,6 +149,8 @@ String[] splitTextIntoLines(String input, float lineWidth) {
 
 
 void setup() {
+  //size(1500, 750);
+  //surface.setResizable(true);
   size(1500, 500);
   max_distance = dist(0, 0, width, height);
   frameRate(25);
@@ -199,9 +203,9 @@ void setup() {
 void draw() {
   background(0);
   if (playing) {
-    world.run(centroidMapping(feat.centroid));
+    world.run(centroidMapping(feat.centroid), spreadMapping(feat.spread));
   } else {
-    world.run(200);
+    world.run(200,1);
   }
   //new one every 15 frames
   a = a + 1;
@@ -212,7 +216,7 @@ void draw() {
   // Check if shouldDisplayImages is true to display images
   if (shouldDisplayImages&&playing) {
     for (Particle obj : particles) {
-      obj.update();
+      obj.update(flatnessMapping(feat.flatness));
       obj.draw();
     }
     //filter(GRAY);
@@ -242,7 +246,7 @@ void draw() {
           float size = dist(width/2, height/2, i, j);
           size = size*map(energyMapping(feat.energy), 0, 66, 0, 0.1)/max_distance*66;
           colorMode(HSB, 360, 100, 100);
-          fill(centroidMapping(feat.centroid), 100, 100);
+          fill(centroidMapping(feat.centroid), 100-skewnessMapping(feat.skewness), 100);
           stroke(0);
           ellipse(i, j, size, size);
           colorMode(RGB, 255, 255, 255);
@@ -293,7 +297,7 @@ void draw() {
           // Glow Effect
           textSize(txtSize + 2);
           colorMode(HSB, 360, 100, 100);
-          fill(txtColor, 100, 100);
+          fill(txtColor, 100-skewnessMapping(feat.skewness), 100);
 
           float lineHeight = 40;
           for (int i = 0; i < lines.length; i++) {
@@ -315,7 +319,7 @@ void draw() {
           // Glow Effect
           textSize(txtSize + 2);
           colorMode(HSB, 360, 100, 100);
-          fill(txtColor, 100, 100);
+          fill(txtColor, 100-skewnessMapping(feat.skewness), 100);
           text(text, width / 2, height / 2);
           //filter(BLUR, 1);
 
@@ -615,7 +619,6 @@ void oscEvent(OscMessage theOscMessage) {
 // Features Functions
 
 // Entropy goes approximately from  0 (usually only when there is silence, otherwise it has a minimum value between around 50 and 200) to a maximum around 800/1000.
-//
 float entropyMapping(float entropy) {
   float output = 64;
   if (0 < entropy && entropy <= 200) {
@@ -631,8 +634,8 @@ float entropyMapping(float entropy) {
   }
   return output;
 }
+
 // Centroid is more stable than Energy and mantains values from around 1000/2000 to 5000/6000
-// TO DO BETTER
 float centroidMapping(float centroid) {
   float output = 50;
   if (1000 < centroid && centroid <= 2000) {
@@ -648,8 +651,8 @@ float centroidMapping(float centroid) {
   }
   return output;
 }
+
 //Energy mantains very high values that changes dramatically during the song. They goes from a minimum around 1000 to a maximum around 40000/50000
-// TO DO
 float energyMapping(float energy) {
   float output = 64;
   if (0 < energy && energy <= 200) {
@@ -665,24 +668,47 @@ float energyMapping(float energy) {
   }
   return output;
 }
+
 // Spread behaves more or less as the Centroid
-// TO DO
 float spreadMapping(float spread) {
-  float output = 64;
+  float output = 10;
   if (0 < spread && spread <= 200) {
-    output = map(spread, 0, 200, 63, 63.5);
+    output = map(spread, 0, 200, 0, 5);
   } else if (200 < spread && spread <= 400) {
-    output = map(spread, 200, 400, 63.5, 64);
+    output = map(spread, 200, 400, 5, 10);
   } else if (400 < spread && spread <= 600) {
-    output = map(spread, 400, 600, 64, 64.5);
+    output = map(spread, 400, 600, 10, 12);
   } else if (600 < spread && spread <= 800) {
-    output = map(spread, 600, 800, 64.5, 65);
+    output = map(spread, 600, 800, 12, 14);
   } else if (800 < spread) {
-    output = map(spread, 800, 1000, 65, 66);
+    output = map(spread, 800, 1000, 14, 15);
   }
   return output;
 }
 
+// starts very low but then is in range -3 : 10 (usually 0:4)
+float skewnessMapping(float skew) {
+  float output = 0;
+  if (0 < skew && skew <= 1) {
+    output = map(skew, 0, 1, -5, -3);
+  } else if (1 < skew && skew <= 5) {
+    output = map(skew, 1, 5, -3, 3);
+  } else if (5 < skew && skew <= 9) {
+    output = map(skew, 5, 9, 3, 4);
+  } else if (9 < skew) {
+    output = map(skew, 9, 10, 4, 5);
+  }
+  return output;
+}
+
+// has a range of around 0-0.25
+float flatnessMapping(float flatness) {
+  float output = 1;
+  if (0 < flatness && flatness <= 0.25) {
+    output = map(flatness, 0, 0.25, 1, 1.25);
+  } 
+  return output;
+}
 
 void textShapesEffect() {
   String[] lines = splitTextIntoLinesGeom(text, width - 900);
@@ -706,7 +732,7 @@ void textShapesEffect() {
       // If there are any points
       if (points != null) {
         colorMode(HSB, 360, 100, 100);
-        fill(txtColor, 100, 100);
+        fill(txtColor, 100-skewnessMapping(feat.skewness), 100);
         beginShape();
         for (int i = 0; i < points.length; i++) {
           vertex(points[i].x, points[i].y + lineY);

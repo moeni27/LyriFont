@@ -4,6 +4,7 @@ class Particle {
   color c;
   float targetX;
   float targetY;
+  float factor = 0.25;
   float jigglefactor = 0.25;
 
   Particle(float x, float y, color c, PVector randomTarget) {
@@ -14,7 +15,7 @@ class Particle {
     this.targetY = y+randomTarget.y;
   }
   
-  void update() {
+  void update(float flatness) {
     
     if(COUNTER<1&&!DEAD) {
       COUNTER+=0.000001; 
@@ -45,6 +46,8 @@ class Particle {
       particle2target.setMag(attraction/4);
       force.add(particle2target);
     }
+
+    jigglefactor = factor*flatness;
 
     this.x += force.x+random(-jigglefactor, jigglefactor);
     this.y += force.y+random(-jigglefactor, jigglefactor);

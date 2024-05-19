@@ -17,11 +17,11 @@ class World {
     blobs.add(new Blob(l, dna));
   }
 
- void run(float centroidcolor) {
+ void run(float centroidcolor, float spread) {
 
     for (int i = blobs.size() - 1; i >= 0; i--) {
       Blob b = blobs.get(i);
-      b.run(centroidcolor);
+      b.run(centroidcolor, spread);
       if (b.dead()) {
         b.makeSmall();
         blobs.remove(i);
@@ -53,13 +53,13 @@ public class Blob {
     r = map(dna.genes[0], 0, 1, 0, 50);
   }
 
-  void run(float centroidcolor) {
-    this.update();
+  void run(float centroidcolor, float spread) {
+    this.update(spread);
     this.display(centroidcolor);
   }
 
   Blob reproduce() {
-    //asexual reproduction (maybe make probability higher?)
+    //asexual reproduction
     if (random(1) < 0.0005) { 
       //child is exact copy
       DNA childDNA = this.dna;
@@ -77,7 +77,7 @@ public class Blob {
     }
   }
 
-  void update() {
+  void update(float spread) {
     //based on perlin noise
     Float vx = map(noise(this.xoff), 0, 1, -this.maxspeed, this.maxspeed);
     Float vy = map(noise(this.yoff), 0, 1, -this.maxspeed, this.maxspeed);
@@ -88,8 +88,8 @@ public class Blob {
     }
 
     PVector velocity = new PVector(vx, vy);
-    this.xoff += 0.01;
-    this.yoff += 0.01;
+    this.xoff += 0.01*spread;
+    this.yoff += 0.01*spread;
 
     this.position.add(velocity);
     
