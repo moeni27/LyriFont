@@ -25,6 +25,7 @@ color rectColor;
 color rectHighlight;
 boolean rectOver = false;
 boolean geomActive = false;
+boolean polimiOver = false;
 
 int geomX, geomY;      // Position of square button
 int geomSize = 90;     // Diameter of rect
@@ -82,6 +83,7 @@ ArrayList<Blob> blobs = new ArrayList<Blob>();
 
 // BACKGROUND IMAGES
 PImage img;
+PImage polilogo;
 float PARTICLE_SIZE = 5;
 float RESOLUTION = 5;
 float MAX_FORCE = 5;
@@ -150,14 +152,14 @@ String[] splitTextIntoLines(String input, float lineWidth) {
 
 
 void setup() {
-  //size(1500, 750);
-  //surface.setResizable(true);
-  size(1500, 500);
+  size(1500, 750);
+  surface.setResizable(true);
   max_distance = dist(0, 0, width, height);
   frameRate(25);
   playimg = loadImage("play.png");
   pauseimg = loadImage("pause.png");
   pyimg = loadImage("python.png");
+  polilogo = loadImage("polimilogo.png");
   geomimg = loadImage("geom.png");
   noVectimg = loadImage("noVectorize.png");
   rectColor = color(255);
@@ -202,6 +204,10 @@ void setup() {
 }
 
 void draw() {
+  max_distance = dist(0, 0, width, height);
+  chooseX = width-chooseSize-20;
+  geomX = width - geomSize - 20;
+  geomY = height - geomSize - 20;
   background(0);
   if (playing) {
     world.run(genreColors[genre]+centroidMapping(feat.centroid), spreadMapping(feat.spread), skewnessMapping(feat.skewness));
@@ -343,12 +349,23 @@ void draw() {
       fill(0, 0, 0);
     }
   }
-
+  
+  if (polimiOver) {
+    fill(rectHighlight);
+  } else {
+    fill(rectColor);
+  }
+  
+  stroke(255);
+  rect(rectX, height-rectY-rectSize, rectSize, rectSize, 28);
+  image(polilogo, rectX+(rectSize-rectSize/1.1), height-rectY-rectSize+(rectSize-rectSize/1.1), rectSize/1.2, rectSize/1.2);
+  
   if (rectOver) {
     fill(rectHighlight);
   } else {
     fill(rectColor);
   }
+
   stroke(255);
   rect(rectX, rectY, rectSize, rectSize, 28);
 
@@ -382,12 +399,13 @@ void draw() {
   // upload button
   if (mouseX > chooseX && mouseX < chooseX + chooseSize &&
     mouseY > chooseY && mouseY < chooseY + chooseSize) {
-    tint(200); // Dim the button when the mouse is over it
+    fill(geomHighlight);
   } else {
-    noTint();
+    fill(geomColor);
   }
 
   // Draw the upload button image
+  stroke(255);
   rect(chooseX, chooseY, chooseSize, chooseSize, 28);
   image(uploadButton, chooseX, chooseY, chooseSize, chooseSize);
 
@@ -444,6 +462,12 @@ void update() {
     rectOver = true;
   } else {
     rectOver = false;
+  }
+  
+    if ( overRect(rectX, height-rectY-rectSize, rectSize, rectSize) ) {
+    polimiOver = true;
+  } else {
+    polimiOver = false;
   }
 
   if ( overRect(chooseX, chooseY, chooseSize, chooseSize) ) {
@@ -569,6 +593,11 @@ void mousePressed() {
     geomActive = !geomActive;
     println("Button pressed");
   }
+  
+  if (polimiOver){
+    link("https://mae-creative-pc.github.io/");
+  }
+  
 }
 
 boolean overRect(int x, int y, int width, int height) {
