@@ -548,6 +548,13 @@ void mousePressed() {
       world.born(float(mouseX), float(mouseY));
     }
     if (chooseOver) {
+      if (playing&&songChosen) {
+        song.pause();
+        elapsedTime = millis()-startTime+restartTime;
+        restartTime = elapsedTime;
+        playing = false;
+        shouldDisplayImages = false;
+      }
       selectInput("Select a file to process:", "fileSelected");
     }
   }
