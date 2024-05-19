@@ -97,7 +97,8 @@ String[] imageFiles;
 boolean shouldDisplayImages = false;
 
 //["Pop","Rock","Metal","Hiphop","Reggae","Blues","Classical","Jazz","Disco","Country"]
-float[] genreColors = {30, 70, 100, 130, 150, 200,240, 270, 300, 340};
+float[] genreColors = {320, 200, 0, 130, 110, 240, 40, 60, 285, 15};
+int genre = 0;
 
 String getCurrentLine(Object[] timestamps, Object[] lines) {
   int current_time = millis()-startTime+elapsedTime;
@@ -203,9 +204,9 @@ void setup() {
 void draw() {
   background(0);
   if (playing) {
-    world.run(centroidMapping(feat.centroid), spreadMapping(feat.spread));
+    world.run(genreColors[genre]+centroidMapping(feat.centroid), spreadMapping(feat.spread), skewnessMapping(feat.skewness));
   } else {
-    world.run(200,1);
+    world.run(200,1,0);
   }
   //new one every 15 frames
   a = a + 1;
@@ -246,7 +247,7 @@ void draw() {
           float size = dist(width/2, height/2, i, j);
           size = size*map(energyMapping(feat.energy), 0, 66, 0, 0.1)/max_distance*66;
           colorMode(HSB, 360, 100, 100);
-          fill(centroidMapping(feat.centroid), 100-skewnessMapping(feat.skewness), 100);
+          fill(genreColors[genre]+centroidMapping(feat.centroid), 100-skewnessMapping(feat.skewness), 100);
           stroke(0);
           ellipse(i, j, size, size);
           colorMode(RGB, 255, 255, 255);
@@ -268,7 +269,7 @@ void draw() {
     feat.reasoning(song.mix);
     // Calculate text settings from audio features
     txtSize = entropyMapping(feat.entropy);
-    txtColor = centroidMapping(feat.centroid);
+    txtColor = genreColors[genre]+centroidMapping(feat.centroid);
 
     if (currentLine > -1 && playing) {
       text = getCurrentLine(timestamps, lrc);
@@ -581,6 +582,11 @@ boolean overRect(int x, int y, int width, int height) {
 
 void oscEvent(OscMessage theOscMessage) {
 
+  if (theOscMessage.checkAddrPattern("/genre")==true) {
+    genre = int(theOscMessage.arguments()[0].toString());
+    print(genre);
+  }
+  
   if (theOscMessage.checkAddrPattern("/timestamps")==true) {
     for (int i = 0; i < theOscMessage.arguments().length; i++) {
       if (theOscMessage.arguments()[i] instanceof Integer) {
@@ -637,17 +643,17 @@ float entropyMapping(float entropy) {
 
 // Centroid is more stable than Energy and mantains values from around 1000/2000 to 5000/6000
 float centroidMapping(float centroid) {
-  float output = 50;
+  float output = 0;
   if (1000 < centroid && centroid <= 2000) {
-    output = map(centroid, 1000, 2000, 0, 10);
+    output = map(centroid, 1000, 2000, -30, -20);
   } else if (2000 < centroid && centroid <= 3000) {
-    output = map(centroid, 2000, 3000, 10, 20);
+    output = map(centroid, 2000, 3000, -20, -10);
   } else if (3000 < centroid && centroid <= 4000) {
-    output = map(centroid, 3000, 4000, 20, 30);
+    output = map(centroid, 3000, 4000, -10, 0);
   } else if (5000 < centroid && centroid <= 6000) {
-    output = map(centroid, 4000, 6000, 30, 50);
+    output = map(centroid, 4000, 6000, 0, 20);
   } else if (6000 < centroid) {
-    output = map(centroid, 6000, 10000, 50, 100);
+    output = map(centroid, 6000, 10000, 20, 30);
   }
   return output;
 }

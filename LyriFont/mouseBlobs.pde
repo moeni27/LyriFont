@@ -17,11 +17,11 @@ class World {
     blobs.add(new Blob(l, dna));
   }
 
- void run(float centroidcolor, float spread) {
+ void run(float centroidcolor, float spread, float skew) {
 
     for (int i = blobs.size() - 1; i >= 0; i--) {
       Blob b = blobs.get(i);
-      b.run(centroidcolor, spread);
+      b.run(centroidcolor, spread, skew);
       if (b.dead()) {
         b.makeSmall();
         blobs.remove(i);
@@ -53,9 +53,9 @@ public class Blob {
     r = map(dna.genes[0], 0, 1, 0, 50);
   }
 
-  void run(float centroidcolor, float spread) {
+  void run(float centroidcolor, float spread, float skew) {
     this.update(spread);
-    this.display(centroidcolor);
+    this.display(centroidcolor, skew);
   }
 
   Blob reproduce() {
@@ -101,17 +101,17 @@ public class Blob {
     }
   }
 
-  void display(float centroidcolor) {
+  void display(float centroidcolor, float skew) {
     ellipseMode(CENTER);
-    if(centroidcolor==200){
+    if(centroidcolor==200&&!playing){
       colorMode(HSB, 360, 100, 100);
-          stroke(360*abs(cos(millis()*0.0001)), this.health,this.health);
-          fill(360*abs(cos(millis()*0.0001)), this.health,this.health);
+          stroke(360*abs(cos(millis()*0.0001)), this.health-skew,this.health);
+          fill(360*abs(cos(millis()*0.0001)), this.health-skew,this.health);
       colorMode(RGB, 255, 255, 255);
     } else {
       colorMode(HSB, 360, 100, 100);
-          stroke(centroidcolor*0.5, this.health,this.health);
-          fill(centroidcolor*0.5, this.health,this.health);
+          stroke(centroidcolor, this.health-skew,this.health);
+          fill(centroidcolor, this.health-skew,this.health);
       colorMode(RGB, 255, 255, 255);
     }
     ellipse(this.position.x, this.position.y, this.r, this.r);

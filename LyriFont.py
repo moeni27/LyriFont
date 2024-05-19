@@ -223,7 +223,7 @@ def loadLyrics(unused_addr, args):
         print("No spotify common genres found.")
 
   print(genre)
-
+  client.send_message("/genre", labels.index(genre))
   songFont = excel(genre)
   print(songFont)
 
