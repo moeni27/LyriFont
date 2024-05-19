@@ -24,6 +24,8 @@ import numpy as np
 
 
 currentpath = sys.path[0]
+labels = ["Pop","Rock","Metal","Hiphop","Reggae","Blues","Classical","Jazz","Disco","Country"]
+
 
 excel_path = os.path.join(currentpath, "ML_Spreadsheet.xlsx") 
 
@@ -35,6 +37,14 @@ if not os.path.exists(folder_path):
 df = pd.read_excel(excel_path, index_col=None, header=None)
 
 client = udp_client.SimpleUDPClient("127.0.0.1", 1234)
+
+def find_first_common_genre(genres, labels):
+    labels_set = set(labels)
+    print(genres)
+    for genre in genres:
+        if genre.capitalize() in labels_set:
+            return genre
+    return None
 
 def checkSize(array, default):
   if (get_deep_size(array)>2048):
@@ -102,7 +112,9 @@ def getSpotifyFont(artist):
   track = result['tracks']['items'][0]
 
   artist = sp.artist(track["artists"][0]["external_urls"]["spotify"])
-  return(artist["genres"][0].capitalize())
+
+  common_genre = find_first_common_genre(artist["genres"], labels)
+  return(common_genre)
 
 def excel(genre):
   mask = df[1].str.contains(genre, na=False)
@@ -199,11 +211,21 @@ def loadLyrics(unused_addr, args):
   value = predictions[0,final_pred]
   print("Value : " + str(value))
 
+  spot_genre = None
+
   if (value < 0.85):
-    genre = getSpotifyFont(artistname)
+    spot_genre = getSpotifyFont(artistname).capitalize()
     print("Genre taken by Spotify")
+    if spot_genre:
+        print(f"There is a common genre: {spot_genre}")
+        genre = spot_genre
+    else:
+        print("No spotify common genres found.")
+
   print(genre)
+
   songFont = excel(genre)
+  print(songFont)
 
   print("Loading Lyrics and Timestamps...")
   lrc = syncedlyrics.search("["+artistname+"] ["+songname+"]").splitlines()
