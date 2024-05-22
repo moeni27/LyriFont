@@ -176,7 +176,7 @@ void setup() {
 
   // Geomerative stuff
   RG.init(this);
-  grp = RG.getText(text, "/Font/Silkscreen-Regular.ttf", 120, CENTER);
+  grp = RG.getText(text, "Font/Silkscreen-Regular.ttf", 120, CENTER);
 
 
   dynamicLyric = new ArrayList<Object>();
@@ -641,7 +641,7 @@ void oscEvent(OscMessage theOscMessage) {
     fontPython = theOscMessage.arguments();
     println(fontPython[0].toString());
     GeomFont = "Font/" + fontPython[0].toString();
-    font = createFont("Font/" + fontPython[0].toString(), 38);
+    font = createFont("FontDataset2/Font/" + fontPython[0].toString(), 38);
     text = "Ready!";
   }
 
@@ -800,7 +800,7 @@ void textShapesEffect() {
 String[] splitTextIntoLinesGeom(String input, float lineWidth) {
   String[] words = input.split("\\s+");
   StringBuilder currentLine = new StringBuilder();
-  ArrayList<String> lines = new ArrayList<>();
+  ArrayList<String> lines = new ArrayList();
 
   for (String word : words) {
     if (textWidth(currentLine + word) <= lineWidth) {

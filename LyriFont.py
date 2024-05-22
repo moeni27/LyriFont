@@ -21,13 +21,14 @@ import random
 import librosa
 import tensorflow as tf
 import numpy as np
+import config
 
 
 currentpath = sys.path[0]
 labels = ["Pop","Rock","Metal","Hiphop","Reggae","Blues","Classical","Jazz","Disco","Country"]
 
 
-excel_path = os.path.join(currentpath, "ML_Spreadsheet.xlsx") 
+excel_path = os.path.join(currentpath, "GenreFontDataset.xlsx") #os.path.join(currentpath, "ML_Spreadsheet.xlsx")
 
 # Create a folder for Images
 folder_path = os.path.join(currentpath, "LyriFont/Images")
@@ -117,15 +118,21 @@ def getSpotifyFont(artist):
   return(common_genre)
 
 def excel(genre):
-  mask = df[1].str.contains(genre, na=False)
+  mask = df[0].str.contains(genre, na=False)
 
   # If the target string is found, get the first element of its row
   if mask.any():
+      indices = df.index[mask].tolist()
+
+      # Choose a random index among the matching ones
+      random_index = random.choice(indices)
+
       # Find the index of the first occurrence
-      index_of_first_occurrence = df.index[mask].tolist()[0]
+      #index_of_first_occurrence = df.index[mask].tolist()[1]
         
       # Get the first element of the row in column A (assuming column A contains the desired data)
-      return (df.iloc[index_of_first_occurrence, 0])
+      #return (df.iloc[index_of_first_occurrence, 1])
+      return (df.iloc[random_index, 1])
   
 # Text to image generation  
 def text2image(prompt: str, fnameimage):
