@@ -17,7 +17,7 @@ def preprocess(dataset_path,num_mfcc=40, n_fft=2048, hop_length=512, num_segment
         if dirpath == dataset_path:
             continue
         for f in sorted(filenames):
-            if not f.endswith('.wav'):
+            if not f.endswith('.mp3'):
                 continue
             # file_path = str(str(dirpath).split('\\')[-3]) + "/" + str(str(dirpath).split('\\')[-2]) + "/" + str(str(dirpath).split('\\')[-1]) + "/" + str(f)
             file_path = dirpath + "/" + f
@@ -37,49 +37,54 @@ def preprocess(dataset_path,num_mfcc=40, n_fft=2048, hop_length=512, num_segment
                     data["labels"].append(label_idx-1)
     return data
 
-# Extracting MFCCs
-mfcc_data = preprocess("data")
+genres = ["Classical","Blues","Jazz","Metal","Pop","Rock","Country", "Disco", "Hiphop", "Reggae"]
 
-# Preparing Training Data
-x = np.array(mfcc_data["mfcc"])
-y = np.array(mfcc_data["labels"])
+for genre in genres:
+    data_path = "Main models projects/myData/"+genre
+ 
+    # Extracting MFCCs
+    mfcc_data = preprocess(data_path)
 
-# Save for future use
-np.save("trained models/MFCCs and LSTM with GZTAN/mfccs_array.npy",x)
-np.save("trained models/MFCCs and LSTM with GZTAN/labels_array.npy",y)
+    # Preparing Training Data
+    x = np.array(mfcc_data["mfcc"])
+    y = np.array(mfcc_data["labels"])
 
-'''# Load already prepared data
-x = np.load("trained models/MFCCs and LSTM with GZTAN/mfccs_array.npy")
-y = np.load("trained models/MFCCs and LSTM with GZTAN/labels_array.npy")'''
+    '''# Save for future use
+    np.save("Utility/Arrays/"+genre+"/mfccs_array.npy",x)
+    np.save("Utility/Arrays/"+genre+"/labels_array.npy",y)'''
 
-x_train, x_test, y_train, y_test = train_test_split(x,y,train_size = 0.75, test_size = 0.25)
-x_train, x_val, y_train, y_val = train_test_split(x_train,y_train,test_size = 0.2)
+    # Load already prepared data
+    x = np.load("Utility/Arrays/"+genre+"/mfccs_array.npy")
+    y = np.load("Utility/Arrays/"+genre+"/labels_array.npy")
 
-input_shape = (x_train.shape[1],x_train.shape[2])
+    x_train, x_test, y_train, y_test = train_test_split(x,y,train_size = 0.75, test_size = 0.25)
+    x_train, x_val, y_train, y_val = train_test_split(x_train,y_train,test_size = 0.2)
 
-# Training simple LSTM classifier
-model = tf.keras.Sequential()
-model.add(tf.keras.layers.LSTM(64, input_shape = input_shape, return_sequences = True))
-model.add(tf.keras.layers.LSTM(64))
-model.add(tf.keras.layers.Dense(64, activation="relu"))
-model.add(tf.keras.layers.Dense(11,activation = "softmax"))
+    input_shape = (x_train.shape[1],x_train.shape[2])
 
-# Compiling and Fitting the model
-optimiser = tf.keras.optimizers.Adam(learning_rate=0.001)
-model.compile(optimizer=optimiser,
-              loss='sparse_categorical_crossentropy',
-              metrics=['accuracy'])
-model.summary()
-model.fit(x_train, y_train, validation_data=(x_val, y_val), batch_size=32, epochs=60, verbose=2)
-model.save("trained models/MFCCs and LSTM with GZTAN/model.h5")
+    # Training simple LSTM classifier
+    model = tf.keras.Sequential()
+    model.add(tf.keras.layers.LSTM(64, input_shape = input_shape, return_sequences = True))
+    model.add(tf.keras.layers.LSTM(64))
+    model.add(tf.keras.layers.Dense(64, activation="relu"))
+    model.add(tf.keras.layers.Dense(10,activation = "softmax"))
 
-'''# Loading pre-trained model
-model = tf.keras.models.load_model('trained models/MFCCs and LSTM with GZTAN/model.h5')
-model.summary()'''
+    # Compiling and Fitting the model
+    optimiser = tf.keras.optimizers.Adam(learning_rate=0.001)
+    model.compile(optimizer=optimiser,
+                loss='sparse_categorical_crossentropy',
+                metrics=['accuracy'])
+    model.summary()
+    model.fit(x_train, y_train, validation_data=(x_val, y_val), batch_size=32, epochs=60, verbose=2)
+    model.save("trained models/"+genre+".h5")
 
-# Evaluate model
-y_pred = model.predict(x_test)
-y_pred = np.argmax(y_pred, axis=1)
+    '''# Loading pre-trained model
+    model = tf.keras.models.load_model("trained models/"+genre+".h5")
+    model.summary()'''
 
-result = np.sum(y_pred==y_test)/len(y_pred)
-print(result) #0.8013616339607529
+    # Evaluate model
+    y_pred = model.predict(x_test)
+    y_pred = np.argmax(y_pred, axis=1)
+
+    result = np.sum(y_pred==y_test)/len(y_pred)
+    print(result)
