@@ -104,6 +104,267 @@ def genreConversionGZTAN(genreNumber):
     print("The genre of the song is : " + genre)
     return genre
 
+# Association font-number
+def fontConversionRock(fontNumber):
+    font = ""
+    match fontNumber:
+        case 0:
+            font = "ChrustyRock-ORLA.ttf"
+        case 1:
+            font = "GraniteRockSt-lGae.ttf"
+        case 2:
+            font = "MonsterRock-rPM7.ttf"
+        case 3:
+            font = "RockElegance-AyXM.ttf"
+        case 4:
+            font = "RockIt-yjYm.ttf"
+        case 5:
+            font = "RockPlaza-517M8.ttf"
+        case 6:
+            font = "RockRadio-Wy4Vz.otf"
+        case 7:
+            font = "RockSlayers-BW6Lw.otf"
+        case 8:
+            font = "RockSteady-Wyy7A.ttf"
+        case 9:
+            font = "WillRockYou-ZVgyK.ttf"
+    print("The font selected is: " + font)
+    return font
+
+def fontConversionBlues(fontNumber):
+    font = ""
+    match fontNumber:
+        case 0:
+            font = "ColderWeatherRegular-L33vG.ttf"
+        case 1:
+            font = "FieldsOfCathayRegular-Z9B3.ttf"
+        case 2:
+            font = "FortDeath-3ne6.ttf"
+        case 3:
+            font = "HellsRiderDecay-KRxZ.ttf"
+        case 4:
+            font = "RoadShot-d9D9V.ttf"
+        case 5:
+            font = "RoadShot-qZYDl.ttf"
+        case 6:
+            font = "RumbleweedspurRegular-VwLy.otf"
+        case 7:
+            font = "TheCheelaved-owOvo.ttf"
+        case 8:
+            font = "UnchainedRoughPersonalUseRegular-WyjAz.otf"
+        case 9:
+            font = "ZinfandelSpurRegular-qJr0.ttf"
+    print("The font selected is: " + font)
+    return font
+
+def fontConversionPop(fontNumber):
+    font = ""
+    match fontNumber:
+        case 0:
+            font = "AtamaG-6YeeY.ttf"
+        case 1:
+            font = "BoldskyRegular-Rp6G3.ttf"
+        case 2:
+            font = "BritishPopMusic-levV.ttf"
+        case 3:
+            font = "BubbleHead-6Y1jq.ttf"
+        case 4:
+            font = "Hurtz-OVLme.ttf"
+        case 5:
+            font = "LunarPopDemoRegular-qZVZ6.ttf"
+        case 6:
+            font = "MicroPop-DO10d.ttf"
+        case 7:
+            font = "RoundPop-owwjd.ttf"
+        case 8:
+            font = "TigerChest-yw6Le.otf"
+        case 9:
+            font = "UnicornPop-Z0qq.ttf"
+    print("The font selected is: " + font)
+    return font
+
+def fontConversionJazz(fontNumber):
+    font = ""
+    match fontNumber:
+        case 0:
+            font = "BeautySwingPersonalUse-DOEaD.otf"
+        case 1:
+            font = "jazztext.ttf"
+        case 2:
+            font = "MEllington.otf"
+        case 3:
+            font = "OPTINovelGothic-XBoldAgen.otf"
+        case 4:
+            font = "GloriousChristmas-BLWWB.ttf"
+        case 5:
+            font = "ArianaVioleta-dz2K.ttf"
+        case 6:
+            font = "BelieveIt-DvLE.ttf"
+        case 7:
+            font = "MorganChalk-L3aJy.ttf"
+        case 8:
+            font = "BeckyTahlia-MP6r.ttf"
+        case 9:
+            font = "Mighty-X34Z2.ttf"
+    print("The font selected is: " + font)
+    return font
+
+def fontConversionHipHop(fontNumber):
+    font = ""
+    match fontNumber:
+        case 0:
+            font = "08Underground-grB6.ttf"
+        case 1:
+            font = "AttackGraffiti-3zRBM.ttf"
+        case 2:
+            font = "BombDaGone-VG0RB.otf"
+        case 3:
+            font = "Chronic-1GnwL.ttf"
+        case 4:
+            font = "DonGraffiti-wrYx.otf"
+        case 5:
+            font = "DowntownStreet-0WY0R.ttf"
+        case 6:
+            font = "GraffitiHipsterDemoVersionRegular-ZVBxJ.otf"
+        case 7:
+            font = "SlimWandalsAltPersonalUse-AL9vM.ttf"
+        case 8:
+            font = "UrbanFest-YzrJO.ttf"
+        case 9:
+            font = "ZlatoustChaos-p7jZy.ttf"
+    print("The font selected is: " + font)
+    return font
+
+def fontConversionMetal(fontNumber):
+    font = ""
+    match fontNumber:
+        case 0:
+            font = "BogartsMetal-MVBEe.ttf"
+        case 1:
+            font = "CrushMetal-8MP7A.otf"
+        case 2:
+            font = "DeadeldermetalRegular-1Gx3v.otf"
+        case 3:
+            font = "Distem-VG2nx.ttf"
+        case 4:
+            font = "MetalArhythmeticRegular-1pnL.ttf"
+        case 5:
+            font = "MetalManiaItalic-X36rP.ttf"
+        case 6:
+            font = "MetalThornRegular-0W43G.ttf"
+        case 7:
+            font = "MetalVengeanceItalic-owAdd.ttf"
+        case 8:
+            font = "MetrimLetterRegular-vmW6M.ttf"
+        case 9:
+            font = "TheOvercook-vmjYM.ttf"
+    print("The font selected is: " + font)
+    return font
+
+def fontConversionFunk(fontNumber):
+    font = ""
+    match fontNumber:
+        case 0:
+            font = "FunkyChokyRegular-ywv4d.ttf"
+        case 1:
+            font = "FunkyJuice-DO781.ttf"
+        case 2:
+            font = "FunkySign-EaAZr.ttf"
+        case 3:
+            font = "FunkyVibes-vmOYy.ttf"
+        case 4:
+            font = "KingthingsLickorishe-Ea9de.ttf"
+        case 5:
+            font = "MagicFunk-qZ641.ttf"
+        case 6:
+            font = "Retroparty-MV3rn.ttf"
+        case 7:
+            font = "RushFunky-X3wGZ.ttf"
+        case 8:
+            font = "SuperCandy-rgLzx.ttf"
+        case 9:
+            font = "SuperCool-MVg1p.ttf"
+    print("The font selected is: " + font)
+    return font
+
+def fontConversionReggae(fontNumber):
+    font = ""
+    match fontNumber:
+        case 0:
+            font = "AguaDejamaicaItalic-55Yv.ttf"
+        case 1:
+            font = "MarleyRegular-zM1a.otf"
+        case 2:
+            font = "MarleyFontDemoDemo-eZDVO.ttf"
+        case 3:
+            font = "ReggaeOne-Regular.ttf"
+        case 4:
+            font = "SpidroMarleyFreeVersionRegular-rgKRB.ttf"
+        case 5:
+            font = "TunUpDeTing-jBxy.ttf"
+        case 6:
+            font = "LoveDays-2v7Oe.ttf"
+        case 7:
+            font = "ShortBaby-Mg2w.ttf"
+        case 8:
+            font = "fast99.ttf"
+        case 9:
+            font = "zawijasy.otf"
+    print("The font selected is: " + font)
+    return font
+
+def fontConversionClassical(fontNumber):
+    font = ""
+    match fontNumber:
+        case 0:
+            font = "AutumnFlowers-9YVZK.otf"
+        case 1:
+            font = "BabySela-vmxz4.ttf"
+        case 2:
+            font = "ClassicSignatureDemo-axdDE.otf"
+        case 3:
+            font = "Classical-4pq9.otf"
+        case 4:
+            font = "ElegantDemo-OVJX6.otf"
+        case 5:
+            font = "ElegantStylish-JR3xj.otf"
+        case 6:
+            font = "Faldith-qZM95.otf"
+        case 7:
+            font = "FathirScriptPersonalUseOnly-MV2rJ.ttf"
+        case 8:
+            font = "HarmonyStrikinglyRegular-d978X.ttf"
+        case 9:
+            font = "RusillaSerif-2OZpl.otf"
+    print("The font selected is: " + font)
+    return font
+
+def fontConversionDisco(fontNumber):
+    font = ""
+    match fontNumber:
+        case 0:
+            font = "70SdiscopersonaluseBold-w14z2.otf"
+        case 1:
+            font = "DiscoDeck-a4wa.otf"
+        case 2:
+            font = "DiscoDuck3DItalic-al1m.otf"
+        case 3:
+            font = "DiscoEverydayValueRegular-zMGG.ttf"
+        case 4:
+            font = "Disco-4BGl.ttf"
+        case 5:
+            font = "DiscoInferno-drME.ttf"
+        case 6:
+            font = "Gelam-lKo5.ttf"
+        case 7:
+            font = "MoogieDisco-2OwAX.otf"
+        case 8:
+            font = "Sugar-lxD5.ttf"
+        case 9:
+            font = "TokyoHoneyChan-dLR.ttf"
+    print("The font selected is: " + font)
+    return font
+
 def getSpotifyFont(artist):
 
   client_credentials_manager = SpotifyClientCredentials(client_id=config.client_id, client_secret=config.client_secret)
@@ -231,8 +492,46 @@ def loadLyrics(unused_addr, args):
 
   print(genre)
   client.send_message("/genre", labels.index(genre))
-  songFont = excel(genre)
-  print(songFont)
+
+  #FONT
+  #load model
+  fontPath = os.path.join(currentpath, "Trained models")
+  modelFont = tf.keras.models.load_model(os.path.join(fontPath, genre + ".keras"))
+
+  #Preprocess
+  x_test = preprocess_song(song_path, param=False)
+  x_test = np.array(x_test)
+  x_test = x_test.reshape(1, 130, 40)
+
+  # Do prediction
+  y_pred = model.predict(x_test)
+  pred = np.argmax(y_pred, axis=1)
+  if(genre == "Rock") :
+      songFont = fontConversionDisco(pred)
+  if(genre == "Pop") :
+      songFont = fontConversionDisco(pred)
+  if(genre == "Funk") :
+      songFont = fontConversionDisco(pred)
+  if(genre == "Jazz") :
+      songFont = fontConversionDisco(pred)
+  if(genre == "Classical") :
+      songFont = fontConversionDisco(pred)
+  if(genre == "Metal") :
+      songFont = fontConversionDisco(pred)
+  if(genre == "Country") :
+      songFont = fontConversionDisco(pred)
+  if(genre == "Reggae") :
+      songFont = fontConversionDisco(pred)
+  if(genre == "Hiphop") :
+      songFont = fontConversionDisco(pred)
+  if(genre == "Disco") :
+      songFont = fontConversionDisco(pred)
+  if(genre == "Blues") :
+      songFont = fontConversionDisco(pred)
+
+  # Result
+  print("Prediction result : " + str(pred))
+
 
   print("Loading Lyrics and Timestamps...")
   lrc = syncedlyrics.search("["+artistname+"] ["+songname+"]").splitlines()
@@ -303,4 +602,3 @@ if __name__ == "__main__":
 
   print("Serving on {}".format(server.server_address))
   server.serve_forever()
-
