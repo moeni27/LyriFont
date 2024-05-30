@@ -1,4 +1,12 @@
-# Music Genre Recognition with Deep Learning
+'''
+Sub-Font Genre Classifier using LSTM
+We used music as time-series data extracting the Mel-frequency cepstral coefficients.
+As a result, we used the LSTM type model as it is more suitable for time series data.
+We built a dataset of 1000 existing songs (100 per genre). For each genre we chose 10 possible fonts that we thought could be associated with it.
+We created a survey in which we asked people to decide which sub-font would be more appropriate for a given song in a given genre.
+Finally, we used the results of the survey to build a classifier for each genre.
+'''
+# Importing librariess
 import math
 import json
 import librosa
@@ -7,7 +15,7 @@ import numpy as np
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
 
-
+# Function that extracts MFCC features of the song
 def preprocess(dataset_path,num_mfcc=40, n_fft=2048, hop_length=512, num_segment=10):
     data = {"labels": [], "mfcc": []}
     sample_rate = 22050
@@ -37,6 +45,7 @@ def preprocess(dataset_path,num_mfcc=40, n_fft=2048, hop_length=512, num_segment
                     data["labels"].append(label_idx-1)
     return data
 
+# All genres taken into account
 genres = ["Classical","Blues","Jazz","Metal","Pop","Rock","Country", "Disco", "Hiphop", "Reggae"]
 
 for genre in genres:
@@ -57,12 +66,12 @@ for genre in genres:
     x = np.load("Utility/Arrays/"+genre+"/mfccs_array.npy")
     y = np.load("Utility/Arrays/"+genre+"/labels_array.npy")
 
+    # Preparation of training, testing and validation dataset
     x_train, x_test, y_train, y_test = train_test_split(x,y,train_size = 0.75, test_size = 0.25)
     x_train, x_val, y_train, y_val = train_test_split(x_train,y_train,test_size = 0.2)
-
     input_shape = (x_train.shape[1],x_train.shape[2])
 
-    # Training simple LSTM classifier
+    # Training LSTM classifier
     model = tf.keras.Sequential()
     model.add(tf.keras.layers.LSTM(64, input_shape = input_shape, return_sequences = True))
     model.add(tf.keras.layers.LSTM(64))
@@ -76,15 +85,16 @@ for genre in genres:
                 metrics=['accuracy'])
     model.summary()
     model.fit(x_train, y_train, validation_data=(x_val, y_val), batch_size=32, epochs=60, verbose=2)
-    model.save("trained models/"+genre+".h5")
+    
+    # Saving the model
+    model.save("Trained models/"+genre+".h5")
 
     '''# Loading pre-trained model
-    model = tf.keras.models.load_model("trained models/"+genre+".h5")
+    model = tf.keras.models.load_model("Trained models/"+genre+".h5")
     model.summary()'''
 
-    # Evaluate model
+    # Evaluating the model
     y_pred = model.predict(x_test)
     y_pred = np.argmax(y_pred, axis=1)
-
     result = np.sum(y_pred==y_test)/len(y_pred)
-    print(result)
+    print("(" + str(genre) + ") Percentage of correct outcomes for testing data : " + str(result))

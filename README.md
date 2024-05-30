@@ -1,20 +1,20 @@
-# Music Genre Classification with Deep Learning
-Two dataset used : GZTAN and myData.
-## Two main models trained :
-1) MFCCs as features and MLP+LSTM network.
-2) Spectrograms as features and CNNs.
-##### 1) MFCCs as features and MLP+LSTM network
-- With GZTAN : high accuracy but doesn't work well with songs.
-- With myData : highest reached accuracy of 70% but problems in some predictions probably due to overfitting.
-##### 2) Spectrograms as features and CNNs
-- With GZTAN : 40% accuracy but still have to predict real songs.
-- With myData : strange results. Very high accuracy but constant high loss. There is probably overfitting also here.
+# LyriFont - Music Genre Recognition and Sub-Font Genre Association
 
-## Problems/Possible Improvements :
-##### 1) myData leads to overfitting. Possible solutions could be :
-- Have more data. With respect to GZTAN we deal with audio very long (3/5 min), so we should need more songs at our disposal.
-- Try to see if the data needs normalization
-- For each song select a chunk of 30 seconds and use them. This means that during prediction each song should be also divided in chunks of 30 seconds and predicted separately.
-- For each song select a chunk of 30 seconds and use them mixed with GZTAN dataset.
-##### 2) We should need to do spectrograms of myData of the same dimension of the one of GZTAN in order to have a more omogeneous comparison (also because every model on internet is optimized for GZTAN dataset).
-##### 3) When predicting a song with a model trained with GZTAN, split it in chuncks of 30 seconds and do an average on the results.
+## Music Genre recognition using LSTM
+We used music as time-series data extracting the Mel-frequency cepstral coefficients.
+As a result, we used the LSTM type model as it is more suitable for time series data.
+We used the GTZAN music genre dataset to build the classifier.
+### Evaluation
+We come up with a model's performance with enough high accuracy (80-90%).
+### Possible Improvements
+GZTAN is a good dataset, but of course we could have got better results with a bigger dataset. Also, another possibility of the model could have been to use CNNs and to use spectrograms as features and/or to include other features such as BPM or spectral centroid.
+
+## Sub-Font Genre Association using LSTM
+Again, we extracted mel-frequency cepstral coefficients and used LSTM in the same way.
+We built a dataset of 1000 existing songs (100 per genre). For each genre we chose 10 possible fonts that we thought could be associated with it.
+We created a survey in which we asked people to decide which sub-font would be more appropriate for a given song in a given genre.
+Finally, we used the results of the survey to build a classifier for each genre.
+### Evaluation
+The accuracy is not very high in absolute terms, but it is still proportional to the small size of the dataset we took into account (only 100 input vectors per genre model).
+### Possible Improvements
+More than for the music genre classifier, a larger dataset for the sub-font genre classification could have led to better results. Again, other features could have been considered to enrich the quality of the association.
