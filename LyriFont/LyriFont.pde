@@ -640,7 +640,7 @@ void oscEvent(OscMessage theOscMessage) {
   if (theOscMessage.checkAddrPattern("/fontchange")==true) {
     fontPython = theOscMessage.arguments();
     println(fontPython[0].toString());
-    GeomFont = "Font/" + fontPython[0].toString();
+    GeomFont = "FontDataset2/Font/" + fontPython[0].toString();
     font = createFont("FontDataset2/Font/" + fontPython[0].toString(), 38);
     text = "Ready!";
   }

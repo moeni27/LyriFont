@@ -507,27 +507,27 @@ def loadLyrics(unused_addr, args):
   y_pred = model.predict(x_test)
   pred = np.argmax(y_pred, axis=1)
   if(genre == "Rock") :
-      songFont = fontConversionDisco(pred)
+      songFont = fontConversionRock(pred)
   if(genre == "Pop") :
-      songFont = fontConversionDisco(pred)
+      songFont = fontConversionPop(pred)
   if(genre == "Funk") :
-      songFont = fontConversionDisco(pred)
+      songFont = fontConversionFunk(pred)
   if(genre == "Jazz") :
-      songFont = fontConversionDisco(pred)
+      songFont = fontConversionJazz(pred)
   if(genre == "Classical") :
-      songFont = fontConversionDisco(pred)
+      songFont = fontConversionClassical(pred)
   if(genre == "Metal") :
-      songFont = fontConversionDisco(pred)
+      songFont = fontConversionMetal(pred)
   if(genre == "Country") :
-      songFont = fontConversionDisco(pred)
+      songFont = fontConversionCountry(pred)
   if(genre == "Reggae") :
-      songFont = fontConversionDisco(pred)
+      songFont = fontConversionReggae(pred)
   if(genre == "Hiphop") :
-      songFont = fontConversionDisco(pred)
+      songFont = fontConversionHiphop(pred)
   if(genre == "Disco") :
       songFont = fontConversionDisco(pred)
   if(genre == "Blues") :
-      songFont = fontConversionDisco(pred)
+      songFont = fontConversionBlues(pred)
 
   # Result
   print("Prediction result : " + str(pred))
