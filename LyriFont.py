@@ -400,41 +400,63 @@ def text2image(prompt: str, fnameimage):
     API_URL = "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5"
     headers = {"Authorization": f"Bearer {config.api_key}"}
     payload = {"inputs": prompt}
-    response = requests.post(API_URL, headers=headers, json=payload)
-    image_bytes = response.content
+    
+    try:
+        response = requests.post(API_URL, headers=headers, json=payload)
+        response.raise_for_status()  # Ensure the request was successful
+        
+        if 'image' not in response.headers.get('Content-Type', ''):
+            print("Response content is not an image.")
+            print("Response content:", response.content)
+            return None
+        
+        image_bytes = response.content
+        image = Image.open(io.BytesIO(image_bytes))
+        
+        timestamps = datetime.now().strftime("%Y%m%d%H%M%S")
+        name = fnameimage + "_" + timestamps
+        filename = f"{name}.jpg"
+        filepath = os.path.join(folder_path, filename)
+        image.save(filepath)
 
-    image = Image.open(io.BytesIO(image_bytes))
+        return filename
     
-    timestamps = datetime.now().strftime("%Y%m%d%H%M%S")
-    name = fnameimage+timestamps
-    filename = f"{name}.jpg"
-    filepath = os.path.join(folder_path, filename)
-    
+    except requests.exceptions.RequestException as e:
+        print(f"HTTP request failed: {e}")
+        for x in range(4):
+            with open(os.path.join(currentpath, f"LyriFont/Default_Images/default_{x+1}.jpg"), 'rb') as f:
+                image_bytes = f.read()
 
-    image.save(filepath)
-    return filename
-    
+            image = Image.open(io.BytesIO(image_bytes))
+
+            filename = f"default_{x+1}.jpg"
+            filepath = os.path.join(folder_path, filename)
+            image.save(filepath)
+        return None
+    except PIL.UnidentifiedImageError:
+        print("Cannot identify image file from the response.")
+        return None
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        # Return default image if an error occurs
+        return None
 
 def extract_keywords_tfidf(text):
-    if len(text) > 10:
-       max_keywords = 5
-    else:
-       max_keywords = 1
-    nlp = spacy.load("en_core_web_sm")
-    # Process the text
-    doc = nlp(text)
-    
-    # Extract nouns from the processed text
-    nouns = [token.text for token in doc if token.pos_ == "NOUN"]
-    
-    # Shuffle the list of nouns
-    random.shuffle(nouns)
-    
-    # Return only the first `max_keywords` nouns if specified
-    nouns = nouns[:max_keywords]
-    
-    return nouns
+  if len(text) > 10:
+    max_keywords = 5
+  else:
+    max_keywords = 1
+  nlp = spacy.load("en_core_web_sm")
+  # Process the text
+  doc = nlp(text)
 
+  # Extract nouns from the processed text (use set for no duplicates)
+  nouns = set([token.text for token in doc if token.pos_ == "NOUN"])
+
+  # Limit the number of keywords (convert set back to list if needed)
+  keywords = list(nouns)[:max_keywords]
+
+  return keywords
 
 def loadLyrics(unused_addr, args):
   
