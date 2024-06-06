@@ -11,13 +11,13 @@
 
 ## Usage
 
-Lyrifont is mainly made with Python and Processing languages. It is organized in two main files:
+Lyrifont is mainly implemented in Python and Processing languages. It is organized in two main files:
 
-- *Lyrifont.py*, that is devoted to retrieve the lyrics of the selected song and to predict the genre and the associated font by pre-trained NN models. Moreover, it generates images taking advantage of Stable Diffusion starting from the key words of the current lyrics. 
+- *Lyrifont.py*, that is devoted to retrieve the lyrics of the selected song and to predict the genre and the associated font by pre-trained NN models. Moreover, it generates images starting from the key words of the current lyrics. 
 
 - *Lyrifont.pde*, that is instead used for the realization of the visual part. It is responsible for displaying the lyrics and the generated images and for all the graphics effects in the background, such that the coloured dots on the sides or the interactive visual blobs. Furthermore, all the visual elements are dinamically connected with the audio features of the song that is played.
 
-LyriFont.py needs to be ran first. Once that the system is correctly listening on the localhost server and is waiting for osc messages, Lyrifont.pde can be ran as well.
+LyriFont.py needs to be run first. Once that the system is correctly listening on the localhost server and is waiting for osc messages, Lyrifont.pde can be run as well.
 
 ## General Architecture
 The Python and Processing files communicates through OSC messages. From the Processing side the song metadata is sent, while the Python script sends back the song lyrics and the images generated from the keywords of the lyrics itself.
