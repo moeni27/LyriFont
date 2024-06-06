@@ -65,13 +65,13 @@ During its execution, LyriFont retrieves some audio features from the selected t
 
 Some of the text parameters change dynamically with the music. In fact, the entropy value has been mapped to the text size and the centroid value has been linked to the shadow color. In addition, the dot size and color vary with the audio energy and centroid respectively.
 
-A button that in the bottom-right part of the screen permits entering another mode in which the vectorial representation of the font is used to create a text warping effect that is triggered by the audio energy. 
+A button that in the bottom-right part of the screen permits entering another mode in which the vectorial representation of the font is used to create a text warping effect that is triggered by the audio energy. This effect has been obtained exploiting the [geomerative](https://github.com/rikrd/geomerative) processing library.
 
 The feature-parameter mappings have been made with respect to the behavior of the audio feature of interest. For example, since energy tends to change dramatically over the course of a track, we decided to associate it with the color of the dots to clearly visualize the rhythm of the song. Instead, we used more stable features such as entropy and centroid to control the font characteristics to capture the rhythmic evolution of the song while maintaining the intelligibility of the text.
 
 (Here is a snapshot of the system GUI during lyric rendering of the Beatles song "It's been a hard day's night")
 <p align="center">
-  <img width="800" height="auto" alt="Lyrifont thumbnail" src="/assets/images/Lyrifont_audio_features.png">
+  <img width="800" height="auto" alt="Lyrifont audio features and vectorial representation" src="/assets/images/Lyrifont_audio_features.png">
 </p>
 
 ## Known Issues
