@@ -20,4 +20,17 @@ Lyrifont is mainly made with Python and Processing languages. It is organized in
 LyriFont.py needs to be ran first. Once that the system is correctly listening on the localhost server and is waiting for osc messages, Lyrifont.pde can be ran as well.
 
 ## General Architecture
+<p align="center">
+  <img width="800" height="auto" alt="Lyrifont architecture" src="/assets/images/Lyrifont_Architecture.png">
+</p>
+## Music Genre Recognition
+## Genre-SubFont Association
+## Image Generation
+## Lyrics and Image Visualization
+## Blobs Generation
+## Interactive Visuals Features
+# Dynamic Blobs
+# Image Particles Generation
+## Audio Features Parameters Classification
+## Known Issues
 
