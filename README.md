@@ -11,7 +11,7 @@
 
 ## Usage
 
-Lyrifont is mainly made with Python and Processing languages. It is organized in two main files
+Lyrifont is mainly made with Python and Processing languages. It is organized in two main files:
 
 - *Lyrifont.py*, that is devoted to retrieve the lyrics of the selected song and to predict the genre and the associated font by pre-trained NN models. Moreover, it generates images taking advantage of Stable Diffusion starting from the key words of the current lyrics. 
 
@@ -23,6 +23,7 @@ LyriFont.py needs to be ran first. Once that the system is correctly listening o
 <p align="center">
   <img width="800" height="auto" alt="Lyrifont architecture" src="/assets/images/Lyrifont_Architecture.png">
 </p>
+
 ## Music Genre Recognition
 ## Genre-SubFont Association
 ## Image Generation
