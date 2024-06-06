@@ -1,3 +1,14 @@
+'''
+LyriFont is an interactive tool that transforms song lyrics into genre-specific text, offering users a multi-sensory, 360° experience. 
+
+This python script is devoted to retrieve the lyrics of the selected song and to predict the genre and the associated font by pre-trained NN models.
+Moreover, it generates images taking advantage of Stable Diffusion starting from the key words of the current lyrics. 
+
+Usage : This script works in couple with LyriFont.pde processing file. LyriFont.py needs to be ran first, LyriFont.pre after.
+Be sure that this script is correctly listening on the localhost server and waiting for osc messages before running the processing project. 
+
+'''
+# Import Libraries
 from sklearn.feature_extraction.text import TfidfVectorizer
 import argparse
 import syncedlyrics
@@ -23,22 +34,27 @@ import tensorflow as tf
 import numpy as np
 import config
 
-
+# Save Current Path
 currentpath = sys.path[0]
+
+# Genre Labels
 labels = ["Pop","Rock","Metal","Hiphop","Reggae","Blues","Classical","Jazz","Disco","Country"]
 
-
+# File path for excel with all fonts
 excel_path = os.path.join(currentpath, "GenreFontDataset.xlsx") #os.path.join(currentpath, "ML_Spreadsheet.xlsx")
 
 # Create a folder for Images
 folder_path = os.path.join(currentpath, "LyriFont/Images")
 if not os.path.exists(folder_path):
    os.makedirs(folder_path)
-## Read the file
+
+# Read Fonts Excel file
 df = pd.read_excel(excel_path, index_col=None, header=None)
 
+# Server Client
 client = udp_client.SimpleUDPClient("127.0.0.1", 1234)
 
+# Retrieves from the multiples genres proposed by Spotify the first that matches with the ones we used as labels for the models
 def find_first_common_genre(genres, labels):
     labels_set = set(labels)
     print(genres)
@@ -47,6 +63,7 @@ def find_first_common_genre(genres, labels):
             return genre
     return None
 
+# ??? (TO DO)
 def checkSize(array, default):
   if (get_deep_size(array)>2048):
     k = 1
@@ -55,7 +72,7 @@ def checkSize(array, default):
     return k
   else: return default  
 
-# Preprocess audio before prediction
+# Preprocess audio before prediction. MFCCs are retrieved.
 def preprocess_song(file_path,num_mfcc=40, n_fft=2048, hop_length=512, num_segment=10,offset=0,duration=30,param=False):
     sample_rate = 22050
     samples_per_segment = int(sample_rate*30/num_segment)
@@ -77,35 +94,87 @@ def preprocess_song(file_path,num_mfcc=40, n_fft=2048, hop_length=512, num_segme
 
     return None
 
-# Association genre-number in DL model
+# Gets association genre-number of the model
 def genreConversionGZTAN(genreNumber):
     genre = ""
     match genreNumber:
         case 1:
-            genre = "Pop" # was blues
+            genre = "Pop"
         case 2:
-            genre = "Rock" # was classical
+            genre = "Rock" 
         case 3:
-            genre = "Metal" # was country
+            genre = "Metal" 
         case 4:
-            genre = "Hiphop" # was disco
+            genre = "Hiphop"
         case 5:
-            genre = "Reggae" # was hiphop
+            genre = "Reggae" 
         case 6:
-            genre = "Blues" # was jazz
+            genre = "Blues" 
         case 7:
-            genre = "Classical" # was metal
+            genre = "Classical" 
         case 8:
-            genre = "Jazz" # was pop
+            genre = "Jazz" 
         case 9:
-            genre = "Disco" # was reggae
+            genre = "Disco" 
         case 10:
-            genre = "Country" # was rock
+            genre = "Country" 
     print("The genre of the song is : " + genre)
     return genre
 
-# Association font-number
+# Get association font-number of the model for each genre
 def fontConversionRock(fontNumber):
+    font = ""
+    match fontNumber:
+        case 0:
+            font = "ChrustyRock-ORLA.ttf"
+        case 1:
+            font = "GraniteRockSt-lGae.ttf"
+        case 2:
+            font = "MonsterRock-rPM7.ttf"
+        case 3:
+            font = "RockElegance-AyXM.ttf"
+        case 4:
+            font = "RockIt-yjYm.ttf"
+        case 5:
+            font = "RockPlaza-517M8.ttf"
+        case 6:
+            font = "RockRadio-Wy4Vz.otf"
+        case 7:
+            font = "RockSlayers-BW6Lw.otf"
+        case 8:
+            font = "RockSteady-Wyy7A.ttf"
+        case 9:
+            font = "WillRockYou-ZVgyK.ttf"
+    print("The font selected is: " + font)
+    return font
+
+def fontConversionCountry(fontNumber): # TO DO, TO BE FILLED WITH COUNTRY FONTS
+    font = ""
+    match fontNumber:
+        case 0:
+            font = "ChrustyRock-ORLA.ttf"
+        case 1:
+            font = "GraniteRockSt-lGae.ttf"
+        case 2:
+            font = "MonsterRock-rPM7.ttf"
+        case 3:
+            font = "RockElegance-AyXM.ttf"
+        case 4:
+            font = "RockIt-yjYm.ttf"
+        case 5:
+            font = "RockPlaza-517M8.ttf"
+        case 6:
+            font = "RockRadio-Wy4Vz.otf"
+        case 7:
+            font = "RockSlayers-BW6Lw.otf"
+        case 8:
+            font = "RockSteady-Wyy7A.ttf"
+        case 9:
+            font = "WillRockYou-ZVgyK.ttf"
+    print("The font selected is: " + font)
+    return font
+
+def fontConversionHiphop(fontNumber): # TO DO, TO BE FILLED WITH HIPHOP FONTS
     font = ""
     match fontNumber:
         case 0:
@@ -365,6 +434,7 @@ def fontConversionDisco(fontNumber):
     print("The font selected is: " + font)
     return font
 
+# Retrieves the genre of the selected artist through Spotipy
 def getSpotifyFont(artist):
 
   client_credentials_manager = SpotifyClientCredentials(client_id=config.client_id, client_secret=config.client_secret)
@@ -378,6 +448,7 @@ def getSpotifyFont(artist):
   common_genre = find_first_common_genre(artist["genres"], labels)
   return(common_genre)
 
+# ?? (TO DO)
 def excel(genre):
   mask = df[0].str.contains(genre, na=False)
 
@@ -395,7 +466,7 @@ def excel(genre):
       #return (df.iloc[index_of_first_occurrence, 1])
       return (df.iloc[random_index, 1])
   
-# Text to image generation  
+# Generate image from text through Stable Diffusion
 def text2image(prompt: str, fnameimage):
     API_URL = "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5"
     headers = {"Authorization": f"Bearer {config.api_key}"}
@@ -441,6 +512,7 @@ def text2image(prompt: str, fnameimage):
         # Return default image if an error occurs
         return None
 
+# Extract Keywords from a text
 def extract_keywords_tfidf(text):
   if len(text) > 10:
     max_keywords = 5
@@ -458,20 +530,23 @@ def extract_keywords_tfidf(text):
 
   return keywords
 
+# It retrieves the lyrics, predicts genre and font, and sends everything back to the processing file
 def loadLyrics(unused_addr, args):
   
+  # Get artist and song names
   fname = os.path.basename(args)
   artistname = fname.split(" - ")[0]
   songname = os.path.splitext("".join(fname.split(" - ")[1:]))[0]
-  
+
+  # Build song path
   song_path = os.path.join(currentpath, os.path.join("Songs", fname))
+
   # Load pre-trained model for genre recognition
+  # Song is splitted in n_of_chunks chunks, for each one is predicted the genre and the final output is obtained by averaging all outpust
   model = tf.keras.models.load_model(os.path.join(currentpath, "model.keras"))
   n_of_chunks = 5
   predictions = np.zeros((1, 11))
-
   for x in range(0,n_of_chunks):
-
     offset = 30*(x+1)
     duration = 30
 
@@ -493,7 +568,7 @@ def loadLyrics(unused_addr, args):
     genreConversionGZTAN(pred)
     print("Value : " + str(y_pred[0,pred]))
 
-  print(n_of_chunks)
+  # Overall Prediction
   predictions = predictions/n_of_chunks
   print("Final ")
   final_pred = np.argmax(predictions, axis=1)
@@ -501,8 +576,9 @@ def loadLyrics(unused_addr, args):
   value = predictions[0,final_pred]
   print("Value : " + str(value))
 
+  # Get genre from prediction
+  # If prediction is lower than 0.85 we opt to retrieve the genre from Spotify
   spot_genre = None
-
   if (value < 0.85):
     spot_genre = getSpotifyFont(artistname).capitalize()
     print("Genre taken by Spotify")
@@ -511,21 +587,22 @@ def loadLyrics(unused_addr, args):
         genre = spot_genre
     else:
         print("No spotify common genres found.")
-
   print(genre)
+
+  # Send genre to processing file
   client.send_message("/genre", labels.index(genre))
 
-  #FONT
-  #load model
+  
+  # Load genre-subFont model
   fontPath = os.path.join(currentpath, "Trained models")
   modelFont = tf.keras.models.load_model(os.path.join(fontPath, genre + ".keras"))
 
-  #Preprocess
+  # Preprocess input data
   x_test = preprocess_song(song_path, param=False)
   x_test = np.array(x_test)
   x_test = x_test.reshape(1, 130, 40)
 
-  # Do prediction
+  # Do font prediction
   y_pred = model.predict(x_test)
   pred = np.argmax(y_pred, axis=1)
   if(genre == "Rock") :
@@ -541,39 +618,40 @@ def loadLyrics(unused_addr, args):
   if(genre == "Metal") :
       songFont = fontConversionMetal(pred)
   if(genre == "Country") :
-      songFont = fontConversionCountry(pred)
+      songFont = fontConversionCountry(pred) 
   if(genre == "Reggae") :
       songFont = fontConversionReggae(pred)
   if(genre == "Hiphop") :
-      songFont = fontConversionHiphop(pred)
+      songFont = fontConversionHiphop(pred) 
   if(genre == "Disco") :
       songFont = fontConversionDisco(pred)
   if(genre == "Blues") :
       songFont = fontConversionBlues(pred)
 
-  # Result
+  # Prediction Result
   print("Prediction result : " + str(pred))
 
-
+  # Lyrics Extraction
   print("Loading Lyrics and Timestamps...")
   lrc = syncedlyrics.search("["+artistname+"] ["+songname+"]").splitlines()
   timestamps = [x[1:9] for x in lrc]
   lyrics = [x[11:len(x)] for x in lrc]
   millisec_ts = [int(x[0:2])*60000+int(x[3:5])*1000+int(x[6:9]+"0") for x in timestamps]
-  
   print("Lyrics and Timestamps Loaded!")
 
-  # Keywords extraction
+  # Keywords Extraction
   result_string = ' '.join(str(element) for element in lyrics)
   print(result_string)
   keywords = extract_keywords_tfidf(result_string)
   nouns = ' '.join(str(element) for element in keywords)
-
+  
+  # Image Generation
   for c in keywords:
      text2image(c, songname)
 
   print("Images generated!")
 
+  # Keywords sending
   print("Nouns:", nouns)
   client.send_message("/keywords", nouns)
   print(f"Keywords Sent")
@@ -582,7 +660,7 @@ def loadLyrics(unused_addr, args):
   print("Lyrics and Timestamps Loaded!")
 
 
-# Set the maximum number of characters per OSC message
+  # Set the maximum number of characters per OSC message
   defaultSize = 40
   k = checkSize(lyrics, defaultSize)
   
@@ -607,7 +685,7 @@ def loadLyrics(unused_addr, args):
   print("All Lyrics and Timestamps Sent")
 
 
-
+# Main functions. It waits for osc messages from processing project
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument("--ip", default="127.0.0.1",
