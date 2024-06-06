@@ -58,8 +58,8 @@ More than for the music genre classifier, a larger dataset for the sub-font genr
 ## Lyrics and Image Visualization
 ## Blobs Generation
 ## Interactive Visuals Features
-# Dynamic Blobs
-# Image Particles Generation
+### Dynamic Blobs
+### Image Particles Generation
 ## Audio Features Parameters Classification
 ## Known Issues
 
