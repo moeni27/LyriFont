@@ -3,6 +3,7 @@
 
 **LYRIFONT** is a project that transforms the way we experience lyrics by dynamically changing their font, based on the genre and the features of the song. Its applications extend far beyond a mere aesthetic upgrade. By harmonizing lyrics with music in this way, we enhance the overall listening experience. Whether you're a casual music enthusiast or a passionate lyricist, our project adds an extra layer of engagement and creativity to the auditory and visual aspects of music. Imagine incorporating LyriFont into music streaming platforms, live performances, or even educational tools. This technology has the potential to let users perceive and interact with song lyrics in a new way, bridging the gap between auditory and visual sensations.
 
+(Here is a snapshot of the system GUI during lyric rendering of the White Stripes song "Fell in Love With a Girl")
 <p align="center">
   <img width="800" height="auto" alt="Lyrifont thumbnail" src="/assets/images/main_Lyrifont.png">
 </p>
@@ -60,6 +61,19 @@ More than for the music genre classifier, a larger dataset for the sub-font genr
 ## Interactive Visuals Features
 ### Dynamic Blobs
 ### Image Particles Generation
-## Audio Features Parameters Classification
+## Audio Features Parameters Classification and Vectorial Representation
+During its execution, LyriFont retrieves some audio features from the selected track in real time. In particular, centroid, energy and entropy have been taken into account. 
+
+Some of the text parameters change dynamically with the music. In fact, the entropy value has been mapped to the text size and the centroid value has been linked to the shadow color. In addition, the dot size and color vary with the audio energy and centroid respectively.
+
+A button that in the bottom-right part of the screen permits entering another mode in which the vectorial representation of the font is used to create a text warping effect that is triggered by the audio energy. 
+
+The feature-parameter mappings have been made with respect to the behavior of the audio feature of interest. For example, since energy tends to change dramatically over the course of a track, we decided to associate it with the color of the dots to clearly visualize the rhythm of the song. Instead, we used more stable features such as entropy and centroid to control the font characteristics to capture the rhythmic evolution of the song while maintaining the intelligibility of the text.
+
+(Here is a snapshot of the system GUI during lyric rendering of the Beatles song "It's been a hard day's night")
+<p align="center">
+  <img width="800" height="auto" alt="Lyrifont thumbnail" src="/assets/images/Lyrifont_audio_features.png">
+</p>
+
 ## Known Issues
 
