@@ -3,7 +3,6 @@
 
 **LYRIFONT** is a project that transforms the way we experience lyrics by dynamically changing their font, based on the genre and the features of the song. Its applications extend far beyond a mere aesthetic upgrade. By harmonizing lyrics with music in this way, we enhance the overall listening experience. Whether you're a casual music enthusiast or a passionate lyricist, our project adds an extra layer of engagement and creativity to the auditory and visual aspects of music. Imagine incorporating LyriFont into music streaming platforms, live performances, or even educational tools. This technology has the potential to let users perceive and interact with song lyrics in a new way, bridging the gap between auditory and visual sensations.
 
-(Here is a snapshot of the system GUI during lyric rendering of the White Stripes song "Fell in Love With a Girl")
 <p align="center">
   <img width="800" height="auto" alt="Lyrifont thumbnail" src="/assets/images/main_Lyrifont.png">
 </p>
