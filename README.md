@@ -21,7 +21,7 @@ LyriFont.py needs to be ran first. Once that the system is correctly listening o
 
 ## General Architecture
 The Python and Processing files communicates through OSC messages. From the Processing side the song metadata is sent, while the Python script sends back the lyrics retrieved and the images generated from the keywords of the lyrics itself.
-The lyrics are taken by using [syncedlyrics]((https://github.com/moehmeni/syncedlyrics) Python library that gets them from many providers such as Musixmatch, Deezer, Lrclib and many others.
+The lyrics are taken by using [syncedlyrics](https://github.com/moehmeni/syncedlyrics) Python library that gets them from many providers such as Musixmatch, Deezer, Lrclib and many others.
 <p align="center">
   <img width="800" height="auto" alt="Lyrifont architecture" src="/assets/images/Lyrifont_Architecture.png">
 </p>
