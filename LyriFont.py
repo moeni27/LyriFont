@@ -491,7 +491,7 @@ def text2image(prompt: str, fnameimage):
         image.save(filepath)
 
         return filename
-    
+    # Returns default images if Hugging Face is unavailable
     except requests.exceptions.RequestException as e:
         print(f"HTTP request failed: {e}")
         for x in range(4):
