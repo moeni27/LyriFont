@@ -63,7 +63,8 @@ def find_first_common_genre(genres, labels):
             return genre
     return None
 
-# ??? (TO DO)
+# max OSC size for Processing is 2048 bytes, function accordingly limits the size of the message
+# chunk by performing a slicing if necessary
 def checkSize(array, default):
   if (get_deep_size(array)>2048):
     k = 1
@@ -122,6 +123,7 @@ def genreConversionGZTAN(genreNumber):
     return genre
 
 # Get association font-number of the model for each genre
+# FONTS SHOULD BE CHANGED
 def fontConversionRock(fontNumber):
     font = ""
     match fontNumber:
@@ -138,9 +140,9 @@ def fontConversionRock(fontNumber):
         case 5:
             font = "RockPlaza-517M8.ttf"
         case 6:
-            font = "RockRadio-Wy4Vz.otf"
+            font = "RockRadio-Wy4Vz.ttf"
         case 7:
-            font = "RockSlayers-BW6Lw.otf"
+            font = "RockSlayers-BW6Lw.ttf"
         case 8:
             font = "RockSteady-Wyy7A.ttf"
         case 9:
@@ -148,7 +150,7 @@ def fontConversionRock(fontNumber):
     print("The font selected is: " + font)
     return font
 
-def fontConversionCountry(fontNumber): # TO DO, TO BE FILLED WITH COUNTRY FONTS
+def fontConversionCountry(fontNumber):
     font = ""
     match fontNumber:
         case 0:
@@ -164,9 +166,9 @@ def fontConversionCountry(fontNumber): # TO DO, TO BE FILLED WITH COUNTRY FONTS
         case 5:
             font = "RockPlaza-517M8.ttf"
         case 6:
-            font = "RockRadio-Wy4Vz.otf"
+            font = "RockRadio-Wy4Vz.ttf"
         case 7:
-            font = "RockSlayers-BW6Lw.otf"
+            font = "RockSlayers-BW6Lw.ttf"
         case 8:
             font = "RockSteady-Wyy7A.ttf"
         case 9:
@@ -174,7 +176,7 @@ def fontConversionCountry(fontNumber): # TO DO, TO BE FILLED WITH COUNTRY FONTS
     print("The font selected is: " + font)
     return font
 
-def fontConversionHiphop(fontNumber): # TO DO, TO BE FILLED WITH HIPHOP FONTS
+def fontConversionHiphop(fontNumber):
     font = ""
     match fontNumber:
         case 0:
@@ -190,9 +192,9 @@ def fontConversionHiphop(fontNumber): # TO DO, TO BE FILLED WITH HIPHOP FONTS
         case 5:
             font = "RockPlaza-517M8.ttf"
         case 6:
-            font = "RockRadio-Wy4Vz.otf"
+            font = "RockRadio-Wy4Vz.ttf"
         case 7:
-            font = "RockSlayers-BW6Lw.otf"
+            font = "RockSlayers-BW6Lw.ttf"
         case 8:
             font = "RockSteady-Wyy7A.ttf"
         case 9:
@@ -216,11 +218,11 @@ def fontConversionBlues(fontNumber):
         case 5:
             font = "RoadShot-qZYDl.ttf"
         case 6:
-            font = "RumbleweedspurRegular-VwLy.otf"
+            font = "RumbleweedspurRegular-VwLy.ttf"
         case 7:
             font = "TheCheelaved-owOvo.ttf"
         case 8:
-            font = "UnchainedRoughPersonalUseRegular-WyjAz.otf"
+            font = "UnchainedRoughPersonalUseRegular-WyjAz.ttf"
         case 9:
             font = "ZinfandelSpurRegular-qJr0.ttf"
     print("The font selected is: " + font)
@@ -246,7 +248,7 @@ def fontConversionPop(fontNumber):
         case 7:
             font = "RoundPop-owwjd.ttf"
         case 8:
-            font = "TigerChest-yw6Le.otf"
+            font = "TigerChest-yw6Le.ttf"
         case 9:
             font = "UnicornPop-Z0qq.ttf"
     print("The font selected is: " + font)
@@ -256,13 +258,13 @@ def fontConversionJazz(fontNumber):
     font = ""
     match fontNumber:
         case 0:
-            font = "BeautySwingPersonalUse-DOEaD.otf"
+            font = "BeautySwingPersonalUse-DOEaD.ttf"
         case 1:
             font = "jazztext.ttf"
         case 2:
-            font = "MEllington.otf"
+            font = "MEllington.ttf"
         case 3:
-            font = "OPTINovelGothic-XBoldAgen.otf"
+            font = "OPTINovelGothic-XBoldAgen.ttf"
         case 4:
             font = "GloriousChristmas-BLWWB.ttf"
         case 5:
@@ -286,15 +288,15 @@ def fontConversionHipHop(fontNumber):
         case 1:
             font = "AttackGraffiti-3zRBM.ttf"
         case 2:
-            font = "BombDaGone-VG0RB.otf"
+            font = "BombDaGone-VG0RB.ttf"
         case 3:
             font = "Chronic-1GnwL.ttf"
         case 4:
-            font = "DonGraffiti-wrYx.otf"
+            font = "DonGraffiti-wrYx.ttf"
         case 5:
             font = "DowntownStreet-0WY0R.ttf"
         case 6:
-            font = "GraffitiHipsterDemoVersionRegular-ZVBxJ.otf"
+            font = "GraffitiHipsterDemoVersionRegular-ZVBxJ.ttf"
         case 7:
             font = "SlimWandalsAltPersonalUse-AL9vM.ttf"
         case 8:
@@ -310,9 +312,9 @@ def fontConversionMetal(fontNumber):
         case 0:
             font = "BogartsMetal-MVBEe.ttf"
         case 1:
-            font = "CrushMetal-8MP7A.otf"
+            font = "CrushMetal-8MP7A.ttf"
         case 2:
-            font = "DeadeldermetalRegular-1Gx3v.otf"
+            font = "DeadeldermetalRegular-1Gx3v.ttf"
         case 3:
             font = "Distem-VG2nx.ttf"
         case 4:
@@ -362,7 +364,7 @@ def fontConversionReggae(fontNumber):
         case 0:
             font = "AguaDejamaicaItalic-55Yv.ttf"
         case 1:
-            font = "MarleyRegular-zM1a.otf"
+            font = "MarleyRegular-zM1a.ttf"
         case 2:
             font = "MarleyFontDemoDemo-eZDVO.ttf"
         case 3:
@@ -378,7 +380,7 @@ def fontConversionReggae(fontNumber):
         case 8:
             font = "fast99.ttf"
         case 9:
-            font = "zawijasy.otf"
+            font = "zawijasy.ttf"
     print("The font selected is: " + font)
     return font
 
@@ -386,25 +388,25 @@ def fontConversionClassical(fontNumber):
     font = ""
     match fontNumber:
         case 0:
-            font = "AutumnFlowers-9YVZK.otf"
+            font = "AutumnFlowers-9YVZK.ttf"
         case 1:
             font = "BabySela-vmxz4.ttf"
         case 2:
-            font = "ClassicSignatureDemo-axdDE.otf"
+            font = "ClassicSignatureDemo-axdDE.ttf"
         case 3:
-            font = "Classical-4pq9.otf"
+            font = "Classical-4pq9.ttf"
         case 4:
-            font = "ElegantDemo-OVJX6.otf"
+            font = "ElegantDemo-OVJX6.ttf"
         case 5:
-            font = "ElegantStylish-JR3xj.otf"
+            font = "ElegantStylish-JR3xj.ttf"
         case 6:
-            font = "Faldith-qZM95.otf"
+            font = "Faldith-qZM95.ttf"
         case 7:
             font = "FathirScriptPersonalUseOnly-MV2rJ.ttf"
         case 8:
             font = "HarmonyStrikinglyRegular-d978X.ttf"
         case 9:
-            font = "RusillaSerif-2OZpl.otf"
+            font = "RusillaSerif-2OZpl.ttf"
     print("The font selected is: " + font)
     return font
 
@@ -412,11 +414,11 @@ def fontConversionDisco(fontNumber):
     font = ""
     match fontNumber:
         case 0:
-            font = "70SdiscopersonaluseBold-w14z2.otf"
+            font = "70SdiscopersonaluseBold-w14z2.ttf"
         case 1:
-            font = "DiscoDeck-a4wa.otf"
+            font = "DiscoDeck-a4wa.ttf"
         case 2:
-            font = "DiscoDuck3DItalic-al1m.otf"
+            font = "DiscoDuck3DItalic-al1m.ttf"
         case 3:
             font = "DiscoEverydayValueRegular-zMGG.ttf"
         case 4:
@@ -426,7 +428,7 @@ def fontConversionDisco(fontNumber):
         case 6:
             font = "Gelam-lKo5.ttf"
         case 7:
-            font = "MoogieDisco-2OwAX.otf"
+            font = "MoogieDisco-2OwAX.ttf"
         case 8:
             font = "Sugar-lxD5.ttf"
         case 9:
@@ -447,24 +449,6 @@ def getSpotifyFont(artist):
 
   common_genre = find_first_common_genre(artist["genres"], labels)
   return(common_genre)
-
-# ?? (TO DO)
-def excel(genre):
-  mask = df[0].str.contains(genre, na=False)
-
-  # If the target string is found, get the first element of its row
-  if mask.any():
-      indices = df.index[mask].tolist()
-
-      # Choose a random index among the matching ones
-      random_index = random.choice(indices)
-
-      # Find the index of the first occurrence
-      #index_of_first_occurrence = df.index[mask].tolist()[1]
-        
-      # Get the first element of the row in column A (assuming column A contains the desired data)
-      #return (df.iloc[index_of_first_occurrence, 1])
-      return (df.iloc[random_index, 1])
   
 # Generate image from text through Stable Diffusion
 def text2image(prompt: str, fnameimage):
