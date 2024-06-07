@@ -475,7 +475,7 @@ def text2image(prompt: str, fnameimage):
         image.save(filepath)
 
         return filename
-    
+    # Returns default images if Hugging Face is unavailable
     except requests.exceptions.RequestException as e:
         print(f"HTTP request failed: {e}")
         for x in range(4):
@@ -509,7 +509,7 @@ def extract_keywords_tfidf(text):
   # Extract nouns from the processed text (use set for no duplicates)
   nouns = set([token.text for token in doc if token.pos_ == "NOUN"])
 
-  # Limit the number of keywords (convert set back to list if needed)
+  # Limit the number of keywords
   keywords = list(nouns)[:max_keywords]
 
   return keywords
