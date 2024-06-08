@@ -65,16 +65,29 @@ Hugging Face is a leading platform in natural language processing (NLP) and mach
 ### Image Particles Generation
 Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
 
-<p align="center">
-  <img width="auto" height="auto" alt="Lyrifont audio features and vectorial representation" src="/assets/images/image_visualization.png">
-</p>
+Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
+
+<img align="right" width="400" height="300" alt="Lyrifont audio features and vectorial representation" src="/assets/images/image_visualization.png">
+
+Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
+Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
+Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
+Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
 
 ### Dynamic Blobs
-blob
 
-<p align="center">
-  <img width="auto" height="auto" alt="Lyrifont audio features and vectorial representation" src="/assets/images/blob_click.gif">
-</p>
+Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
+Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
+Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
+
+<img align="right" width="400" height="350" alt="Lyrifont audio features and vectorial representation" src="/assets/images/blob_click.gif">
+
+Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
+Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
+Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
+Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
+
+Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
 
 ## Audio Features Parameters Classification and Vectorial Representation
 During its execution, LyriFont retrieves some audio features from the selected track in real time. In particular, centroid, energy and entropy have been taken into account. 
