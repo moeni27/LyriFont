@@ -60,7 +60,10 @@ More than for the music genre classifier, a larger dataset for the sub-font genr
 
 ## Image Generation
 The images that are displayed during the playback of the song are generated through the Hugging Face API based on keywords extracted from a given text using the spaCy library in Python.
-<img align="center" width="400" height="300" alt="Hugging_face" src="/assets/images/hugging_face.png">
+<p align="center">
+  <img align="left" width="300" height="25" alt="Hugging_face" src="/assets/images/hugging_face.png">
+</p>
+
 Hugging Face is a leading platform in natural language processing (NLP) and machine learning, known for its Transformers library which provides state-of-the-art models for a variety of tasks. While Hugging Face is primarily known for NLP, it also offers models for other tasks including image generation. These models can create images based on textual inputs. On the other hand spaCy is a popular open-source library for advanced natural language processing in Python. It's designed to be fast and efficient for tasks such as tokenization, part-of-speech tagging, named entity recognition, and more.
 ## Interactive Visuals Features
 ### Image Particles Generation
