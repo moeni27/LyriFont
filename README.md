@@ -65,14 +65,13 @@ Hugging Face is a leading platform in natural language processing (NLP) and mach
 ### Image Particles Generation
 Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
 
-Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
+The particle size influences the radius of the circle, while the resolution controls the number of particles per row, influencing how accurately the displayed image is rendered through the particle grid.
 
 <img align="right" width="400" height="300" alt="Lyrifont audio features and vectorial representation" src="/assets/images/image_visualization.png">
 
-Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
-Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
-Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
-Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
+When generated, the particles move globally towards a random point in the canvas, taking into consideration the size of the image with realation to the window size, while keeping . This point is the random attractor which is chosen for each displayed particle grid.\
+The mouse can interact with the particle system in real time, imposing a repulsive force on the particles surrounding the user's pointer. The particles move back to their original position over time, thanks to an attractive force responsible for the correct visualization of the image.
+The intensity of the repulsion and attraction can be customized in order to make movements faster or slower, allowing to create a more dynamic effect or to make the deformations caused my mouse movement more long-lasting (affecting the image visualization in a pronounced way).
 
 ### Dynamic Blobs
 
@@ -80,7 +79,7 @@ Images are displayed through an interactive particle system. The grid of particl
 Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
 Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
 
-<img align="right" width="400" height="350" alt="Lyrifont audio features and vectorial representation" src="/assets/images/blob_click.gif">
+<img align="right" width="450" height="400" alt="Lyrifont audio features and vectorial representation" src="/assets/images/blob_click.gif">
 
 Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
 Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
