@@ -8,7 +8,7 @@ Its applications extend far beyond a mere aesthetic upgrade. By harmonizing lyri
 Whether you're a casual music enthusiast or a passionate lyricist, our project adds an extra layer of engagement and creativity to the auditory and visual aspects of music. Imagine incorporating LyriFont into music streaming platforms, live performances, or even educational tools. This technology has the potential to let users perceive and interact with song lyrics in a new way, bridging the gap between auditory and visual sensations.
 
 <p align="center">
-  <img width="800" height="auto" alt="Lyrifont thumbnail" src="/assets/images/main_Lyrifont.png">
+  <img width="auto" height="auto" alt="Lyrifont thumbnail" src="/assets/images/example.png">
 </p>
 
 [Demo Video](https://www.youtube.com/???????)
@@ -61,11 +61,21 @@ More than for the music genre classifier, a larger dataset for the sub-font genr
 ## Image Generation
 The images that are displayed during the playback of the song are generated through the Hugging Face API based on keywords extracted from a given text using the spaCy library in Python.
 Hugging Face is a leading platform in natural language processing (NLP) and machine learning, known for its Transformers library which provides state-of-the-art models for a variety of tasks. While Hugging Face is primarily known for NLP, it also offers models for other tasks including image generation. These models can create images based on textual inputs. On the other hand spaCy is a popular open-source library for advanced natural language processing in Python. It's designed to be fast and efficient for tasks such as tokenization, part-of-speech tagging, named entity recognition, and more.
-## Lyrics and Image Visualization
-## Blobs Generation
 ## Interactive Visuals Features
-### Dynamic Blobs
 ### Image Particles Generation
+Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
+
+<p align="center">
+  <img width="auto" height="auto" alt="Lyrifont audio features and vectorial representation" src="/assets/images/image_visualization.png">
+</p>
+
+### Dynamic Blobs
+blob
+
+<p align="center">
+  <img width="auto" height="auto" alt="Lyrifont audio features and vectorial representation" src="/assets/images/blob_click.gif">
+</p>
+
 ## Audio Features Parameters Classification and Vectorial Representation
 During its execution, LyriFont retrieves some audio features from the selected track in real time. In particular, centroid, energy and entropy have been taken into account. 
 
@@ -75,9 +85,12 @@ A button that in the bottom-right part of the screen permits entering another mo
 
 The feature-parameter mappings have been made with respect to the behavior of the audio feature of interest. For example, since energy tends to change dramatically over the course of a track, we decided to associate it with the color of the dots to clearly visualize the rhythm of the song. Instead, we used more stable features such as entropy and centroid to control the font characteristics to capture the rhythmic evolution of the song while maintaining the intelligibility of the text.
 
-(Here is a snapshot of the system GUI during lyric rendering of the Beatles song "It's been a hard day's night")
 <p align="center">
   <img width="800" height="auto" alt="Lyrifont audio features and vectorial representation" src="/assets/images/Lyrifont_audio_features.png">
+</p>
+
+<p align="center">
+  <img width="800" height="auto" alt="Lyrifont audio features and vectorial representation" src="/assets/images/secondary_features.png">
 </p>
 
 ## Known Issues
