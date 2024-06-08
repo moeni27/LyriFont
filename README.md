@@ -85,7 +85,7 @@ The intensity of the repulsion and attraction can be customized in order to make
 
 ### Dynamic Blobs
 
-<img align="right" width="400" height="400" alt="Lyrifont audio features and vectorial representation" src="/assets/images/blob_click.gif">
+<img align="right" width="400" height="500" alt="Lyrifont audio features and vectorial representation" src="/assets/images/blob_click.gif">
 
 Blobs are generated randomly throughout the canvas, according to a simple genetic algorithm. Each blob is a separate entity, posessing one gene which influences the maximum speed that the object can reach. Their color is coordinated with the music-responsive sides of the application.
 These entities have a certain amount of health, which dictates if each blob will continue living or die in the subsequent frame, which is visualized directly through its color saturation. The gene of each blob can be passed down through generations via asexual reproduction.
