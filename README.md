@@ -64,7 +64,10 @@ The images that are displayed during the playback of the song are generated thro
   <img align="left" width="300" height="75" alt="Hugging_face" src="/assets/images/hugging_face.png">
 </p>
 
-Hugging Face is a leading platform in natural language processing (NLP) and machine learning, known for its Transformers library which provides state-of-the-art models for a variety of tasks. While Hugging Face is primarily known for NLP, it also offers models for other tasks including image generation. These models can create images based on textual inputs. On the other hand spaCy is a popular open-source library for advanced natural language processing in Python. It's designed to be fast and efficient for tasks such as tokenization, part-of-speech tagging, named entity recognition, and more.
+Hugging Face is a leading platform in natural language processing (NLP) and machine learning, known for its Transformers library which provides state-of-the-art models for a variety of tasks. While Hugging Face is primarily known for NLP, it also offers models for other tasks including image generation. These models can create images based on textual inputs. 
+
+
+On the other hand spaCy is a popular open-source library for advanced natural language processing in Python. It's designed to be fast and efficient for tasks such as tokenization, part-of-speech tagging, named entity recognition, and more.
 ## Interactive Visuals Features
 ### Image Particles Generation
 Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
