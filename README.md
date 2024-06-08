@@ -75,7 +75,7 @@ On the other hand spaCy is a popular open-source library for advanced natural la
 ### Image Particles Generation
 Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
 
-The particle size influences the radius of the circle, while the resolution controls the number of particles per row, influencing how accurately the displayed image is rendered through the particle grid.
+The particle size influences the radius of the circle, while the resolution controls the number of particles per row, influencing how accurately the displayed image is rendered through the particle grid. The flatness of the music that is played influences the brownian motion of the particles.
 
 <img align="right" width="400" height="300" alt="Lyrifont audio features and vectorial representation" src="/assets/images/image_visualization.png">
 
@@ -85,18 +85,15 @@ The intensity of the repulsion and attraction can be customized in order to make
 
 ### Dynamic Blobs
 
-Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
-Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
-Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
-
 <img align="right" width="450" height="400" alt="Lyrifont audio features and vectorial representation" src="/assets/images/blob_click.gif">
 
-Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
-Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
-Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
-Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
+Blobs are generated randomly throughout the canvas, according to a simple genetic algorithm. Each blob is a separate entity, posessing one gene which influences the maximum speed that the object can reach. Their color is coordinated with the music-responsive sides of the application.
+These entities have a certain amount of health, which dictates if each blob will continue living or die in the subsequent frame, which is visualized directly through its color saturation. The gene of each blob can be passed down through generations via asexual reproduction.
 
-Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
+The blob's genes are randomly generated, the only exception is when they're produced via reproduction, in this latter case the gene is inherited from the parent with a 1% chance of mutation which slightly deviates from the gene that was carried on from the previous generation.\
+Certain features of the music can influence their behaviour and qualities. The track's spread applies an additional force to the blobs (making them move around, loosely following the music), while its skew increases the probability of asexual reproduction (meaning that a higher population of blobs becomes more likely).
+
+The user can further interact with the background of the application by holding down the left mouse button. This input generates a series of blobs as long as the user keeps the button pressed (in this case the blob genes are all random as they're not the result of asexual reproduction).
 
 ## Audio Features Parameters Classification and Vectorial Representation
 During its execution, LyriFont retrieves some audio features from the selected track in real time. In particular, centroid, energy and entropy have been taken into account. 
