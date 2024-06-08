@@ -75,13 +75,14 @@ On the other hand spaCy is a popular open-source library for advanced natural la
 ### Image Particles Generation
 Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
 
-The particle size influences the radius of the circle, while the resolution controls the number of particles per row, influencing how accurately the displayed image is rendered through the particle grid. The flatness of the music that is played influences the brownian motion of the particles.
+The particle size influences the radius of the circle, while the resolution controls the number of particles per row, impacting how accurately the displayed image is rendered through the particle grid. The flatness of the music that is played controls the brownian motion of the particles.
 
 <img align="right" width="400" height="300" alt="Lyrifont audio features and vectorial representation" src="/assets/images/image_visualization.png">
 
-When generated, the particles move globally towards a random point in the canvas, taking into consideration the size of the image with realation to the window size, while keeping . This point is the random attractor which is chosen for each displayed particle grid.\
+When generated, the particles move globally towards a random point in the canvas, taking into consideration the size of the image with respect to the window size, while keeping the general structure of the image intact. This point is the random attractor which is chosen for each displayed particle grid.
+
 The mouse can interact with the particle system in real time, imposing a repulsive force on the particles surrounding the user's pointer. The particles move back to their original position over time, thanks to an attractive force responsible for the correct visualization of the image.
-The intensity of the repulsion and attraction can be customized in order to make movements faster or slower, allowing to create a more dynamic effect or to make the deformations caused my mouse movement more long-lasting (affecting the image visualization in a pronounced way).
+The intensity of the repulsion and attraction can be customized in order to make movements faster or slower, allowing to create a more dynamic effect or to make the deformations caused my mouse movement more long-lasting.
 
 ### Dynamic Blobs
 
@@ -90,8 +91,8 @@ The intensity of the repulsion and attraction can be customized in order to make
 Blobs are generated randomly throughout the canvas, according to a simple genetic algorithm. Each blob is a separate entity, posessing one gene which influences the maximum speed that the object can reach. Their color is coordinated with the music-responsive sides of the application.
 These entities have a certain amount of health, which dictates if each blob will continue living or die in the subsequent frame, which is visualized directly through its color saturation. The gene of each blob can be passed down through generations via asexual reproduction.
 
-The blob's genes are randomly generated, the only exception is when they're produced via reproduction, in this latter case the gene is inherited from the parent with a 1% chance of mutation which slightly deviates from the gene that was carried on from the previous generation.\
-Certain features of the music can influence their behaviour and qualities. The track's spread applies an additional force to the blobs (making them move around, loosely following the music), while its skew increases the probability of asexual reproduction (meaning that a higher population of blobs becomes more likely).
+The blob's genes are randomly generated, the only exception is when they're created via reproduction, in this latter case the gene is inherited from the parent with a 1% chance of mutation which slightly deviates from the gene that was carried on from the previous generation.\
+Certain features of the music can influence their behaviour and qualities. The track's spread applies an additional force to the blobs (making them move around, loosely following the music), while its skew increases the likelihood of asexual reproduction.
 
 The user can further interact with the background of the application by holding down the left mouse button. This input generates a series of blobs as long as the user keeps the button pressed (in this case the blob genes are all random as they're not the result of asexual reproduction).
 
