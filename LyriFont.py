@@ -512,8 +512,10 @@ def loadLyrics(unused_addr, args):
   # If prediction is lower than 0.85 we opt to retrieve the genre from Spotify
   spot_genre = None
   if (value < 0.85):
-    spot_genre = getSpotifyFont(artistname).capitalize()
-    print("Genre taken by Spotify")
+    spot_genre = getSpotifyFont(artistname)
+    if spot_genre != None:
+        spot_genre = spot_genre.capitalize()
+    print("Search genre by Spotify")
     if spot_genre:
         print(f"There is a common genre: {spot_genre}")
         genre = spot_genre
@@ -623,7 +625,6 @@ if __name__ == "__main__":
   parser.add_argument("--port", type=int, default=5005,
       help="The port the OSC server is listening on")
   args = parser.parse_args()
-
   dispatcher = dispatcher.Dispatcher()
 
   dispatcher.map("/load", loadLyrics)
