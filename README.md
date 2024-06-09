@@ -14,13 +14,6 @@ Whether you're a casual music enthusiast or a passionate lyricist, our project a
 [Demo Video](https://www.youtube.com/???????)
 
 ## Usage
-
-Lyrifont is mainly implemented in Python and Processing languages. It is organized in two main files:
-
-- *Lyrifont.py*, that is devoted to retrieve the lyrics of the selected song and to predict the genre and the associated font by pre-trained NN models. Moreover, it generates images starting from the key words of the current lyrics. 
-
-- *Lyrifont.pde*, that is instead used for the realization of the visual part. It is responsible for displaying the lyrics and the generated images and for all the graphics effects in the background, such that the coloured dots on the sides or the interactive visual blobs. Furthermore, all the visual elements are dinamically connected with the audio features of the song that is played.
-
 The first thing to do is copy all the songs you want to use into the "Songs" folder.
 
 *Lyrifont.py* then needs to be run. Once that the system is correctly listening on the localhost server and is waiting for osc messages, *Lyrifont.pde* can be run as well.
@@ -28,7 +21,13 @@ The first thing to do is copy all the songs you want to use into the "Songs" fol
 !!! **The selected song won't be loaded correctly if it doesn't have the correct artist name and song name in the metadata** !!!
 
 ## General Architecture
-The Python and Processing files communicates through OSC messages. From the Processing side the song metadata is sent, while the Python script sends back the song lyrics and the images generated from the keywords of the lyrics itself.
+Lyrifont is mainly implemented in Python and Processing languages. It is organized in two main files:
+
+- *Lyrifont.py*, that is devoted to retrieve the lyrics of the selected song and to predict the genre and the associated font by pre-trained NN models. Moreover, it generates images starting from the key words of the current lyrics. 
+
+- *Lyrifont.pde*, that is instead used for the realization of the visual part. It is responsible for displaying the lyrics and the generated images and for all the graphics effects in the background, such that the coloured dots on the sides or the interactive visual blobs. Furthermore, all the visual elements are dinamically connected with the audio features of the song that is played.
+
+The two files communicates through OSC messages. From the Processing side the song metadata is sent, while the Python script sends back the song lyrics and the images generated from the keywords of the lyrics itself.
 
 The lyrics are retrieved by using [syncedlyrics](https://github.com/moehmeni/syncedlyrics) Python library that gets them from many providers such as Musixmatch, Deezer, Lrclib and many others.
 
