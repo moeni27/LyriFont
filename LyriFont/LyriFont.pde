@@ -1,3 +1,14 @@
+/*
+LyriFont is an interactive tool that transforms song lyrics into genre-specific text, offering users a multi-sensory, 360° experience. 
+
+This script is used for the realization of the visual part. 
+It is responsible for displaying the lyrics and the generated images and for all the graphics effects in the background, such that the coloured dots on the sides or the interactive visual blobs. 
+Furthermore, all the visual elements are dinamically connected with the audio features of the song that is played.
+
+Usage : Lyrifont.py then needs to be run first. Once that the system is correctly listening on the localhost server and is waiting for osc messages, Lyrifont.pde can be run as well.
+*/
+
+// Import libraries
 import oscP5.*;
 import netP5.*;
 import ddf.minim.*;
@@ -5,20 +16,23 @@ import ddf.minim.analysis.*;
 import geomerative.*;
 import java.io.File;
 
+// Define all variables
 File folder;
 
+// Audio loading variables
 Minim minim;
 AudioPlayer song;
 int frameLength = 1024;
 AgentFeature feat;
 AudioMetaData meta;
 
+// Font variables
 PFont font;
 RShape grp;
 RPoint[] points;
 String GeomFont;
 
-
+// Graphics variables
 int rectX, rectY;      // Position of square button
 int rectSize = 90;     // Diameter of rect
 color rectColor;
@@ -45,10 +59,12 @@ int switchSize = 90;
 //color chooseHighlight;
 boolean chooseOver = false;
 
+// OSC variables
 OscP5 oscP5;
 OscP5 oscP52;
 NetAddress myRemoteLocation;
 
+// Lyrics variables
 String filepath;
 String text = "Load a song to start";
 String metaTitle;
@@ -81,7 +97,7 @@ World world;
 int a;
 ArrayList<Blob> blobs = new ArrayList<Blob>();
 
-// BACKGROUND IMAGES
+// Background images variables
 PImage img;
 PImage polilogo;
 float PARTICLE_SIZE = 5;
@@ -102,6 +118,7 @@ boolean shouldDisplayImages = false;
 float[] genreColors = {320, 200, 0, 130, 110, 240, 40, 60, 285, 15};
 int genre = 0;
 
+// ??? TO DO
 String getCurrentLine(Object[] timestamps, Object[] lines) {
   int current_time = millis()-startTime+elapsedTime;
 
@@ -129,6 +146,7 @@ String getCurrentLine(Object[] timestamps, Object[] lines) {
   }
 }
 
+// Split too long sentences into lines
 String[] splitTextIntoLines(String input, float lineWidth) {
   String[] words = input.split("\\s+");
   StringBuilder currentLine = new StringBuilder();
@@ -150,8 +168,10 @@ String[] splitTextIntoLines(String input, float lineWidth) {
   return lines.toArray(new String[0]);
 }
 
-
+// Setup function
 void setup() {
+  
+  // Graphic setup
   size(1500, 750);
   surface.setResizable(true);
   max_distance = dist(0, 0, width, height);
@@ -166,22 +186,20 @@ void setup() {
   rectHighlight = color(204);
   rectX = 20;
   rectY = 20;
-
-
+  
+  // Geomerative stuff
   geomColor = color(255);
   geomHighlight = color(204);
   geomX = width - geomSize - 20;
   geomY = height - geomSize - 20;
-
-
-  // Geomerative stuff
   RG.init(this);
   grp = RG.getText(text, "Font/Silkscreen-Regular.ttf", 120, CENTER);
 
-
+  // Lyrics variables
   dynamicLyric = new ArrayList<Object>();
   dynamicTime = new ArrayList<Object>();
-
+  
+  // Graphic setup
   uploadButton = loadImage("upload.png");
   chooseX = width-chooseSize-20;
   chooseY = 20;
@@ -190,19 +208,22 @@ void setup() {
   //switchButton = loadImage("switch.png");
   //switchX = width - switchSize - 20;
   //switchY = height - switchSize - 20;
-
+  
+  // Font variable
   font = createFont("Georgia", 38);
-
+  
+  // Audio variables
   minim = new Minim(this);
-
   oscP5 = new OscP5(this, 1234);
   oscP52 = new OscP5(this, 1234);
   myRemoteLocation = new NetAddress("127.0.0.1", 5005);
 
+  // Mouse blobs variables
   world = new World(20);
   a = 0;
 }
 
+// Draw function
 void draw() {
   max_distance = dist(0, 0, width, height);
   chooseX = width-chooseSize-20;
@@ -413,11 +434,13 @@ void draw() {
   //image(switchButton, switchX, switchY, switchSize, switchSize);
 }
 
+// Loads images from index
 void loadImageFromIndex(int index) {
   String imagePath = "Images/" + imageFiles[index];
   img = loadImage(imagePath);
 }
 
+// Spawn new particles
 void spawnParticles() {
   DEAD = false;
   COUNTER=0;
@@ -456,7 +479,7 @@ void clearFolder() {
   }
 }
 
-
+// Update function
 void update() {
   if ( overRect(rectX, rectY, rectSize, rectSize) ) {
     rectOver = true;
@@ -483,6 +506,7 @@ void update() {
   }
 }
 
+// Reset Function
 void reset() {
   songChosen = false;
   if (playing) {
@@ -501,6 +525,7 @@ void reset() {
   font = createFont("Georgia", 38);
 }
 
+// Actions after file is selected
 void fileSelected(File selection) {
   if (selection == null) {
     println("Window was closed or the user hit cancel.");
@@ -514,6 +539,7 @@ void fileSelected(File selection) {
   }
 }
 
+// Load song and retrieves metadata
 void loadSong() {
   song = minim.loadFile(filepath, frameLength);
   feat = new AgentFeature(song.bufferSize(), song.sampleRate());
@@ -529,7 +555,7 @@ void loadSong() {
   text = "Song loaded!";
 }
 
-
+// MousePressed function
 void mousePressed() {
   if (rectOver) {
     if (firstPlay&&songChosen) {
@@ -609,6 +635,7 @@ boolean overRect(int x, int y, int width, int height) {
   }
 }
 
+// Handle osc event
 void oscEvent(OscMessage theOscMessage) {
 
   if (theOscMessage.checkAddrPattern("/genre")==true) {
@@ -651,7 +678,7 @@ void oscEvent(OscMessage theOscMessage) {
     println(keywords);
   }
 }
-// Features Functions
+// Mapping audio features functions 
 
 // Entropy goes approximately from  0 (usually only when there is silence, otherwise it has a minimum value between around 50 and 200) to a maximum around 800/1000.
 float entropyMapping(float entropy) {
@@ -721,7 +748,7 @@ float spreadMapping(float spread) {
   return output;
 }
 
-// starts very low but then is in range -3 : 10 (usually 0:4)
+// Skew starts very low but then is in range -3 : 10 (usually 0:4)
 float skewnessMapping(float skew) {
   float output = 0;
   if (0 < skew && skew <= 1) {
@@ -736,7 +763,7 @@ float skewnessMapping(float skew) {
   return output;
 }
 
-// has a range of around 0-0.25
+// Flatness has a range of around 0-0.25
 float flatnessMapping(float flatness) {
   float output = 1;
   if (0 < flatness && flatness <= 0.25) {
@@ -745,6 +772,7 @@ float flatnessMapping(float flatness) {
   return output;
 }
 
+// Text warping effect function
 void textShapesEffect() {
   String[] lines = splitTextIntoLinesGeom(text, width - 900);
   float lineHeight = txtSize + 10; // Adjust the vertical spacing between lines as needed
@@ -796,7 +824,7 @@ void textShapesEffect() {
   }
 }
 
-
+// Split too long sentences in line for text warping
 String[] splitTextIntoLinesGeom(String input, float lineWidth) {
   String[] words = input.split("\\s+");
   StringBuilder currentLine = new StringBuilder();
@@ -818,6 +846,7 @@ String[] splitTextIntoLinesGeom(String input, float lineWidth) {
   return lines.toArray(new String[0]);
 }
 
+// MouseDragged function
 void mouseDragged() {
   if (mouseX>width/8 && mouseX<(width-width/8)) {
     world.born(float(mouseX), float(mouseY));
