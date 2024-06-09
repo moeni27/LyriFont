@@ -154,25 +154,25 @@ def fontConversionCountry(fontNumber):
     font = ""
     match fontNumber:
         case 0:
-            font = "ChrustyRock-ORLA.ttf"
+            font = "BroncoPersonalUse.ttf"
         case 1:
-            font = "GraniteRockSt-lGae.ttf"
+            font = "Carnevalee Freakshow.ttf"
         case 2:
-            font = "MonsterRock-rPM7.ttf"
+            font = "Cowboy Movie.ttf"
         case 3:
-            font = "RockElegance-AyXM.ttf"
+            font = "Edmunds.ttf"
         case 4:
-            font = "RockIt-yjYm.ttf"
+            font = "FontanioBlack.ttf"
         case 5:
-            font = "RockPlaza-517M8.ttf"
+            font = "IFC INSANE RODEO.ttf"
         case 6:
-            font = "RockRadio-Wy4Vz.ttf"
+            font = "NORTHWEST-B-DEMO.ttf"
         case 7:
-            font = "RockSlayers-BW6Lw.ttf"
+            font = "RioGrande.ttf"
         case 8:
-            font = "RockSteady-Wyy7A.ttf"
+            font = "SHADSER.TTF"
         case 9:
-            font = "WillRockYou-ZVgyK.ttf"
+            font = "WEST____.TTF"
     print("The font selected is: " + font)
     return font
 
@@ -180,25 +180,25 @@ def fontConversionHiphop(fontNumber):
     font = ""
     match fontNumber:
         case 0:
-            font = "ChrustyRock-ORLA.ttf"
+            font = "08Underground-grB6.ttf"
         case 1:
-            font = "GraniteRockSt-lGae.ttf"
+            font = "AttackGraffiti-3zRBM.ttf"
         case 2:
-            font = "MonsterRock-rPM7.ttf"
+            font = "BombDaGone-VG0RB.ttf"
         case 3:
-            font = "RockElegance-AyXM.ttf"
+            font = "Chronic-1GnwL.ttf"
         case 4:
-            font = "RockIt-yjYm.ttf"
+            font = "DonGraffiti-wrYx.ttf"
         case 5:
-            font = "RockPlaza-517M8.ttf"
+            font = "DowntownStreet-0WY0R.ttf"
         case 6:
-            font = "RockRadio-Wy4Vz.ttf"
+            font = "GraffitiHipsterDemoVersionRegular-ZVBxJ.ttf"
         case 7:
-            font = "RockSlayers-BW6Lw.ttf"
+            font = "SlimWandalsAltPersonalUse-AL9vM.ttf"
         case 8:
-            font = "RockSteady-Wyy7A.ttf"
+            font = "UrbanFest-YzrJO.ttf"
         case 9:
-            font = "WillRockYou-ZVgyK.ttf"
+            font = "ZlatoustChaos-p7jZy.ttf"
     print("The font selected is: " + font)
     return font
 
@@ -280,32 +280,6 @@ def fontConversionJazz(fontNumber):
     print("The font selected is: " + font)
     return font
 
-def fontConversionHipHop(fontNumber):
-    font = ""
-    match fontNumber:
-        case 0:
-            font = "08Underground-grB6.ttf"
-        case 1:
-            font = "AttackGraffiti-3zRBM.ttf"
-        case 2:
-            font = "BombDaGone-VG0RB.ttf"
-        case 3:
-            font = "Chronic-1GnwL.ttf"
-        case 4:
-            font = "DonGraffiti-wrYx.ttf"
-        case 5:
-            font = "DowntownStreet-0WY0R.ttf"
-        case 6:
-            font = "GraffitiHipsterDemoVersionRegular-ZVBxJ.ttf"
-        case 7:
-            font = "SlimWandalsAltPersonalUse-AL9vM.ttf"
-        case 8:
-            font = "UrbanFest-YzrJO.ttf"
-        case 9:
-            font = "ZlatoustChaos-p7jZy.ttf"
-    print("The font selected is: " + font)
-    return font
-
 def fontConversionMetal(fontNumber):
     font = ""
     match fontNumber:
@@ -329,32 +303,6 @@ def fontConversionMetal(fontNumber):
             font = "MetrimLetterRegular-vmW6M.ttf"
         case 9:
             font = "TheOvercook-vmjYM.ttf"
-    print("The font selected is: " + font)
-    return font
-
-def fontConversionFunk(fontNumber):
-    font = ""
-    match fontNumber:
-        case 0:
-            font = "FunkyChokyRegular-ywv4d.ttf"
-        case 1:
-            font = "FunkyJuice-DO781.ttf"
-        case 2:
-            font = "FunkySign-EaAZr.ttf"
-        case 3:
-            font = "FunkyVibes-vmOYy.ttf"
-        case 4:
-            font = "KingthingsLickorishe-Ea9de.ttf"
-        case 5:
-            font = "MagicFunk-qZ641.ttf"
-        case 6:
-            font = "Retroparty-MV3rn.ttf"
-        case 7:
-            font = "RushFunky-X3wGZ.ttf"
-        case 8:
-            font = "SuperCandy-rgLzx.ttf"
-        case 9:
-            font = "SuperCool-MVg1p.ttf"
     print("The font selected is: " + font)
     return font
 
@@ -593,8 +541,6 @@ def loadLyrics(unused_addr, args):
       songFont = fontConversionRock(pred)
   if(genre == "Pop") :
       songFont = fontConversionPop(pred)
-  if(genre == "Funk") :
-      songFont = fontConversionFunk(pred)
   if(genre == "Jazz") :
       songFont = fontConversionJazz(pred)
   if(genre == "Classical") :
