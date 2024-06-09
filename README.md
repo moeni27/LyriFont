@@ -97,9 +97,9 @@ Certain features of the music can influence their behaviour and qualities. The t
 The user can further interact with the background of the application by holding down the left mouse button. This input generates a series of blobs as long as the user keeps the button pressed (in this case the blob genes are all random as they're not the result of asexual reproduction).
 
 ## Audio Features Parameters Classification and Vectorial Representation
-During its execution, LyriFont retrieves some audio features from the selected track in real time. In particular, centroid, energy and entropy have been taken into account. 
+During its execution, LyriFont retrieves some audio features from the selected track in real time. In particular, centroid, energy, flatness, skew, spread and entropy have been taken into account. 
 
-Some of the text parameters change dynamically with the music. In fact, the entropy value has been mapped to the text size and the centroid value has been linked to the shadow color. In addition, the dot size and color vary with the audio energy and centroid respectively.
+Some of the text parameters change dynamically with the music. In fact, the entropy value has been mapped to the text size and the centroid value has been linked to the shadow color. Moreover, the whole visual environment is also connected with the audio features, as can be seen in the pictures below.
 
 A button that in the bottom-right part of the screen permits entering another mode in which the vectorial representation of the font is used to create a text warping effect that is triggered by the audio energy. This effect has been obtained exploiting the [geomerative](https://github.com/rikrd/geomerative) processing library.
 
