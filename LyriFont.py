@@ -33,6 +33,13 @@ import librosa
 import tensorflow as tf
 import numpy as np
 import config
+import Levenshtein
+
+
+import codecs
+def strict_handler(exception):
+    return u"", exception.end
+codecs.register_error("strict", strict_handler)
 
 # Save Current Path
 currentpath = sys.path[0]
@@ -73,10 +80,33 @@ def checkSize(array, default):
     return k
   else: return default  
 
+def find_closest_filename(target, folder_path):
+    # List all files in the directory
+    files = os.listdir(folder_path)
+    
+    if not files:
+        return None, None  # Return None if the folder is empty
+    
+    closest_file = None
+    closest_distance = float('inf')
+    
+    for file in files:
+        # Calculate the Levenshtein distance
+        distance = Levenshtein.distance(target, file)
+        if distance < closest_distance:
+            closest_distance = distance
+            closest_file = file
+
+            closest_file = os.path.join(os.path.join(currentpath,"Songs"),closest_file)
+    
+    return closest_file, closest_distance
+
 # Preprocess audio before prediction. MFCCs are retrieved.
 def preprocess_song(file_path,num_mfcc=40, n_fft=2048, hop_length=512, num_segment=10,offset=0,duration=30,param=False):
     sample_rate = 22050
     samples_per_segment = int(sample_rate*30/num_segment)
+
+    file_path, distance = find_closest_filename(file_path.split('\\')[-1], os.path.join(currentpath,"Songs"))
 
     try:
         if(param):
