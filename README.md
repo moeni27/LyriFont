@@ -21,10 +21,11 @@ Lyrifont is mainly implemented in Python and Processing languages. It is organiz
 
 - *Lyrifont.pde*, that is instead used for the realization of the visual part. It is responsible for displaying the lyrics and the generated images and for all the graphics effects in the background, such that the coloured dots on the sides or the interactive visual blobs. Furthermore, all the visual elements are dinamically connected with the audio features of the song that is played.
 
-LyriFont.py needs to be run first. Once that the system is correctly listening on the localhost server and is waiting for osc messages, Lyrifont.pde can be run as well.
+The first thing to do is copy all the songs you want to use into the "Songs" folder.
 
-## Song title format
-TO DO
+*Lyrifont.py* then needs to be run. Once that the system is correctly listening on the localhost server and is waiting for osc messages, *Lyrifont.pde* can be run as well.
+
+!!! **The selected song won't be loaded correctly if it doesn't have the correct artist name and song name in the metadata** !!!
 
 ## General Architecture
 The Python and Processing files communicates through OSC messages. From the Processing side the song metadata is sent, while the Python script sends back the song lyrics and the images generated from the keywords of the lyrics itself.
@@ -117,6 +118,6 @@ The feature-parameter mappings have been made with respect to the behavior of th
 </p>
 
 ## Known Issues
-- Vectorization (TO DO)
+- The text warping effect doesn't get cool results for every font. A dynamic warping algorithm that takes into account the different font shapes would be required.
 
 
