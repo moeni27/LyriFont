@@ -68,7 +68,25 @@ def find_first_common_genre(genres, labels):
     for genre in genres:
         if genre.capitalize() in labels_set:
             return genre
-    return None
+
+    closest_distance = float('inf')
+
+    # If no perfect match found, try closest
+    for genre in genres:
+        for label in labels_set:
+            print(label +" : "+genre)
+        # Calculate the Levenshtein distance
+            distance = Levenshtein.distance(label, genre)
+            if distance < closest_distance:
+                closest_distance = distance
+                closest_match = genre
+                closest_label = label
+                print(closest_distance)
+
+    if closest_distance<5:
+        return closest_label
+    else:
+        return None
 
 # max OSC size for Processing is 2048 bytes, function accordingly limits the size of the message
 # chunk by performing a slicing if necessary
