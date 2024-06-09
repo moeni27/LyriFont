@@ -36,6 +36,7 @@ import config
 import Levenshtein
 from translate import Translator
 from langdetect import detect
+from unidecode import unidecode
 
 
 import codecs
@@ -633,7 +634,7 @@ def loadLyrics(unused_addr, args):
   print("Loading Lyrics and Timestamps...")
   lrc = syncedlyrics.search("["+artistname+"] ["+songname+"]").splitlines()
   timestamps = [x[1:9] for x in lrc]
-  lyrics = [x[11:len(x)] for x in lrc]
+  lyrics = [unidecode(x[11:len(x)]) for x in lrc]
   millisec_ts = [int(x[0:2])*60000+int(x[3:5])*1000+int(x[6:9]+"0") for x in timestamps]
   print("Lyrics and Timestamps Loaded!")
 
