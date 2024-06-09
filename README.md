@@ -23,6 +23,9 @@ Lyrifont is mainly implemented in Python and Processing languages. It is organiz
 
 LyriFont.py needs to be run first. Once that the system is correctly listening on the localhost server and is waiting for osc messages, Lyrifont.pde can be run as well.
 
+## Song title format
+TO DO
+
 ## General Architecture
 The Python and Processing files communicates through OSC messages. From the Processing side the song metadata is sent, while the Python script sends back the song lyrics and the images generated from the keywords of the lyrics itself.
 
@@ -114,4 +117,6 @@ The feature-parameter mappings have been made with respect to the behavior of th
 </p>
 
 ## Known Issues
+- Vectorization (TO DO)
+
 
