@@ -34,6 +34,8 @@ import tensorflow as tf
 import numpy as np
 import config
 import Levenshtein
+from translate import Translator
+from langdetect import detect
 
 
 import codecs
@@ -492,23 +494,39 @@ def text2image(prompt: str, fnameimage):
         # Return default image if an error occurs
         return None
 
-# Extract Keywords from a text
+# Extract keywords from text and translate them in english in order to generate images
+
+def translate_to_english(keyword, source_lang):
+    translator = Translator(to_lang="en", from_lang=source_lang)
+    translated = translator.translate(keyword)
+    return translated
+
 def extract_keywords_tfidf(text):
-  if len(text) > 10:
-    max_keywords = 5
-  else:
-    max_keywords = 1
-  nlp = spacy.load("en_core_web_sm")
-  # Process the text
-  doc = nlp(text)
+    if len(text) > 10:
+        max_keywords = 5
+    else:
+        max_keywords = 1
 
-  # Extract nouns from the processed text (use set for no duplicates)
-  nouns = set([token.text for token in doc if token.pos_ == "NOUN"])
+    # Detect the language of the input text
+    source_lang = detect(text)
 
-  # Limit the number of keywords
-  keywords = list(nouns)[:max_keywords]
+    # Translate the input text to English
+    translated_text = translate_to_english(text[:500], source_lang)
 
-  return keywords
+    # Process the translated text
+    nlp = spacy.load("en_core_web_sm")
+    doc = nlp(translated_text)
+
+    # Extract nouns from the processed text (use set for no duplicates)
+    nouns = set([token.text for token in doc if token.pos_ == "NOUN"])
+
+    # Return the keywords
+    keywords = list(nouns)[:max_keywords]
+
+    if len(text) == 0:
+        keywords = ['music', 'violin', 'music sheet', 'melody', 'clarinet']
+
+    return keywords
 
 # It retrieves the lyrics, predicts genre and font, and sends everything back to the processing file
 def loadLyrics(unused_addr, args):
