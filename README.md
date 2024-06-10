@@ -14,6 +14,7 @@ Whether you're a casual music enthusiast or a passionate lyricist, our project a
 <p align="center">
   <a href="https://youtu.be/DySCcsfUlA8">Demo Video</a>
 </p>
+
 ## Usage
 Copy all the songs you want to use into the "Songs" folder.
 
