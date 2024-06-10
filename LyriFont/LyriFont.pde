@@ -89,7 +89,6 @@ PImage pyimg;
 PImage geomimg;
 PImage noVectimg;
 float max_distance;
-//ArrayList<String> receivedLyrics = new ArrayList<>();
 ArrayList<Object> dynamicLyric;
 ArrayList<Object> dynamicTime;
 ArrayList<Object> dynamicKey;
@@ -118,7 +117,7 @@ boolean shouldDisplayImages = false;
 float[] genreColors = {320, 200, 0, 130, 110, 240, 40, 60, 285, 15};
 int genre = 0;
 
-// ??? TO DO
+// saves the lyric that needs to be displayed at the correct time in the song
 String getCurrentLine(Object[] timestamps, Object[] lines) {
   int current_time = millis()-startTime+elapsedTime;
 
@@ -146,7 +145,7 @@ String getCurrentLine(Object[] timestamps, Object[] lines) {
   }
 }
 
-// Split too long sentences into lines
+// Splits sentences to long for the window into multiple lines
 String[] splitTextIntoLines(String input, float lineWidth) {
   String[] words = input.split("\\s+");
   StringBuilder currentLine = new StringBuilder();
@@ -203,11 +202,6 @@ void setup() {
   uploadButton = loadImage("upload.png");
   chooseX = width-chooseSize-20;
   chooseY = 20;
-  //chooseColor = color(255,0,0);
-  //chooseHighlight = color(127,0,0);
-  //switchButton = loadImage("switch.png");
-  //switchX = width - switchSize - 20;
-  //switchY = height - switchSize - 20;
   
   // Font variable
   font = createFont("Georgia", 38);
@@ -230,6 +224,8 @@ void draw() {
   geomX = width - geomSize - 20;
   geomY = height - geomSize - 20;
   background(0);
+  
+  // controls blob population
   if (playing) {
     world.run(genreColors[genre]+centroidMapping(feat.centroid), spreadMapping(feat.spread), skewnessMapping(feat.skewness));
   } else {
@@ -247,7 +243,6 @@ void draw() {
       obj.update(flatnessMapping(feat.flatness));
       obj.draw();
     }
-    //filter(GRAY);
 
     displayDuration = metaDuration*50;
 
@@ -257,7 +252,7 @@ void draw() {
     }
 
     if (millis()-startTime+elapsedTime - previousTime >= displayDuration) {
-      // Move to the next image after 5 seconds
+      // Move to the next image after a certain amount of time
       currentIndex = (currentIndex + 1) % imageFiles.length;
       loadImageFromIndex(currentIndex);
       spawnParticles();
@@ -266,14 +261,17 @@ void draw() {
   }
   update();
 
+  // draw the responsive dot grid on the sides of the window
   for (int i = 0; i <= width; i += 20) {
     if ((i >= 0 && i <= width / 8) || (i >= (width * 7) / 8 && i <= width)) {
       for (int j = 0; j <= height; j += 20) {
 
         if (playing) {
           float size = dist(width/2, height/2, i, j);
+          // connect their size with the music's energy feature
           size = size*map(energyMapping(feat.energy), 0, 66, 0, 0.1)/max_distance*66;
           colorMode(HSB, 360, 100, 100);
+          // color controlled by centroid and skew
           fill(genreColors[genre]+centroidMapping(feat.centroid), 100-skewnessMapping(feat.skewness), 100);
           stroke(0);
           ellipse(i, j, size, size);
@@ -282,6 +280,7 @@ void draw() {
           float size = dist(width/2, height/2, i, j);
           size = size/(max_distance*2)*10;
           colorMode(HSB, 360, 100, 100);
+          // color changes periodically when music isn't playing
           fill(360*abs(cos(millis()*0.0001)), 100, 100);
           stroke(0);
           ellipse(i, j, size, size);
@@ -322,7 +321,7 @@ void draw() {
         if (textWidthWithMargin > width) {
           String[] lines = splitTextIntoLines(text, width - margin);
 
-          // Glow Effect
+          // shadow
           textSize(txtSize + 2);
           colorMode(HSB, 360, 100, 100);
           fill(txtColor, 100-skewnessMapping(feat.skewness), 100);
@@ -332,7 +331,6 @@ void draw() {
             float y = height / 2 - (lines.length - 1) * (lineHeight + lineVerticalSpacing) / 2 + i * (lineHeight + lineVerticalSpacing);
             text(lines[i], width / 2, y);
           }
-          //filter(BLUR, 1);
 
           // Lyrics
           textSize(txtSize);
@@ -344,12 +342,11 @@ void draw() {
             text(lines[i], width / 2, y);
           }
         } else {
-          // Glow Effect
+          // shadow
           textSize(txtSize + 2);
           colorMode(HSB, 360, 100, 100);
           fill(txtColor, 100-skewnessMapping(feat.skewness), 100);
           text(text, width / 2, height / 2);
-          //filter(BLUR, 1);
 
           // Lyrics
           textSize(txtSize);
@@ -361,8 +358,6 @@ void draw() {
         colorMode(RGB, 255, 255, 255);
         fill(255, 255, 255);
         translate(width/2, 10);
-        /*text(firstLine, width / 2, height / 2 - 20);
-         text(secondLine, width / 2, height / 2 + 20);*/
         textShapesEffect();
         translate(-width/2, -10);
       }
@@ -370,6 +365,8 @@ void draw() {
       fill(0, 0, 0);
     }
   }
+  
+  // code for correct button control
   
   if (polimiOver) {
     fill(rectHighlight);
@@ -430,8 +427,6 @@ void draw() {
   rect(chooseX, chooseY, chooseSize, chooseSize, 28);
   image(uploadButton, chooseX, chooseY, chooseSize, chooseSize);
 
-
-  //image(switchButton, switchX, switchY, switchSize, switchSize);
 }
 
 // Loads images from index
@@ -440,15 +435,18 @@ void loadImageFromIndex(int index) {
   img = loadImage(imagePath);
 }
 
-// Spawn new particles
+// create the particle grid that represents the loaded image
 void spawnParticles() {
   DEAD = false;
   COUNTER=0;
   particles.clear(); // Clear previous particles
   float offset = PARTICLE_SIZE/2;
+  // select random center of attraction
   PVector randomTarget = new PVector(random(-(width*3)/8+img.width/2+PARTICLE_SIZE, (width*3)/8-img.width/2-PARTICLE_SIZE), random(-height/2+img.height/2, height/2-img.height/2));
+  // create the grid
   for (int i = 0; i < img.width; i += RESOLUTION) {
     for (int j = 0; j < img.height; j += RESOLUTION) {
+      // get color of the pixel assigned to the particle
       color c = img.get(i, j);
       particles.add(new Particle(i + (width / 2 - img.width / 2) + offset, j + (height / 2 - img.height / 2) + offset, c, randomTarget));
     }
@@ -479,7 +477,7 @@ void clearFolder() {
   }
 }
 
-// Update function
+// Update button state function
 void update() {
   if ( overRect(rectX, rectY, rectSize, rectSize) ) {
     rectOver = true;
@@ -801,7 +799,6 @@ void textShapesEffect() {
           vertex(points[i].x, points[i].y + lineY);
         }
         endShape();
-        //filter(BLUR, 1);
       }
     }
 
@@ -824,7 +821,7 @@ void textShapesEffect() {
   }
 }
 
-// Split too long sentences in line for text warping
+// Split sentences too long for the window in multiple lines for text warping
 String[] splitTextIntoLinesGeom(String input, float lineWidth) {
   String[] words = input.split("\\s+");
   StringBuilder currentLine = new StringBuilder();
@@ -849,6 +846,7 @@ String[] splitTextIntoLinesGeom(String input, float lineWidth) {
 // MouseDragged function
 void mouseDragged() {
   if (mouseX>width/8 && mouseX<(width-width/8)) {
+    // generate blobs while holding down mouse button
     world.born(float(mouseX), float(mouseY));
   }
 }
