@@ -18,7 +18,7 @@ The first thing to do is copy all the songs you want to use into the "Songs" fol
 
 *Lyrifont.py* then needs to be run. Once that the system is correctly listening on the localhost server and is waiting for osc messages, *Lyrifont.pde* can be run as well.
 
-!!! **The selected song won't be loaded correctly if it doesn't have the correct artist name and song name in the metadata** !!!
+!!! **The selected song won't be loaded correctly if its name doesn't have the format "artistName - songName" and it's not an mp3 file** !!!
 
 ## General Architecture
 Lyrifont is mainly implemented in Python and Processing languages. It is organized in two main files:
@@ -121,5 +121,4 @@ The feature-parameter mappings have been made with respect to the behavior of th
 
 ## Known Issues
 - The text warping effect doesn't get cool results for every font. A dynamic warping algorithm that takes into account the different font shapes would be required.
-
-
+- Sometimes the text-to-image generation service returns an error. If it happens, the system will display a bunch of default pictures.
