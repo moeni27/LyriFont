@@ -73,9 +73,10 @@ Hugging Face is a leading platform in natural language processing (NLP) and mach
   <img align="right" width="170" height="120" alt="spacy" src="/assets/images/spacy.jpg">
 </p>
 
+On the other hand spaCy is a popular open-source library for advanced natural language processing in Python. It's designed to be fast and efficient for tasks such as tokenization, part-of-speech tagging, named entity recognition, and more.
+
 If the lyrics are not in English, the language is identified using the langdetect library. Then, the lyrics are translated into English using the translate library. Subsequently, keywords are extracted from the translated text, as described earlier.
 
-On the other hand spaCy is a popular open-source library for advanced natural language processing in Python. It's designed to be fast and efficient for tasks such as tokenization, part-of-speech tagging, named entity recognition, and more.
 ## Interactive Visuals Features
 ### Image Particles Generation
 Images are displayed through an interactive particle system. The grid of particles is generated according to the selected resolution and particle size, approximating the color of the corresponding pixels of the original generated image.
