@@ -18,7 +18,7 @@ Whether you're a casual music enthusiast or a passionate lyricist, our project a
 ## Usage
 Copy all the songs you want to use into the "Songs" folder.
 
-Insert your personal Spotipy client id, client secret and api key in *config.py* script.
+Insert your personal Spotipy client id and client secret and Hugging Face api key in *config.py* script.
 
 *Lyrifont.py* then needs to be run. Once that the system is correctly listening on the localhost server and is waiting for osc messages, *Lyrifont.pde* can be run as well.
 
