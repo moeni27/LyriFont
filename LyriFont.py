@@ -64,10 +64,11 @@ df = pd.read_excel(excel_path, index_col=None, header=None)
 # Server Client
 client = udp_client.SimpleUDPClient("127.0.0.1", 1234)
 
+unicodeerr = False
+
 # Retrieves from the multiples genres proposed by Spotify the first that matches with the ones we used as labels for the models
 def find_first_common_genre(genres, labels):
     labels_set = set(labels)
-    print(genres)
     for genre in genres:
         if genre.capitalize() in labels_set:
             return genre
@@ -77,14 +78,12 @@ def find_first_common_genre(genres, labels):
     # If no perfect match found, try closest
     for genre in genres:
         for label in labels_set:
-            print(label +" : "+genre)
         # Calculate the Levenshtein distance
             distance = Levenshtein.distance(label, genre)
             if distance < closest_distance:
                 closest_distance = distance
                 closest_match = genre
                 closest_label = label
-                print(closest_distance)
 
     if closest_distance<5:
         return closest_label
@@ -104,7 +103,8 @@ def checkSize(array, default):
 def find_closest_filename(target, folder_path):
     # List all files in the directory
     files = os.listdir(folder_path)
-    
+    global unicodeerr
+
     if not files:
         return None, None  # Return None if the folder is empty
     
@@ -119,7 +119,12 @@ def find_closest_filename(target, folder_path):
             closest_file = file
 
             closest_file = os.path.join(os.path.join(currentpath,"Songs"),closest_file)
-    
+        
+    if closest_distance>0:
+        unicodeerr = True
+    else:
+        unicodeerr = False
+
     return closest_file, closest_distance
 
 # Preprocess audio before prediction. MFCCs are retrieved.
@@ -567,9 +572,14 @@ def loadLyrics(unused_addr, args):
     genreConversionGZTAN(pred)
     print("Value : " + str(y_pred[0,pred]))
 
+  if unicodeerr:
+    file_path, distance = find_closest_filename(fname.split('\\')[-1], os.path.join(currentpath,"Songs"))
+    artistname = file_path.split('\\')[-1].split(' - ')[0]
+    songname = os.path.splitext("".join(file_path.split(" - ")[1:]))[0]
+
   # Overall Prediction
   predictions = predictions/n_of_chunks
-  print("Final ")
+  print("Final prediction!")
   final_pred = np.argmax(predictions, axis=1)
   genre = genreConversionGZTAN(final_pred)
   value = predictions[0,final_pred]
@@ -651,7 +661,7 @@ def loadLyrics(unused_addr, args):
   print("Images generated!")
 
   # Keywords sending
-  print("Nouns:", nouns)
+  print("Keywords:", nouns)
   client.send_message("/keywords", nouns)
   print(f"Keywords Sent")
   # end keyword extraction

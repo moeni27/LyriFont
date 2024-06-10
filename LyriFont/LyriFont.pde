@@ -192,7 +192,7 @@ void setup() {
   geomX = width - geomSize - 20;
   geomY = height - geomSize - 20;
   RG.init(this);
-  grp = RG.getText(text, "Font/Silkscreen-Regular.ttf", 120, CENTER);
+  grp = RG.getText(text, "FontDataset/Font/Silkscreen-Regular.ttf", 120, CENTER);
 
   // Lyrics variables
   dynamicLyric = new ArrayList<Object>();
@@ -665,8 +665,8 @@ void oscEvent(OscMessage theOscMessage) {
   if (theOscMessage.checkAddrPattern("/fontchange")==true) {
     fontPython = theOscMessage.arguments();
     println(fontPython[0].toString());
-    GeomFont = "FontDataset2/Font/" + fontPython[0].toString();
-    font = createFont("FontDataset2/Font/" + fontPython[0].toString(), 38);
+    GeomFont = "FontDataset/Font/" + fontPython[0].toString();
+    font = createFont("FontDataset/Font/" + fontPython[0].toString(), 38);
     text = "Ready!";
   }
 
