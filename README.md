@@ -11,8 +11,9 @@ Whether you're a casual music enthusiast or a passionate lyricist, our project a
   <img width="auto" height="auto" alt="Lyrifont thumbnail" src="/assets/images/example.png">
 </p>
 
-[Demo Video](https://youtu.be/DySCcsfUlA8)
-
+<p align="center">
+  <a href="https://youtu.be/DySCcsfUlA8">Demo Video</a>
+</p>
 ## Usage
 Copy all the songs you want to use into the "Songs" folder.
 
